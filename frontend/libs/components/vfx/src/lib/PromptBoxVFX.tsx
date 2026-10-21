@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ImageIcon, ImagesIcon, LoaderCircleIcon, PlusIcon, SparklesIcon, SquarePenIcon, VideoIcon, XIcon } from "lucide-react";
@@ -45,6 +46,7 @@ export const PromptBoxVFX = ({
   containerClassName,
   hideResolution = false,
 }: PromptBoxVFXProps) => {
+  useUiLocale();
   const source = useVFXStore((s) => s.source);
   const mask = useVFXStore((s) => s.mask);
   const reference = useVFXStore((s) => s.reference);
@@ -152,8 +154,8 @@ export const PromptBoxVFX = ({
           ) {
             onError(
               kind === "mask"
-                ? "Failed to upload mask image."
-                : "Failed to upload reference image.",
+                ? uiText("desktop.failed.to.upload.mask.image")
+                : uiText("desktop.failed.to.upload.reference.image"),
             );
             setUploading(false);
             URL.revokeObjectURL(previewUrl);
@@ -257,14 +259,12 @@ export const PromptBoxVFX = ({
         <div className="absolute bottom-full left-1/2 mb-2 w-full -translate-x-1/2">
           <div className="glass flex flex-col gap-1.5 rounded-2xl px-3 py-2 shadow-2xl sm:px-4 sm:py-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-base-fg/60">
-                Prompt (optional)
-              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-base-fg/60">{uiText("vfx.prompt.optional")}{" "}</span>
               <button
                 type="button"
                 onClick={() => setShowPromptPopover(false)}
                 className="flex h-5 w-5 items-center justify-center rounded-full text-base-fg/50 hover:bg-base-fg/10 hover:text-base-fg"
-                aria-label="Close prompt"
+                aria-label={uiText("vfx.close.prompt")}
               >
                 <XIcon  className="h-3 w-3" />
               </button>
@@ -273,7 +273,7 @@ export const PromptBoxVFX = ({
               ref={promptTextareaRef}
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe the new scene, lighting, or change..."
+              placeholder={uiText("vfx.describe.the.new.scene.lighting.or.change")}
               rows={3}
               className="max-h-40 min-h-[3.5rem] w-full resize-none bg-transparent text-sm text-base-fg placeholder-base-fg/50 focus:outline-none"
               onKeyDown={(e) => {
@@ -321,7 +321,7 @@ export const PromptBoxVFX = ({
         {/* Primary inputs — centered, all aspect-video. Source + Reference are required, Mask is optional */}
         <div className="flex items-end justify-center gap-3">
           <UploadTile
-            label="Source Video"
+            label={uiText("vfx.source.video")}
             icon={VideoIcon}
             previewUrl={source?.url}
             isVideo
@@ -334,7 +334,7 @@ export const PromptBoxVFX = ({
           />
           {/* Mask is hidden for now — backend endpoint doesn't accept it yet. */}
           <UploadTile
-            label="Reference Image"
+            label={uiText("vfx.reference.image")}
             icon={ImageIcon}
             previewUrl={reference?.url}
             uploading={referenceUploading}
@@ -349,12 +349,12 @@ export const PromptBoxVFX = ({
         {/* Bottom row: model + resolution chips on left, prompt toggle + Generate on right.
             Wraps on narrow widths so Generate stays visible on mobile. */}
         <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
-          <Tooltip content="Model" position="top" closeOnClick>
+          <Tooltip content={uiText("common.model")} position="top" closeOnClick>
             <PopoverMenu
               items={modelItems}
               onSelect={handleModelSelect}
               mode="toggle"
-              panelTitle="Model"
+              panelTitle={uiText("common.model")}
               triggerIcon={
                 <SparklesIcon  className="h-3 w-3" />
               }
@@ -362,19 +362,19 @@ export const PromptBoxVFX = ({
             />
           </Tooltip>
           {!hideResolution && (
-            <Tooltip content="Resolution" position="top" closeOnClick>
+            <Tooltip content={uiText("common.resolution")} position="top" closeOnClick>
               <PopoverMenu
                 items={resolutionItems}
                 onSelect={handleResolutionSelect}
                 mode="toggle"
-                panelTitle="Resolution"
+                panelTitle={uiText("common.resolution")}
                 triggerLabel={resolution}
               />
             </Tooltip>
           )}
 
           <Tooltip
-            content={hasPrompt ? "Edit prompt" : "Add an optional prompt"}
+            content={hasPrompt ? uiText("vfx.edit.prompt") : uiText("vfx.add.an.optional.prompt")}
             position="top"
           >
             <button
@@ -392,9 +392,9 @@ export const PromptBoxVFX = ({
                 className="hidden h-3 w-3 sm:inline-block"
               />
               <span className="truncate">
-                <span className="sm:hidden">Prompt</span>
+                <span className="sm:hidden">{uiText("common.prompt")}</span>
                 <span className="hidden sm:inline">
-                  {hasPrompt ? "Prompt" : "Add prompt"}
+                  {hasPrompt ? uiText("common.prompt") : uiText("vfx.add.prompt")}
                 </span>
               </span>
             </button>
@@ -411,9 +411,7 @@ export const PromptBoxVFX = ({
               disabled={!canSubmit}
               loading={isSubmitting}
               className="border-none bg-primary px-4 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Generate
-            </GenerateButton>
+            >{uiText("common.generate")}{" "}</GenerateButton>
           </div>
         </div>
 
@@ -464,6 +462,7 @@ const UploadTile = ({
   onPickFromLibrary,
   onClear,
 }: UploadTileProps) => {
+  useUiLocale();
   const showHoverMenu = !previewUrl && !uploading;
   const tileSize = tileClassName ?? "h-12 w-12";
   return (
@@ -472,9 +471,7 @@ const UploadTile = ({
         <span>{label}</span>
         {required && <span className="text-primary-400">*</span>}
         {optional && (
-          <span className="rounded bg-base-fg/10 px-1 py-px text-[9px] font-medium normal-case tracking-normal text-base-fg/40">
-            optional
-          </span>
+          <span className="rounded bg-base-fg/10 px-1 py-px text-[9px] font-medium normal-case tracking-normal text-base-fg/40">{uiText("vfx.optional")}{" "}</span>
         )}
       </div>
 
@@ -492,17 +489,13 @@ const UploadTile = ({
                 onClick={onUpload}
                 icon={PlusIcon}
                 className="w-full"
-              >
-                Upload
-              </Button>
+              >{uiText("common.upload")}{" "}</Button>
               <Button
                 variant="action"
                 onClick={onPickFromLibrary}
                 icon={ImagesIcon}
                 className="w-full bg-base-fg/10 hover:bg-base-fg/20"
-              >
-                Pick from library
-              </Button>
+              >{uiText("common.pick.from.library")}{" "}</Button>
             </div>
           }
         >

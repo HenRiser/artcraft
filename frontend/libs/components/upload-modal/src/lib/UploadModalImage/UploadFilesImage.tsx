@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { Button } from "@storyteller/ui-button";
@@ -31,6 +32,7 @@ export const UploadFilesImage = ({
   onClose,
   onUploadProgress,
 }: Props) => {
+  useUiLocale();
   const seedFiles = initialFiles ?? [];
 
   const [fileEntries, setFileEntries] = useState<FileEntry[]>(
@@ -105,7 +107,7 @@ export const UploadFilesImage = ({
 
   const handleSubmit = () => {
     if (fileEntries.length === 0) {
-      setSelectionError("Please select an image to upload.");
+      setSelectionError(uiText("desktop.please.select.an.image.to.upload"));
       return;
     }
 
@@ -141,7 +143,7 @@ export const UploadFilesImage = ({
         } else if (!anySucceeded) {
           onUploadProgress({
             status: UploaderStates.assetError,
-            errorMessage: "All uploads failed.",
+            errorMessage: uiText("desktop.all.uploads.failed"),
           });
         }
       },
@@ -172,7 +174,7 @@ export const UploadFilesImage = ({
         } else if (!anySucceeded) {
           onUploadProgress({
             status: UploaderStates.assetError,
-            errorMessage: "All uploads failed.",
+            errorMessage: uiText("desktop.all.uploads.failed"),
           });
         }
       },
@@ -224,7 +226,7 @@ export const UploadFilesImage = ({
                           e.stopPropagation();
                           removeFile(i);
                         }}
-                        title="Remove"
+                        title={uiText("common.remove")}
                       >
                         <XIcon />
                       </button>
@@ -250,7 +252,7 @@ export const UploadFilesImage = ({
                             e.stopPropagation();
                             retrySingleFile(i);
                           }}
-                          title="Retry"
+                          title={uiText("common.retry")}
                         >
                           <RotateCwIcon />
                         </button>
@@ -275,7 +277,7 @@ export const UploadFilesImage = ({
                 {previewUrl && (
                   <img
                     key={previewIndex}
-                    alt="Preview"
+                    alt={uiText("common.preview")}
                     className="m-auto max-h-full max-w-full object-contain"
                     src={previewUrl}
                   />
@@ -311,7 +313,7 @@ export const UploadFilesImage = ({
           previewUrl && (
             <div className="relative m-auto flex aspect-square w-full items-center justify-center overflow-hidden rounded-none border border-white/15 bg-black/30">
               <img
-                alt="Preview"
+                alt={uiText("common.preview")}
                 className="m-auto max-h-full max-w-full object-contain"
                 src={previewUrl}
               />
@@ -321,34 +323,26 @@ export const UploadFilesImage = ({
       )}
 
       {(isUploading || anyUploading) && overallProgress && isMulti && (
-        <p className="text-center text-sm opacity-60">
-          Uploading {overallProgress.current} / {overallProgress.total}...
+        <p className="text-center text-sm opacity-60">{uiText("common.uploading.3")}{" "}{overallProgress.current} / {overallProgress.total}...
         </p>
       )}
 
       {!isUploading && !anyUploading && allDone && anyFailed && isMulti && (
         <p className="text-center text-sm text-red-400">
-          {fileEntries.filter((e) => e.status === "error").length} file(s) failed to upload.
-        </p>
+          {fileEntries.filter((e) => e.status === "error").length}{" "}{uiText("common.file.s.failed.to.upload")}{" "}</p>
       )}
 
       <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Button variant="secondary" onClick={onClose}>{uiText("common.cancel")}{" "}</Button>
         {!isUploading && !anyUploading && allDone && anyFailed && isMulti && (
-          <Button variant="secondary" onClick={retryAllFailed}>
-            Retry Failed
-          </Button>
+          <Button variant="secondary" onClick={retryAllFailed}>{uiText("common.retry.failed")}{" "}</Button>
         )}
         {!hasUploadStarted && (
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={fileEntries.length === 0}
-          >
-            Upload
-          </Button>
+          >{uiText("common.upload")}{" "}</Button>
         )}
       </div>
     </div>

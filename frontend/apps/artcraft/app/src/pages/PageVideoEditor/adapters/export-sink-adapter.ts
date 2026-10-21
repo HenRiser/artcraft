@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type {
   ExportArtifact,
   ExportSinkAdapter,
@@ -69,14 +70,14 @@ export const tauriExportSinkAdapter: ExportSinkAdapter = {
         onProgress?.({
           destination: "disk",
           status: "error",
-          error: "Already saving this export",
+          error: uiText("desktop.already.saving.this.export"),
         });
       }
       if (saveToLibrary) {
         onProgress?.({
           destination: "library",
           status: "error",
-          error: "Already uploading this export",
+          error: uiText("desktop.already.uploading.this.export"),
         });
       }
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 60_000);
@@ -100,7 +101,7 @@ export const tauriExportSinkAdapter: ExportSinkAdapter = {
             onProgress?.({
               destination: "disk",
               status: "error",
-              error: "Save dialog cancelled",
+              error: uiText("desktop.save.dialog.cancelled"),
             });
           }
         } catch (error) {
@@ -108,7 +109,7 @@ export const tauriExportSinkAdapter: ExportSinkAdapter = {
           onProgress?.({
             destination: "disk",
             status: "error",
-            error: error instanceof Error ? error.message : "Disk save failed",
+            error: error instanceof Error ? error.message : uiText("video-editor.disk.save.failed"),
           });
         }
       }
@@ -123,7 +124,7 @@ export const tauriExportSinkAdapter: ExportSinkAdapter = {
           onProgress?.({
             destination: "library",
             status: "error",
-            error: error instanceof Error ? error.message : "Upload failed",
+            error: error instanceof Error ? error.message : uiText("desktop.upload.failed"),
           });
         }
       }

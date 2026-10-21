@@ -1,3 +1,5 @@
+import { localize as uiLocalize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   ReactNode,
   useRef,
@@ -42,6 +44,7 @@ function PortalTooltip({
   onOpenChange,
   portalRef,
 }: PortalTooltipProps) {
+  useUiLocale();
   const [isShowing, setIsShowing] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -159,6 +162,7 @@ function PortalTooltip({
 // toggles on click/tap (works on touch devices). Rendered into a portal so it
 // is never clipped by the popover panel's bounds.
 function InfoHint({ content }: { content: ReactNode }) {
+  useUiLocale();
   const [open, setOpen] = useState(false);
   const pinnedRef = useRef(false); // opened via click/tap (sticky until dismissed)
   const [position, setPosition] = useState({ top: 0, left: 0, maxWidth: 320 });
@@ -218,7 +222,7 @@ function InfoHint({ content }: { content: ReactNode }) {
       <button
         ref={anchorRef}
         type="button"
-        aria-label="More info"
+        aria-label={uiText("popover.more.info")}
         className="ml-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center text-base-fg/40 transition-colors hover:text-base-fg/80"
         onClick={(e) => {
           // Don't let the click select the row.
@@ -349,6 +353,7 @@ function RichListRow({
   active = false,
   rightNode,
 }: RichListRowProps) {
+  useUiLocale();
   return (
     <div
       data-selected={item.selected ? "true" : undefined}
@@ -380,13 +385,13 @@ function RichListRow({
               item.selected ? "text-base-fg" : "text-base-fg/90",
             )}
           >
-            {item.label}
+            {uiLocalize(item.label)}
           </span>
           {item.info ? <InfoHint content={item.info} /> : null}
         </div>
         {item.description && (
           <span className="truncate text-xs text-base-fg/55">
-            {item.description}
+            {uiLocalize(item.description)}
           </span>
         )}
         {item.badges &&
@@ -439,6 +444,7 @@ function SubmenuFlyout({
   popoverClose,
   onOpenChange,
 }: SubmenuFlyoutProps) {
+  useUiLocale();
   const [isShowing, setIsShowingRaw] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [activeChildIdx, setActiveChildIdx] = useState<number | null>(null);
@@ -644,7 +650,7 @@ function SubmenuFlyout({
             className="pointer-events-auto w-[340px] rounded-[3px] border border-ui-panel-border bg-ui-controls p-1.5 text-base-fg"
           >
             <div className="mb-1 mt-0.5 px-1.5 text-sm font-normal text-base-fg opacity-70">
-              {item.label}
+              {uiLocalize(item.label)}
             </div>
             <div className="relative">
               {/* Top fade — appears only when there's content above, with a
@@ -816,6 +822,7 @@ export const PopoverMenu = ({
   maxListHeight,
   richList = false,
 }: PopoverMenuProps) => {
+  useUiLocale();
   // Search leaves so a grouped list resolves to the selected model, not its
   // (also-selected) family group row.
   const selectedItem = items
@@ -1057,7 +1064,7 @@ export const PopoverMenu = ({
                   <>
                     {triggerIcon}
                     {mode === "toggle" && selectedItem ? (
-                      <span className="truncate">{selectedItem.label}</span>
+                      <span className="truncate">{uiLocalize(selectedItem.label)}</span>
                     ) : null}
                     {mode === "default" && triggerLabel ? (
                       <span className="truncate">{triggerLabel}</span>
@@ -1066,7 +1073,7 @@ export const PopoverMenu = ({
                       <div className="flex items-center gap-1.5">
                         <span className="opacity-70">{triggerLabel}</span>
                         <div className="flex items-center gap-2">
-                          <span className="truncate">{selectedItem.label}</span>
+                          <span className="truncate">{uiLocalize(selectedItem.label)}</span>
                           <ChevronUpIcon className="text-sm" />
                         </div>
                       </div>
@@ -1309,13 +1316,13 @@ export const PopoverMenu = ({
                                     <div className="flex flex-1 flex-col min-w-0">
                                       <div className="flex items-center gap-2 min-w-0">
                                         <span className="truncate font-semibold text-base-fg text-base">
-                                          {item.label}
+                                          {uiLocalize(item.label)}
                                         </span>
                                       </div>
 
                                       {item.description && (
                                         <div className="truncate text-xs text-base-fg/60 mt-0.5">
-                                          {item.description}
+                                          {uiLocalize(item.description)}
                                         </div>
                                       )}
 
@@ -1421,9 +1428,7 @@ export const PopoverMenu = ({
                             )}
                             onClick={onAdd}
                             disabled={disableAddButton}
-                          >
-                            + Add
-                          </Button>
+                          >{uiText("common.add.2")}{" "}</Button>
                         )}
                       </div>
                     ) : (
@@ -1485,11 +1490,11 @@ export const PopoverMenu = ({
                                             : "text-base-fg/70",
                                         )}
                                       >
-                                        {item.label}
+                                        {uiLocalize(item.label)}
                                       </span>
                                     ) : (
                                       <span className="truncate">
-                                        {item.label}
+                                        {uiLocalize(item.label)}
                                       </span>
                                     )}
                                   </div>
@@ -1548,11 +1553,11 @@ export const PopoverMenu = ({
                                           : "text-base-fg/70",
                                       )}
                                     >
-                                      {item.label}
+                                      {uiLocalize(item.label)}
                                     </span>
                                   ) : (
                                     <span className="truncate">
-                                      {item.label}
+                                      {uiLocalize(item.label)}
                                     </span>
                                   )}
                                 </div>
@@ -1590,9 +1595,7 @@ export const PopoverMenu = ({
                             )}
                             onClick={onAdd}
                             disabled={disableAddButton}
-                          >
-                            + Add
-                          </Button>
+                          >{uiText("common.add.2")}{" "}</Button>
                         )}
                       </div>
                     )}

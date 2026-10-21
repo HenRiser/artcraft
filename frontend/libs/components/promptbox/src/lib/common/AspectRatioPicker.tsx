@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, localize } from "@storyteller/common";
 import { useEffect } from "react";
 import { CommonAspectRatio } from "@storyteller/model-list";
 import { PopoverItem, PopoverMenu } from "@storyteller/ui-popover";
@@ -28,6 +29,7 @@ export const AspectRatioPicker = ({
   currentAspectRatio,
   handleCommonAspectRatioSelect,
 }: AspectRatioPickerProps) => {
+  useUiLocale();
   const useAspectRatio =
     currentAspectRatio ?? model.defaultAspectRatio ?? undefined;
 
@@ -67,7 +69,7 @@ export const AspectRatioPicker = ({
 
   model.aspectRatios?.forEach((ratio: CommonAspectRatio) => {
     aspectRatioList.push({
-      label: getAspectRatioTextLabel(ratio),
+      label: getAspectRatioTextLabel(ratio).replace(/Wide|Tall|Square|Auto/g, localize),
       action: ratio,
       selected: useAspectRatio === ratio,
       icon: isAutoAspectRatio(ratio) ? (
@@ -81,7 +83,7 @@ export const AspectRatioPicker = ({
   return (
     <>
       <Tooltip
-        content="Aspect Ratio"
+        content={uiText("common.aspect.ratio")}
         position="top"
         className="z-50"
         closeOnClick={true}
@@ -90,7 +92,7 @@ export const AspectRatioPicker = ({
           items={aspectRatioList}
           onSelect={handleSelectAdapter}
           mode="toggle"
-          panelTitle="Aspect Ratio"
+          panelTitle={uiText("common.aspect.ratio")}
           showIconsInList
           triggerIcon={
             isAutoRatio || !useAspectRatio ? (

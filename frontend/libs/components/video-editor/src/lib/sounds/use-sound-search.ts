@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect } from "react";
 import { useSoundsStore } from "./sounds-store";
 import { EditorCore } from "../core";
@@ -55,7 +56,7 @@ export function useSoundSearch({
       setTotalCount({ count: data.totalCount });
     } catch (err) {
       setSearchError({
-        error: err instanceof Error ? err.message : "Load more failed",
+        error: err instanceof Error ? err.message : uiText("desktop.load.more.failed"),
       });
     } finally {
       setLoadingMore({ loading: false });
@@ -99,7 +100,7 @@ export function useSoundSearch({
       } catch (err) {
         if (!ignore) {
           setSearchError({
-            error: err instanceof Error ? err.message : "Search failed",
+            error: err instanceof Error ? err.message : uiText("desktop.search.failed"),
           });
         }
       } finally {

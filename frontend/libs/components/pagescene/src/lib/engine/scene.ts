@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import * as THREE from "three";
 import { GLTFLoader, GLTF } from "three/addons/loaders/GLTFLoader.js";
 import { MMDLoader } from "three/addons/loaders/MMDLoader.js";
@@ -489,7 +490,7 @@ class Scene {
 
     const group = this._buildCameraFrustum();
     group.name = "::CAM::";
-    group.userData["name"] = "Camera";
+    group.userData["name"] = uiText("common.camera");
     group.position.set(
       renderCam.position.x,
       renderCam.position.y,
@@ -830,7 +831,7 @@ class Scene {
       }
       // Don't toast aborts — those are us cancelling a superseded load.
       if ((error as { name?: string })?.name !== "AbortError") {
-        toast.error("Failed to load splat.");
+        toast.error(uiText("desktop.failed.to.load.splat"));
       }
       throw error;
     });
@@ -955,8 +956,8 @@ class Scene {
     });
 
     if (load_version <= 1.0) {
-      glb.scene.name = "Scene";
-      glb.scene.userData["name"] = "Scene";
+      glb.scene.name = uiText("pagescene.scene");
+      glb.scene.userData["name"] = uiText("pagescene.scene");
       glb.scene.userData["media_id"] = media_id;
       glb.scene.userData["color"] = "#FFFFFF";
       glb.scene.userData["metalness"] = 0.0;

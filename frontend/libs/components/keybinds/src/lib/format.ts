@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { Binding } from "./types";
 
 // Human-readable rendering of a binding. macOS uses symbol glyphs (⌘⇧⌥);
@@ -42,7 +43,7 @@ export function formatBinding(binding: Binding): string {
 }
 
 export function formatBindings(bindings: Binding[]): string {
-  if (!bindings.length) return "Unbound";
+  if (!bindings.length) return uiText("keybinds.unbound");
   return bindings.map(formatBinding).join(" / ");
 }
 

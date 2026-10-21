@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useState } from "react";
 import {
   ChevronRightIcon,
@@ -55,6 +56,7 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
   onDelete,
   close,
 }) => {
+  useUiLocale();
   const [folderSubmenuOpen, setFolderSubmenuOpen] = useState(false);
 
   return (
@@ -72,12 +74,12 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
           <EyeIcon className="text-base-fg w-4" />
           <span>
             {item.mediaClass === "video"
-              ? "View video"
+              ? uiText("gallery-modal.view.video")
               : item.mediaClass === "dimensional" ||
                   item.mediaClass === "mesh" ||
                   item.mediaClass === "splat"
-                ? "View 3D"
-                : "View image"}
+                ? uiText("gallery-modal.view.3d")
+                : uiText("gallery-modal.view.image")}
           </span>
         </button>
       )}
@@ -95,7 +97,7 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
           }}
         >
           <PencilIcon className="text-base-fg w-4" />
-          <span>Edit image</span>
+          <span>{uiText("gallery-modal.edit.image")}</span>
         </button>
       )}
 
@@ -120,7 +122,7 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
           >
             <div className="flex items-center gap-2">
               <FolderPlusIcon className="text-base-fg w-4" />
-              <span>Add to Folder</span>
+              <span>{uiText("gallery-modal.add.to.folder")}</span>
             </div>
             <ChevronRightIcon
               className={twMerge(
@@ -175,7 +177,7 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
           }}
         >
           <FolderMinusIcon className="text-base-fg w-4" />
-          <span>Remove from folder</span>
+          <span>{uiText("gallery-modal.remove.from.folder")}</span>
         </button>
       )}
 
@@ -190,7 +192,7 @@ export const GalleryItemMenuItems: React.FC<GalleryItemMenuItemsProps> = ({
           }}
         >
           <Trash2Icon className="text-red w-4" />
-          <span className="text-red">Delete</span>
+          <span className="text-red">{uiText("common.delete")}</span>
         </button>
       )}
     </div>
@@ -210,7 +212,7 @@ const FolderList = ({
   onAddToFolder?: (itemIds: string[], folderId: string) => void;
   onCreateFolderFromMenu?: () => void;
   closeAll: () => void;
-}) => (
+}) => { useUiLocale(); return (
   <>
     {/* Same ordering as the sidebar / folder chips: starred first, then
         alphabetical. */}
@@ -245,7 +247,7 @@ const FolderList = ({
       }}
     >
       <PlusIcon className="text-xs w-4" />
-      <span>New Folder</span>
+      <span>{uiText("gallery-modal.new.folder")}</span>
     </button>
   </>
-);
+); };

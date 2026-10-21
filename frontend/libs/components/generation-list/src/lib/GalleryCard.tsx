@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { memo, useCallback, useState, type ReactNode } from "react";
 import {
   BoxIcon,
@@ -95,6 +96,7 @@ export const GalleryCard = memo(function GalleryCard({
   onToggleSelect,
   lastViewed = false,
 }: GalleryCardProps) {
+  useUiLocale();
   const isSquare = shape === "square";
   const cached = aspectRatioCache.get(item.id);
   const [ratio, setRatio] = useState<number | undefined>(cached);
@@ -110,12 +112,12 @@ export const GalleryCard = memo(function GalleryCard({
         ? MusicIcon
         : ImageIcon;
   const mediaLabel = isVideo
-    ? "Video"
+    ? uiText("common.video")
     : is3D
       ? "3D"
       : isAudio
-        ? "Audio"
-        : "Image";
+        ? uiText("common.audio")
+        : uiText("common.image");
   const modelDisplayName = item.modelId
     ? getModelDisplayName(item.modelId)
     : null;
@@ -236,9 +238,7 @@ export const GalleryCard = memo(function GalleryCard({
           checkbox chip at top-left. */}
       {lastViewed && (
         <div className="pointer-events-none absolute right-2 top-2 z-10 flex items-center gap-1 rounded-[3px] bg-black/70 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-white/80">
-          <EyeIcon />
-          Last viewed
-        </div>
+          <EyeIcon />{uiText("common.last.viewed")}{" "}</div>
       )}
 
       {/* Hover overlay with media type + model badges and quick actions */}

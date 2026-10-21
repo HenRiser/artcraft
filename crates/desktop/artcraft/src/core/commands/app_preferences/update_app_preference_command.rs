@@ -7,6 +7,8 @@ use errors::AnyhowResult;
 use log::{error, info};
 use serde_derive::{Deserialize, Serialize};
 use tauri::State;
+use tauri::AppHandle;
+use crate::core::state::app_preferences::ui_language::{UiLanguage, update_window_titles};
 
 /// For now, we'll only update a single preference at a time.
 #[derive(Deserialize)]
@@ -28,6 +30,7 @@ pub enum ValueType {
 #[derive(Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PreferenceName {
+  UiLanguage,
   PreferredDownloadDirectory,
   PreferredDownloadFilename,
   AutoDownload,
@@ -46,6 +49,7 @@ pub struct UpdateAppPreferencesResponse {
 
 #[tauri::command]
 pub async fn update_app_preferences_command(
+  app: AppHandle,
   request: UpdateAppPreferencesRequest,
   app_prefs: State<'_, AppPreferencesManager>,
   app_data_root: State<'_, AppDataRoot>,
@@ -59,6 +63,9 @@ pub async fn update_app_preferences_command(
         format!("Error getting app preferences: {:?}", err)
       })?;
 
+  if let Ok(prefs) = app_prefs.get_clone() {
+    update_window_titles(&app, prefs.ui_language);
+  }
   Ok(UpdateAppPreferencesResponse {
     success: true,
   })
@@ -74,6 +81,12 @@ async fn update_prefs(
   info!("Value is: {:?}", request.value);
   
   match request.preference {
+    PreferenceName::UiLanguage => {
+      prefs.ui_language = match &request.value {
+        Some(ValueType::String(value)) => UiLanguage::from_value(value),
+        _ => None,
+      }.ok_or_else(|| anyhow!("Unsupported UI language"))?;
+    }
     PreferenceName::AutoDownload => {
       match request.value {
         Some(ValueType::Bool(value)) => prefs.auto_download = value,

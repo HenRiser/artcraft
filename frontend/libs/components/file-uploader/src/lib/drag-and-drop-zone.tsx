@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { FileImageIcon, FileUpIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -11,18 +12,17 @@ export const DragAndDropZone = ({
   fileTypes: string[];
   fileIcon?: LucideIcon;
 }) => {
+  useUiLocale();
   if (files.length === 0) {
     return (
       <div className="flex cursor-pointer items-center gap-3.5 rounded-none border border-dashed border-white/20 bg-white/[0.02] p-3 transition-colors hover:border-white/40 hover:bg-white/[0.05]">
         <FileUpIcon className="text-4xl text-white/60" />
         <div className="flex flex-col gap-0">
           <p className="font-medium">
-            <u>Upload a file</u> or drop it here
-          </p>
+            <u>{uiText("file-uploader.upload.a.file")}</u>{" "}{uiText("file-uploader.or.drop.it.here")}{" "}</p>
 
           <p className="flex items-center gap-2 font-mono text-[11px] font-normal uppercase tracking-[0.12em] opacity-50">
-            {fileTypes.join(", ").toString()} supported
-          </p>
+            {fileTypes.join(", ").toString()}{" "}{uiText("file-uploader.supported")}{" "}</p>
         </div>
       </div>
     );
@@ -45,9 +45,9 @@ export const DragAndDropZone = ({
           </p>
           <p className="flex items-center gap-2 text-sm font-normal">
             <span className="opacity-50">
-              {`${fileName} file size: ${fileSize} `}
+              {uiText("file-uploader.value.file.size.value", { value0: fileName, value1: fileSize })}
             </span>
-            <u className="transition-all hover:text-white/80">Change File</u>
+            <u className="transition-all hover:text-white/80">{uiText("file-uploader.change.file")}</u>
           </p>
         </div>
       </div>
@@ -58,9 +58,9 @@ export const DragAndDropZone = ({
     <div className="flex cursor-pointer items-center justify-between gap-3.5 rounded-none border border-dashed border-white/20 bg-white/[0.02] p-3 transition-colors hover:border-white/40 hover:bg-white/[0.05]">
       <DynamicIcon icon={fileIcon} className="text-4xl" />
       <div className="flex grow flex-col gap-0">
-        <p className="font-medium">{files.length} files selected</p>
+        <p className="font-medium">{files.length}{" "}{uiText("file-uploader.files.selected")}</p>
         <p className="flex items-center gap-2 text-sm font-normal">
-          <u className="transition-all hover:text-white/80">Change Files</u>
+          <u className="transition-all hover:text-white/80">{uiText("file-uploader.change.files")}</u>
         </p>
       </div>
     </div>

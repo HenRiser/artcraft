@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { LogInIcon } from "lucide-react";
 import { EngineContext } from "../../contexts/EngineContext/EngineContext";
@@ -8,6 +9,7 @@ import { usePageSceneStore } from "../../PageSceneStore";
 // per-action signup CTAs (Save, Generate, Upload) still fire when the
 // user clicks those buttons; this chip just sets expectations up front.
 export const AnonHintChip = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const currentUserToken = usePageSceneStore((s) => s.currentUserToken);
 
@@ -23,8 +25,6 @@ export const AnonHintChip = () => {
       onClick={handleClick}
       className="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-[3px] border border-ui-panel-border bg-ui-controls px-3 py-1.5 text-xs font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
     >
-      <LogInIcon  className="opacity-70" />
-      Sign up to save
-    </button>
+      <LogInIcon  className="opacity-70" />{uiText("pagescene.sign.up.to.save")}{" "}</button>
   );
 };

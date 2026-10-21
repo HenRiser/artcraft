@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Checkbox } from "@storyteller/ui-checkbox";
 import { Modal } from "@storyteller/ui-modal";
 import { ArrowUpFromLineIcon, BoxIcon, ChevronLeftIcon, ChevronRightIcon, DogIcon, FootprintsIcon, LaughIcon, LayersIcon, MountainIcon, SearchIcon, SunIcon, UserIcon } from "lucide-react";
@@ -51,7 +52,7 @@ const AllTabSection = ({
   label: string;
   items: MediaItem[];
   onViewAll: () => void;
-}) => (
+}) => { useUiLocale(); return (
   <div className="mb-0">
     <div className="mb-2 flex items-center justify-between">
       <h3 className="text-md ml-2 font-semibold opacity-90">{label}</h3>
@@ -59,9 +60,7 @@ const AllTabSection = ({
         variant="ghost"
         className="mr-3 h-6 gap-1 px-1.5 py-0 text-[10px] tracking-[0.08em] leading-none"
         onClick={onViewAll}
-      >
-        View all
-        <ChevronRightIcon className="h-3 w-3 shrink-0 opacity-70" />
+      >{uiText("pagescene.view.all")}{" "}<ChevronRightIcon className="h-3 w-3 shrink-0 opacity-70" />
       </Button>
     </div>
     <div className="h-[170px]">
@@ -72,7 +71,7 @@ const AllTabSection = ({
       />
     </div>
   </div>
-);
+); };
 
 // Mapping from upload category to AssetTab id, so the modal can
 // auto-switch the user to the tab matching what they just uploaded.
@@ -95,6 +94,7 @@ const CHARACTER_PRIORITY_ORDER = [
 const MEME_OVERRIDES = ["ai trump"];
 
 export const AssetModal = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
 
   const {
@@ -299,18 +299,18 @@ export const AssetModal = () => {
     const orderedCharacters = [...priorityCharacters, ...remainingCharacters];
 
     return [
-      { id: "all", label: "All", icon: LayersIcon, items: [] },
+      { id: "all", get label() { return uiText("common.all"); }, icon: LayersIcon, items: [] },
       {
         id: "character",
-        label: "Characters",
-        labelSingle: "Character",
+        get label() { return uiText("common.characters"); },
+        labelSingle: uiText("promptbox.character"),
         icon: UserIcon,
         engineCategory: FilterEngineCategories.CHARACTER,
         items: orderedCharacters,
       },
       {
         id: "objects",
-        label: "Objects",
+        get label() { return uiText("pagescene.objects"); },
         labelSingle: "Object",
         icon: BoxIcon,
         engineCategory: FilterEngineCategories.OBJECT,
@@ -321,7 +321,7 @@ export const AssetModal = () => {
       },
       {
         id: "memes",
-        label: "Memes",
+        get label() { return uiText("pagescene.memes"); },
         labelSingle: "Meme",
         icon: LaughIcon,
         engineCategory: FilterEngineCategories.CHARACTER,
@@ -332,7 +332,7 @@ export const AssetModal = () => {
       },
       {
         id: "sets",
-        label: "Sets",
+        get label() { return uiText("pagescene.sets"); },
         labelSingle: "Set",
         icon: MountainIcon,
         engineCategory: FilterEngineCategories.LOCATION,
@@ -343,7 +343,7 @@ export const AssetModal = () => {
       },
       {
         id: "creatures",
-        label: "Creatures",
+        get label() { return uiText("pagescene.creatures"); },
         labelSingle: "Creature",
         icon: DogIcon,
         engineCategory: FilterEngineCategories.CREATURE,
@@ -354,8 +354,8 @@ export const AssetModal = () => {
       },
       {
         id: "animations",
-        label: "Animations",
-        labelSingle: "Animation",
+        get label() { return uiText("common.animations"); },
+        labelSingle: uiText("common.animation"),
         icon: FootprintsIcon,
         engineCategory: FilterEngineCategories.ANIMATION,
         // Uploads-first ordering with the demo-clip fallback lives in
@@ -364,8 +364,8 @@ export const AssetModal = () => {
       },
       {
         id: "skybox",
-        label: "Skybox",
-        labelSingle: "Skybox",
+        get label() { return uiText("pagescene.skybox"); },
+        labelSingle: uiText("pagescene.skybox"),
         icon: SunIcon,
         items: activeLibraryTab === "library" ? demoSkyboxItems : [],
       },
@@ -508,9 +508,7 @@ export const AssetModal = () => {
         <div className="grid h-full grid-cols-12 gap-3">
           <div className="relative col-span-3 flex h-full flex-col p-3 pt-2 after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-200 after:bg-white/10">
             <div className="flex h-10 items-center justify-between gap-2.5">
-              <h2 className="font-display text-lg tracking-tight text-white">
-                ArtCraft Presets
-              </h2>
+              <h2 className="font-display text-lg tracking-tight text-white">{uiText("pagescene.artcraft.presets")}{" "}</h2>
             </div>
             <hr className="my-2 w-full border-white/10" />
             <div className="flex h-full flex-col space-y-2">
@@ -538,7 +536,7 @@ export const AssetModal = () => {
                 id="reopen-after-add"
                 checked={reopenAfterDrag}
                 onChange={handleReopenChange}
-                label="Reopen after adding"
+                label={uiText("common.reopen.after.adding")}
               />
             </div>
           </div>
@@ -549,7 +547,7 @@ export const AssetModal = () => {
                   <div className="relative grow">
                     <Input
                       ref={searchInputRef}
-                      placeholder="Search"
+                      placeholder={uiText("pagescene.search")}
                       className="relative z-[51] grow"
                       inputClassName="bg-white/5 pr-10 placeholder-white/40"
                       icon={SearchIcon}
@@ -606,7 +604,7 @@ export const AssetModal = () => {
           isOpen: isUploadModalOpen,
           onClose: () => setIsUploadModalOpen(false),
           onSuccess: handleUploadSuccess,
-          title: "Upload 3D Asset",
+          get title() { return uiText("pagescene.upload.3d.asset"); },
           titleIcon: ArrowUpFromLineIcon,
         })}
     </>

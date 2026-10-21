@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import {
@@ -26,6 +27,7 @@ import { useEditorAdapters } from "../../EditorProvider";
 import { useEditor } from "../../editor/use-editor";
 
 export function ScenesView({ children }: { children: React.ReactNode }) {
+  useUiLocale();
   const editor = useEditor();
   const scenes = editor.scenes.getScenes();
   const currentScene = editor.scenes.getActiveScene();
@@ -72,7 +74,7 @@ export function ScenesView({ children }: { children: React.ReactNode }) {
 
       const { canDelete, reason } = canDeleteScene({ scene });
       if (!canDelete) {
-        toast.error(reason || "Failed to delete scene");
+        toast.error(reason || uiText("desktop.failed.to.delete.scene"));
         continue;
       }
 
@@ -97,12 +99,12 @@ export function ScenesView({ children }: { children: React.ReactNode }) {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>
-            {isSelectMode ? `Select scenes (${selectedScenes.size})` : "Scenes"}
+            {isSelectMode ? uiText("video-editor.select.scenes.value", { value0: selectedScenes.size }) : uiText("video-editor.scenes")}
           </SheetTitle>
           <SheetDescription>
             {isSelectMode
-              ? "Select scenes to delete"
-              : "Switch between scenes in your project"}
+              ? uiText("video-editor.select.scenes.to.delete")
+              : uiText("video-editor.switch.between.scenes.in.your.project")}
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 py-4">
@@ -114,7 +116,7 @@ export function ScenesView({ children }: { children: React.ReactNode }) {
               onClick={handleSelectMode}
             >
               <ListCheck />
-              {isSelectMode ? "Cancel" : "Select"}
+              {isSelectMode ? uiText("common.cancel") : uiText("common.select")}
             </Button>
             {isSelectMode && (
               <DeleteDialog
@@ -128,17 +130,14 @@ export function ScenesView({ children }: { children: React.ReactNode }) {
                     disabled={isMainSceneSelected}
                     size="sm"
                   >
-                    <Trash2 />
-                    Delete ({selectedScenes.size})
+                    <Trash2 />{uiText("video-editor.delete")}{selectedScenes.size})
                   </Button>
                 }
               />
             )}
           </div>
           {scenes.length === 0 ? (
-            <div className="text-muted-foreground text-sm">
-              No scenes available
-            </div>
+            <div className="text-muted-foreground text-sm">{uiText("video-editor.no.scenes.available")}{" "}</div>
           ) : (
             <div className="space-y-2">
               {scenes.map((scene) => (
@@ -184,6 +183,7 @@ function DeleteDialog({
   disabled?: boolean;
   trigger: React.ReactNode;
 }) {
+  useUiLocale();
   const [open, setOpen] = useState(false);
 
   const handleDelete = () => {
@@ -196,23 +196,16 @@ function DeleteDialog({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Scenes</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete {count} scene
-            {count === 1 ? "" : "s"}? This action cannot be undone.
-          </DialogDescription>
+          <DialogTitle>{uiText("video-editor.delete.scenes")}</DialogTitle>
+          <DialogDescription>{uiText("video-editor.are.you.sure.you.want.to.delete")}{" "}{count}{" "}{uiText("video-editor.scene")}{" "}{count === 1 ? "" : "s"}{uiText("video-editor.this.action.cannot.be.undone")}{" "}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{uiText("common.cancel")}{" "}</Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={disabled}
-          >
-            Delete
-          </Button>
+          >{uiText("common.delete")}{" "}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

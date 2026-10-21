@@ -1,3 +1,4 @@
+import { t as uiText, useLocale } from "@storyteller/common";
 import { Switch as HeadlessSwitch } from "@headlessui/react";
 import clsx from "clsx";
 import { Fragment } from "react";
@@ -12,7 +13,8 @@ interface SwitchProps {
   offClassName?: string;
 }
 
-export function Switch({ enabled, setEnabled, id, label = "Enable notifications", disabled = false, className, offClassName }: SwitchProps) {
+export function Switch({ enabled, setEnabled, id, label = uiText("desktop.enable.notifications"), disabled = false, className, offClassName }: SwitchProps) {
+  useLocale();
   return (
     <HeadlessSwitch id={id} checked={enabled} onChange={setEnabled} disabled={disabled} as={Fragment}>
       {({ checked, disabled }) => (

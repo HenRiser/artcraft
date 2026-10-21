@@ -1,4 +1,5 @@
 import rhToast, { Toaster as RHToaster } from "react-hot-toast";
+import { localize, localizeError } from "@storyteller/common";
 
 // Host apps that render their own toast UI instead of mounting <Toaster />
 // (e.g. the webapp) register a delegate here. Shared-lib `toast.success` /
@@ -20,6 +21,7 @@ const toast: typeof rhToast = Object.assign(
   rhToast,
   {
     success: ((message, opts) => {
+      if (typeof message === "string") message = localize(message);
       if (toastDelegate && typeof message === "string") {
         toastDelegate.success(message);
         return "";
@@ -27,6 +29,7 @@ const toast: typeof rhToast = Object.assign(
       return rhToast.success(message, opts);
     }) as typeof rhToast.success,
     error: ((message, opts) => {
+      if (typeof message === "string") message = localizeError(message);
       if (toastDelegate && typeof message === "string") {
         toastDelegate.error(message);
         return "";

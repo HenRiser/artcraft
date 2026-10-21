@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Modal } from "@storyteller/ui-modal";
 import { ArrowLeftIcon, EyeIcon, ImagesIcon, LoaderCircleIcon, PenIcon, PlusIcon, Trash2Icon, UploadIcon, UsersIcon, XIcon } from "lucide-react";
@@ -52,6 +53,7 @@ export const CharactersModal = ({
   onClose,
   onSelectCharacter,
 }: CharactersModalProps) => {
+  useUiLocale();
   const [view, setView] = useState<ModalView>("list");
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(
     null,
@@ -145,7 +147,7 @@ export const CharactersModal = ({
         () => {
           setPendingCharacters((prev) => {
             if (!prev.some((p) => p.name === pending.name)) return prev;
-            toast.error(`Character "${pending.name}" failed to create`);
+            toast.error(uiText("promptbox.character.value.failed.to.create", { value0: pending.name }));
             return prev.filter((p) => p.name !== pending.name);
           });
         },
@@ -160,7 +162,7 @@ export const CharactersModal = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={view === "list" ? "Characters" : undefined}
+      title={view === "list" ? uiText("common.characters") : undefined}
       className="max-w-[800px] h-[600px] max-h-[80vh] overflow-hidden"
     >
       <div
@@ -218,6 +220,7 @@ const CharacterListView = ({
   pendingCharacters: PendingCharacter[];
   onPendingResolved: (name: string) => void;
 }) => {
+  useUiLocale();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [previewCharacter, setPreviewCharacter] = useState<Character | null>(
@@ -273,16 +276,13 @@ const CharacterListView = ({
   const handleDelete = (character: Character) => {
     showActionReminder({
       reminderType: "default",
-      title: "Delete character?",
+      get title() { return uiText("promptbox.delete.character"); },
       message: (
-        <p className="text-sm text-white/70">
-          This will permanently delete <strong>{character.name}</strong>. This
-          action cannot be undone.
-        </p>
+        <p className="text-sm text-white/70">{uiText("common.this.will.permanently.delete")}{" "}<strong>{character.name}</strong>{uiText("promptbox.this.action.cannot.be.undone")}{" "}</p>
       ),
-      primaryActionText: "Delete",
+      primaryActionText: uiText("common.delete"),
       primaryActionIcon: Trash2Icon,
-      secondaryActionText: "Cancel",
+      secondaryActionText: uiText("common.cancel"),
       primaryActionBtnClassName: "bg-red text-white hover:bg-red/90",
       onPrimaryAction: async () => {
         if (actionReminderProps.value) {
@@ -302,12 +302,12 @@ const CharacterListView = ({
               prev.filter((c) => c.token !== character.token),
             );
             storeRemoveCharacter(character.token);
-            toast.success(`Character "${character.name}" deleted`);
+            toast.success(uiText("promptbox.character.value.deleted", { value0: character.name }));
           } else {
-            toast.error(res.errorMessage || "Failed to delete character");
+            toast.error(res.errorMessage || uiText("promptbox.failed.to.delete.character"));
           }
         } catch {
-          toast.error("Failed to delete character");
+          toast.error(uiText("promptbox.failed.to.delete.character"));
         } finally {
           isActionReminderOpen.value = false;
         }
@@ -358,7 +358,7 @@ const CharacterListView = ({
           >
             <div className="flex aspect-square w-full flex-col items-center justify-center gap-2">
               <PlusIcon  className="text-lg" />
-              <span className="text-sm font-medium">Create New</span>
+              <span className="text-sm font-medium">{uiText("promptbox.create.new")}</span>
             </div>
           </button>
 
@@ -384,9 +384,7 @@ const CharacterListView = ({
                   <LoaderCircleIcon
                     
                     className="text-lg text-white/80 animate-spin" />
-                  <span className="text-xs font-medium text-white/80">
-                    Creating...
-                  </span>
+                  <span className="text-xs font-medium text-white/80">{uiText("promptbox.creating")}{" "}</span>
                 </div>
               </div>
               <div className="px-2 py-1.5 text-center">
@@ -442,7 +440,7 @@ const CharacterListView = ({
                           e.stopPropagation();
                           setPreviewCharacter(character);
                         }}
-                        title="View full size"
+                        title={uiText("common.view.full.size")}
                         className="flex h-7 w-7 items-center justify-center bg-black/60 text-white/80 transition-colors hover:bg-black/80"
                       >
                         <EyeIcon  className="text-[10px]" />
@@ -512,6 +510,7 @@ const EditCharacterView = ({
   onBack: () => void;
   onSaved: () => void;
 }) => {
+  useUiLocale();
   const updateCharacterInStore = useCharactersStore((s) => s.updateCharacter);
   const [name, setName] = useState(character.name);
   const [description, setDescription] = useState(
@@ -525,7 +524,7 @@ const EditCharacterView = ({
 
   const handleSave = async () => {
     if (!name.trim()) {
-      toast.error("Name cannot be empty");
+      toast.error(uiText("promptbox.name.cannot.be.empty"));
       return;
     }
 
@@ -542,14 +541,14 @@ const EditCharacterView = ({
       });
 
       if (res.success) {
-        toast.success("Character updated");
+        toast.success(uiText("promptbox.character.updated"));
         updateCharacterInStore(character.token, { name: name.trim() });
         onSaved();
       } else {
-        toast.error(res.errorMessage || "Failed to update character");
+        toast.error(res.errorMessage || uiText("promptbox.failed.to.update.character"));
       }
     } catch {
-      toast.error("Failed to update character");
+      toast.error(uiText("promptbox.failed.to.update.character"));
     } finally {
       setSaving(false);
     }
@@ -567,7 +566,7 @@ const EditCharacterView = ({
           >
             <ArrowLeftIcon />
           </button>
-          <h2 className="text-xl font-bold text-base-fg">Edit Character</h2>
+          <h2 className="text-xl font-bold text-base-fg">{uiText("promptbox.edit.character")}</h2>
         </div>
 
         {/* Avatar preview */}
@@ -583,14 +582,12 @@ const EditCharacterView = ({
 
         {/* Name input */}
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="edit-character-name" className={FIELD_LABEL_CLASSES}>
-            Name
-          </Label>
+          <Label htmlFor="edit-character-name" className={FIELD_LABEL_CLASSES}>{uiText("common.name")}{" "}</Label>
           <Input
             id="edit-character-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Character name"
+            placeholder={uiText("common.character.name")}
             autoComplete="off"
             inputClassName="bg-ui-controls text-sm"
           />
@@ -601,15 +598,14 @@ const EditCharacterView = ({
           <Label
             htmlFor="edit-character-description"
             className={FIELD_LABEL_CLASSES}
-          >
-            Description{" "}
-            <span className="font-normal text-base-fg/40">(optional)</span>
+          >{uiText("common.description")}{" "}
+            <span className="font-normal text-base-fg/40">{uiText("common.optional")}</span>
           </Label>
           <textarea
             id="edit-character-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description..."
+            placeholder={uiText("common.description.2")}
             rows={3}
             autoComplete="off"
             className="w-full resize-none rounded-[3px] border border-ui-panel-border bg-ui-controls px-3 py-2 text-sm text-base-fg placeholder-base-fg/50 outline-none transition-colors focus:border-white focus:!outline-none"
@@ -619,17 +615,13 @@ const EditCharacterView = ({
 
       {/* Action buttons */}
       <div className="flex justify-end gap-2 pt-4">
-        <Button variant="secondary" onClick={onBack}>
-          Cancel
-        </Button>
+        <Button variant="secondary" onClick={onBack}>{uiText("common.cancel")}{" "}</Button>
         <Button
           variant="primary"
           onClick={handleSave}
           loading={saving}
           disabled={saving || !name.trim() || !hasChanges}
-        >
-          Save
-        </Button>
+        >{uiText("common.save")}{" "}</Button>
       </div>
     </div>
   );
@@ -646,6 +638,7 @@ const NewCharacterView = ({
   onBack: () => void;
   onCreated: (pending: { name: string; previewUrl?: string }) => void;
 }) => {
+  useUiLocale();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<UploadedImage[]>([]);
@@ -665,7 +658,7 @@ const NewCharacterView = ({
         f.type.startsWith("image/"),
       );
       if (imageFiles.length === 0) {
-        toast.error("Please upload image files");
+        toast.error(uiText("promptbox.please.upload.image.files"));
         return;
       }
 
@@ -698,11 +691,11 @@ const NewCharacterView = ({
           if (res.success && res.data) {
             updatedImages.push({ ...img, mediaToken: res.data });
           } else {
-            toast.error(`Failed to upload ${img.file.name}`);
+            toast.error(uiText("common.failed.to.upload.value", { value0: img.file.name }));
             updatedImages.push(img);
           }
         } catch {
-          toast.error(`Failed to upload ${img.file.name}`);
+          toast.error(uiText("common.failed.to.upload.value", { value0: img.file.name }));
           updatedImages.push(img);
         }
       }
@@ -772,13 +765,13 @@ const NewCharacterView = ({
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      toast.error("Please enter a character name");
+      toast.error(uiText("promptbox.please.enter.a.character.name"));
       return;
     }
 
     const uploadedImages = images.filter((img) => img.mediaToken);
     if (uploadedImages.length < 1) {
-      toast.error("Please upload a reference image");
+      toast.error(uiText("promptbox.please.upload.a.reference.image"));
       return;
     }
 
@@ -794,17 +787,17 @@ const NewCharacterView = ({
       });
 
       if (res.success && res.data) {
-        toast.success(`Character "${name.trim()}" is being created`);
+        toast.success(uiText("promptbox.character.value.is.being.created", { value0: name.trim() }));
         // Pass pending info up so the list shows an optimistic card
         onCreated({
           name: name.trim(),
           previewUrl: uploadedImages[0]!.url,
         });
       } else {
-        toast.error(res.errorMessage || "Failed to create character");
+        toast.error(res.errorMessage || uiText("promptbox.failed.to.create.character"));
       }
     } catch {
-      toast.error("Failed to create character");
+      toast.error(uiText("promptbox.failed.to.create.character"));
     } finally {
       setCreating(false);
     }
@@ -829,7 +822,7 @@ const NewCharacterView = ({
           >
             <ArrowLeftIcon />
           </button>
-          <h2 className="text-xl font-bold text-base-fg">New Character</h2>
+          <h2 className="text-xl font-bold text-base-fg">{uiText("promptbox.new.character")}</h2>
         </div>
 
         {/* Image upload area */}
@@ -852,7 +845,7 @@ const NewCharacterView = ({
             >
               <img
                 src={images[0]!.url}
-                alt="Reference"
+                alt={uiText("common.reference")}
                 className="max-h-full max-w-full object-contain"
               />
               {!images[0]!.mediaToken && (
@@ -877,10 +870,8 @@ const NewCharacterView = ({
               <UploadIcon
                 
                 className="mb-2 text-xl text-base-fg/40" />
-              <p className="text-sm">Upload reference image</p>
-              <p className="mb-3 text-xs text-base-fg/40">
-                Click or drag an image here
-              </p>
+              <p className="text-sm">{uiText("promptbox.upload.reference.image")}</p>
+              <p className="mb-3 text-xs text-base-fg/40">{uiText("promptbox.click.or.drag.an.image.here")}{" "}</p>
               <div
                 className="flex items-center gap-3"
                 onClick={(e) => e.stopPropagation()}
@@ -889,16 +880,12 @@ const NewCharacterView = ({
                   onClick={() => setIsGalleryOpen(true)}
                   className="flex items-center gap-2 rounded-[3px] border border-base-fg/15 bg-transparent px-3 py-1.5 text-sm text-base-fg/80 transition-colors hover:border-base-fg/25 hover:bg-base-fg/[0.07] hover:text-base-fg"
                 >
-                  <ImagesIcon  className="text-xs" />
-                  Choose from Library
-                </button>
+                  <ImagesIcon  className="text-xs" />{uiText("common.choose.from.library")}{" "}</button>
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="flex items-center gap-2 rounded-[3px] border border-base-fg/15 bg-transparent px-3 py-1.5 text-sm text-base-fg/80 transition-colors hover:border-base-fg/25 hover:bg-base-fg/[0.07] hover:text-base-fg"
                 >
-                  <UploadIcon  className="text-xs" />
-                  Upload Image
-                </button>
+                  <UploadIcon  className="text-xs" />{uiText("common.upload.image")}{" "}</button>
               </div>
             </div>
           )}
@@ -914,14 +901,12 @@ const NewCharacterView = ({
 
         {/* Name input */}
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="character-name" className={FIELD_LABEL_CLASSES}>
-            Name
-          </Label>
+          <Label htmlFor="character-name" className={FIELD_LABEL_CLASSES}>{uiText("common.name")}{" "}</Label>
           <Input
             id="character-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Character name"
+            placeholder={uiText("common.character.name")}
             autoComplete="off"
             inputClassName="bg-ui-controls text-sm"
           />
@@ -932,15 +917,14 @@ const NewCharacterView = ({
           <Label
             htmlFor="character-description"
             className={FIELD_LABEL_CLASSES}
-          >
-            Description{" "}
-            <span className="font-normal text-base-fg/40">(optional)</span>
+          >{uiText("common.description")}{" "}
+            <span className="font-normal text-base-fg/40">{uiText("common.optional")}</span>
           </Label>
           <textarea
             id="character-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Description..."
+            placeholder={uiText("common.description.2")}
             rows={3}
             autoComplete="off"
             className="w-full resize-none rounded-[3px] border border-ui-panel-border bg-ui-controls px-3 py-2 text-sm text-base-fg placeholder-base-fg/50 outline-none transition-colors focus:border-white focus:!outline-none"
@@ -950,9 +934,7 @@ const NewCharacterView = ({
 
       {/* Action buttons — sticky at the bottom */}
       <div className="sticky bottom-0 flex justify-end gap-2 pt-4 pb-1 bg-ui-modal">
-        <Button variant="secondary" onClick={onBack}>
-          Cancel
-        </Button>
+        <Button variant="secondary" onClick={onBack}>{uiText("common.cancel")}{" "}</Button>
         <Button
           variant="primary"
           onClick={handleCreate}
@@ -963,9 +945,7 @@ const NewCharacterView = ({
             !name.trim() ||
             images.filter((i) => i.mediaToken).length < 1
           }
-        >
-          Create
-        </Button>
+        >{uiText("common.create")}{" "}</Button>
       </div>
 
       <GalleryModal

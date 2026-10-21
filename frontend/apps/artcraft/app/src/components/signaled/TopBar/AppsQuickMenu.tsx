@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { DynamicIcon } from "@storyteller/icons";
 import { twMerge } from "tailwind-merge";
 import {
@@ -10,12 +11,13 @@ import {
 } from "~/config/appMenu";
 
 export const AppsQuickMenu = () => {
+  useUiLocale();
   const generateApps = useGenerateApps();
   const editApps = useEditApps();
   return (
     <div className="grid w-[680px] grid-cols-2 gap-3">
-      <AppsQuickMenuSection title="Create" apps={generateApps} />
-      <AppsQuickMenuSection title="Edit" apps={editApps} />
+      <AppsQuickMenuSection title={uiText("common.create")} apps={generateApps} />
+      <AppsQuickMenuSection title={uiText("common.edit")} apps={editApps} />
     </div>
   );
 };
@@ -26,7 +28,7 @@ const AppsQuickMenuSection = ({
 }: {
   title: string;
   apps: FullAppItem[];
-}) => (
+}) => { useUiLocale(); return (
   <div>
     <h3 className="hud-label mb-2 px-2 text-base-fg/50">{title}</h3>
     <div className="space-y-0.5">
@@ -78,4 +80,4 @@ const AppsQuickMenuSection = ({
       })}
     </div>
   </div>
-);
+); };

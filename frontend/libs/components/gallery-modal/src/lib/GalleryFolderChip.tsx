@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useState } from "react";
 import { EllipsisIcon, FolderIcon, StarIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
@@ -18,6 +19,7 @@ interface GalleryFolderChipProps {
 
 /** A folder thumbnail that removes itself on error so a fallback can show. */
 const ChipImg = ({ src, className }: { src: string; className: string }) => {
+  useUiLocale();
   const [failed, setFailed] = useState(false);
   if (failed)
     return <div className={twMerge(className, "bg-ui-controls/30")} />;
@@ -44,6 +46,7 @@ export const GalleryFolderChip: React.FC<GalleryFolderChipProps> = ({
   onOpen,
   onContextMenu,
 }) => {
+  useUiLocale();
   const { colorCode, hasStar, name } = folder;
   const coverUrl = folder.coverUrl;
   const collageUrls = folder.collageUrls ?? [];
@@ -152,7 +155,7 @@ export const GalleryFolderChip: React.FC<GalleryFolderChipProps> = ({
               hasArt ? "text-white/70" : "text-base-fg/40",
             )}
           >
-            {childCount} folder{childCount === 1 ? "" : "s"}
+            {childCount}{" "}{uiText("gallery-modal.folder")}{childCount === 1 ? "" : "s"}
           </span>
         )}
       </div>
@@ -162,7 +165,7 @@ export const GalleryFolderChip: React.FC<GalleryFolderChipProps> = ({
         <span
           role="button"
           tabIndex={-1}
-          aria-label="Folder options"
+          aria-label={uiText("gallery-modal.folder.options")}
           onPointerDown={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();

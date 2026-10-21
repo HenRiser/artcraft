@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   useCallback,
   useContext,
@@ -20,6 +21,7 @@ interface NewSceneFromTemplateProps {
 export const NewSceneFromTemplate = ({
   onSceneSelect,
 }: NewSceneFromTemplateProps) => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const [featuredScenes, setFeaturedScenes] = useState<SceneTypes[] | undefined>(
     undefined,
@@ -99,7 +101,7 @@ export const NewSceneFromTemplate = ({
         {!featuredScenes && (
           <div className="flex items-center justify-center gap-3 py-12">
             <LoadingSpinner />
-            <span className="font-medium opacity-70">Loading scenes...</span>
+            <span className="font-medium opacity-70">{uiText("common.loading.scenes")}</span>
           </div>
         )}
         {featuredScenes && (

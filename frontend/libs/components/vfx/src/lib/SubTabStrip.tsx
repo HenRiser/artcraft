@@ -1,9 +1,10 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { twMerge } from "tailwind-merge";
 import type { VFXSubTab } from "./types";
 
 const TABS: { id: VFXSubTab; label: string }[] = [
-  { id: "history", label: "History" },
-  { id: "showcase", label: "Showcase" },
+  { id: "history", get label() { return uiText("common.history"); } },
+  { id: "showcase", get label() { return uiText("vfx.showcase"); } },
 ];
 
 interface SubTabStripProps {
@@ -16,7 +17,7 @@ export const SubTabStrip = ({
   activeTab,
   onChange,
   className,
-}: SubTabStripProps) => (
+}: SubTabStripProps) => { useUiLocale(); return (
   <div
     className={twMerge(
       "flex shrink-0 items-center justify-center gap-1 border-b border-white/10 bg-white/[0.04] px-6 py-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]",
@@ -38,4 +39,4 @@ export const SubTabStrip = ({
       </button>
     ))}
   </div>
-);
+); };

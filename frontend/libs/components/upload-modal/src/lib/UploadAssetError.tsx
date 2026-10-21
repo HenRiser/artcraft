@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { FilterEngineCategories } from "@storyteller/api";
 import { Button } from "@storyteller/ui-button";
 interface Props {
@@ -13,17 +14,14 @@ export const UploadAssetError = ({
   type,
   errorMessage,
 }: Props) => {
+  useUiLocale();
   return (
     <>
-      <h3>Error in Uploading {type}</h3>
-      <p>{errorMessage ?? "Unknown Error"}</p>
+      <h3>{uiText("upload-modal.error.in.uploading")}{" "}{type}</h3>
+      <p>{errorMessage ?? uiText("desktop.unknown.error")}</p>
       <div className="mt-6 flex justify-end gap-2">
-        <Button onClick={onCancel} variant="secondary">
-          Cancel
-        </Button>
-        <Button onClick={onRetry} variant="primary">
-          Try again
-        </Button>
+        <Button onClick={onCancel} variant="secondary">{uiText("common.cancel")}{" "}</Button>
+        <Button onClick={onRetry} variant="primary">{uiText("common.try.again")}{" "}</Button>
       </div>
     </>
   );

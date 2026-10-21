@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, Trash2Icon } from "lucide-react";
 
@@ -24,6 +25,7 @@ export const SectionHeader = ({
   onRename,
   onDelete,
 }: Props) => {
+  useUiLocale();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -52,7 +54,7 @@ export const SectionHeader = ({
       {editable ? (
         <button
           type="button"
-          aria-label={collapsed ? "Expand section" : "Collapse section"}
+          aria-label={collapsed ? uiText("common.expand.section") : uiText("common.collapse.section")}
           onClick={onToggleCollapse}
           className="flex h-6 w-6 items-center justify-center rounded-md text-base-fg/45 transition-colors duration-150 hover:bg-base-fg/10 hover:text-base-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         >
@@ -104,8 +106,8 @@ export const SectionHeader = ({
       {editable && (
         <button
           type="button"
-          aria-label="Delete section"
-          title="Delete section (keeps items)"
+          aria-label={uiText("moodboard.delete.section")}
+          title={uiText("moodboard.delete.section.keeps.items")}
           onClick={onDelete}
           className="flex h-7 w-7 items-center justify-center rounded-md text-base-fg/40 opacity-0 transition-all duration-150 hover:bg-danger/10 hover:text-danger focus:outline-none focus-visible:opacity-100 focus-visible:ring-2 focus-visible:ring-danger group-hover/section:opacity-100"
         >

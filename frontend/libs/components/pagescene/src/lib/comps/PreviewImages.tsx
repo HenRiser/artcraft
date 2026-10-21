@@ -1,7 +1,9 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { MoveRightIcon } from "lucide-react";
 import { useViewportSize } from "../hooks/useViewportSize";
 
 export const PreviewImages = () => {
+  useUiLocale();
   const { width, height } = useViewportSize();
   const maxHeight = height - 68 - 120 - 100 - 240;
   const imageWidth1 = (width - 160) / 2;
@@ -29,7 +31,7 @@ export const PreviewImages = () => {
       >
         <img
           id="styled-preview"
-          alt="Styled Preview"
+          alt={uiText("pagescene.styled.preview")}
           width={imageWidth}
           height={imageHeight}
         />

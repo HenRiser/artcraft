@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useElementSelection } from "../hooks/element/use-element-selection";
@@ -45,6 +46,7 @@ export function TimelineTrackContent({
   shouldIgnoreClick,
   targetElementId = null,
 }: TimelineTrackContentProps) {
+  useUiLocale();
   const { isElementSelected } = useElementSelection();
 
   return (
@@ -52,7 +54,7 @@ export function TimelineTrackContent({
       <button
         type="button"
         className="absolute inset-0 m-0 size-full appearance-none border-0 bg-transparent p-0"
-        aria-label={`Select ${track.name} track`}
+        aria-label={uiText("video-editor.select.value.track", { value0: track.name })}
         onMouseUp={(event) => {
           if (shouldIgnoreClick?.()) return;
           onTrackMouseUp?.(event);

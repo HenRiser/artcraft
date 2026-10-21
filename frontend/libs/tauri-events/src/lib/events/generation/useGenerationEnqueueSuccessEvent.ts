@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect } from "react";
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { SoundManager } from "@storyteller/soundboard";
@@ -52,6 +53,6 @@ const makeMessage = (event: GenerationEnqueueSuccessEvent) => {
     case GenerationAction.GenerateGaussian:
       return "3D world generation enqueued!";
     default:
-      return "Generation enqueued!";
+      return uiText("desktop.generation.enqueued");
   }
 }

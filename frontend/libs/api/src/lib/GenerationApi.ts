@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ApiManager } from "./ApiManager.js";
 
 export interface EnqueueGenerationResult {
@@ -24,12 +25,12 @@ export class GenerationApi extends ApiManager {
         }
         return {
           success: false,
-          error: response.BadInput ?? "Generation failed",
+          error: response.BadInput ?? uiText("common.generation.failed"),
         };
       })
       .catch((err) => ({
         success: false,
-        error: err.message ?? "Request failed",
+        error: err.message ?? uiText("desktop.request.failed"),
       }));
   }
 }

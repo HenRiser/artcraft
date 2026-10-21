@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Grid3x3Icon, GripVerticalIcon, GroupIcon, ImagesIcon, MagnetIcon, MousePointerIcon, PenToolIcon, PlusIcon, RotateCcwIcon, RotateCwIcon, TrashIcon, TypeIcon, UngroupIcon, UploadIcon, WorkflowIcon } from "lucide-react";
 import { ButtonIconSelect } from "@storyteller/ui-button-icon-select";
 import { PopoverMenu } from "@storyteller/ui-popover";
@@ -20,9 +21,9 @@ const MODES: Array<{
   icon: typeof MousePointerIcon;
   tooltip: string;
 }> = [
-  { value: "select", icon: MousePointerIcon, tooltip: "Select (V)" },
-  { value: "lasso", icon: PenToolIcon, tooltip: "Lasso (L)" },
-  { value: "text", icon: TypeIcon, tooltip: "Text (T)" },
+  { value: "select", icon: MousePointerIcon, get tooltip() { return uiText("moodboard.select.v"); } },
+  { value: "lasso", icon: PenToolIcon, get tooltip() { return uiText("moodboard.lasso.l"); } },
+  { value: "text", icon: TypeIcon, get tooltip() { return uiText("moodboard.text.t"); } },
 ];
 
 interface Props {
@@ -31,6 +32,7 @@ interface Props {
 }
 
 export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
+  useUiLocale();
   const tool = useMoodboardStore((s) => s.tool);
   const setTool = useMoodboardStore((s) => s.setTool);
   const group = useMoodboardStore((s) => s.group);
@@ -85,7 +87,7 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
   return (
     <FloatingToolbar>
       <Tooltip
-        content="Add an image"
+        content={uiText("moodboard.add.an.image")}
         position="bottom"
         delay={300}
         closeOnClick
@@ -93,10 +95,10 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
         <PopoverMenu
           mode="button"
           position="bottom"
-          panelTitle="Add an image"
+          panelTitle={uiText("moodboard.add.an.image")}
           items={[
             {
-              label: "Upload Image",
+              get label() { return uiText("common.upload.image"); },
               selected: false,
               icon: (
                 <UploadIcon
@@ -106,7 +108,7 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
               action: "upload",
             },
             {
-              label: "Pick from Library",
+              get label() { return uiText("moodboard.pick.from.library"); },
               selected: false,
               icon: <ImagesIcon  className="h-4 w-4" />,
               action: "library",
@@ -131,14 +133,14 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
 
       <FloatingToolbarButton
         icon={GroupIcon}
-        label={`Group (${fmtShortcut([MOD, "G"])})`}
+        label={uiText("moodboard.group.value", { value0: fmtShortcut([MOD, "G"]) })}
         onClick={() => group()}
         disabled={selectedIds.size < 2}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={UngroupIcon}
-        label={`Ungroup (${fmtShortcut([MOD, "Shift", "G"])})`}
+        label={uiText("moodboard.ungroup.value", { value0: fmtShortcut([MOD, "Shift", "G"]) })}
         onClick={() => ungroup()}
         disabled={selectedIds.size === 0}
         tooltipDelay={100}
@@ -148,26 +150,26 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
 
       <FloatingToolbarButton
         icon={Grid3x3Icon}
-        label="Fit to grid"
+        label={uiText("moodboard.fit.to.grid")}
         onClick={handleFitToGrid}
         disabled={selectedIds.size === 0}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={GripVerticalIcon}
-        label="Pack collage"
+        label={uiText("moodboard.pack.collage")}
         onClick={handlePackCollage}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={WorkflowIcon}
-        label="Auto-group by proximity"
+        label={uiText("moodboard.auto.group.by.proximity")}
         onClick={handleAutoGroup}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={MagnetIcon}
-        label={snapEnabled ? "Snapping on" : "Snapping off"}
+        label={snapEnabled ? uiText("moodboard.snapping.on") : uiText("moodboard.snapping.off")}
         active={snapEnabled}
         onClick={toggleSnap}
         tooltipDelay={100}
@@ -177,19 +179,19 @@ export const MoodboardToolbar = ({ onUploadClick, onGalleryClick }: Props) => {
 
       <FloatingToolbarButton
         icon={RotateCcwIcon}
-        label={`Undo (${fmtShortcut([MOD, "Z"])})`}
+        label={uiText("moodboard.undo.value", { value0: fmtShortcut([MOD, "Z"]) })}
         onClick={undo}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={RotateCwIcon}
-        label={`Redo (${fmtShortcut([MOD, "Shift", "Z"])})`}
+        label={uiText("moodboard.redo.value", { value0: fmtShortcut([MOD, "Shift", "Z"]) })}
         onClick={redo}
         tooltipDelay={100}
       />
       <FloatingToolbarButton
         icon={TrashIcon}
-        label="Delete (Del)"
+        label={uiText("moodboard.delete.del")}
         onClick={deleteSelected}
         disabled={selectedIds.size === 0}
         tooltipDelay={100}

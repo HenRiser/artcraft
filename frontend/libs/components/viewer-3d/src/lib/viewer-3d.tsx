@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -56,6 +57,7 @@ export function Viewer3D({
   showGrid = false,
   onThumbnailCapture,
 }: Viewer3DProps) {
+  useUiLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -584,7 +586,7 @@ export function Viewer3D({
           {hasRig && (
             <button
               type="button"
-              title={skeletonVisible ? "Hide skeleton" : "Show skeleton"}
+              title={skeletonVisible ? uiText("common.hide.skeleton") : uiText("common.show.skeleton")}
               onClick={() => setSkeletonVisible((visible) => !visible)}
               className={`flex h-10 w-10 items-center justify-center rounded-md border transition-colors ${
                 skeletonVisible
@@ -605,7 +607,7 @@ export function Viewer3D({
                     label: name,
                     value: String(index),
                   })),
-                  { label: "T-pose (none)", value: NO_ANIMATION_VALUE },
+                  { get label() { return uiText("common.t.pose.none"); }, value: NO_ANIMATION_VALUE },
                 ]}
               />
             </div>

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BoardItem, BoardSection, GridDensity } from "../boards/boardTypes";
 import { BoardCard } from "./BoardCard";
@@ -125,7 +126,7 @@ export const BoardGrid = ({
     const ungrouped = bySection.get(null) ?? [];
     return ungrouped.length > 0
       ? [
-          { id: null, name: "Ungrouped", collapsed: false, items: ungrouped },
+          { id: null, name: uiText("moodboard.ungrouped"), collapsed: false, items: ungrouped },
           ...named,
         ]
       : named;

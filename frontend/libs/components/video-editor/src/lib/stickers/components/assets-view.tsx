@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import type { CSSProperties } from "react";
@@ -27,6 +28,7 @@ import { HappyIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 export function StickersView() {
+  useUiLocale();
   const {
     browseContent,
     browseStickers,
@@ -50,7 +52,7 @@ export function StickersView() {
         <Input
           size="sm"
           variant="default"
-          placeholder="Search..."
+          placeholder={uiText("video-editor.search")}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery({ query: e.target.value });
@@ -74,7 +76,7 @@ export function StickersView() {
         variant="underline"
         className="mt-2 flex min-h-0 flex-1 flex-col"
       >
-        <TabsList aria-label="Sticker categories">
+        <TabsList aria-label={uiText("video-editor.sticker.categories")}>
           {Object.entries(STICKER_CATEGORIES).map(([key, label]) => (
             <TabsTrigger key={key} value={key}>
               {label}
@@ -90,13 +92,14 @@ export function StickersView() {
 }
 
 function InlineSpinner({ className }: { className?: string }) {
+  useUiLocale();
   // The OpenCut Classic shell ships a dedicated Spinner component
   // backed by HugeIcons. The lib doesn't ship a primitive of its own,
   // so we inline a minimal pure-SVG ring that matches the visual.
   return (
     <svg
       role="status"
-      aria-label="Loading"
+      aria-label={uiText("video-editor.loading")}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -127,6 +130,7 @@ function StickerGrid({
   items: StickerData[];
   shouldCapSize?: boolean;
 }) {
+  useUiLocale();
   const gridStyle: CSSProperties & {
     "--sticker-min": string;
     "--sticker-max"?: string;
@@ -148,6 +152,7 @@ function StickerGrid({
 }
 
 function StickerRow({ items }: { items: StickerData[] }) {
+  useUiLocale();
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hidden">
       {items.map((item) => (
@@ -160,6 +165,7 @@ function StickerRow({ items }: { items: StickerData[] }) {
 }
 
 function EmptyView({ message }: { message: string }) {
+  useUiLocale();
   return (
     <div className="bg-background flex h-full flex-col items-center justify-center gap-3 p-4">
       <HugeiconsIcon
@@ -167,7 +173,7 @@ function EmptyView({ message }: { message: string }) {
         className="text-muted-foreground size-10"
       />
       <div className="flex flex-col gap-2 text-center">
-        <p className="text-lg font-medium">No stickers found</p>
+        <p className="text-lg font-medium">{uiText("video-editor.no.stickers.found")}</p>
         <p className="text-muted-foreground text-sm text-balance">{message}</p>
       </div>
     </div>
@@ -175,6 +181,7 @@ function EmptyView({ message }: { message: string }) {
 }
 
 function StickersContentView() {
+  useUiLocale();
   const {
     browseContent,
     clearRecentStickers,
@@ -201,8 +208,7 @@ function StickersContentView() {
         <div className="flex flex-col gap-3 pb-4">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground text-sm">
-              {searchResults.total} results
-            </span>
+              {searchResults.total}{" "}{uiText("video-editor.results")}{" "}</span>
           </div>
           <StickerGrid items={searchResults.items} />
         </div>
@@ -211,7 +217,7 @@ function StickersContentView() {
 
     // "all" tab search — sections are in browseContent, fall through to section rendering below
     if (selectedCategory !== "all" && searchQuery) {
-      return <EmptyView message={`No stickers found for "${searchQuery}"`} />;
+      return <EmptyView message={uiText("common.no.stickers.found.for.value", { value0: searchQuery })} />;
     }
   }
 
@@ -229,10 +235,10 @@ function StickersContentView() {
       <EmptyView
         message={
           viewMode === "search"
-            ? `No stickers found for "${searchQuery}"`
+            ? uiText("common.no.stickers.found.for.value", { value0: searchQuery })
             : selectedCategory === "all"
-              ? "No stickers available yet."
-              : `No stickers available in ${categoryLabel.toLowerCase()} yet.`
+              ? uiText("video-editor.no.stickers.available.yet")
+              : uiText("video-editor.no.stickers.available.in.value.yet", { value0: categoryLabel.toLowerCase() })
         }
       />
     );
@@ -263,6 +269,7 @@ function StickerSection({
   onClearRecent: () => void;
   onSeeAll: (category: StickerCategory) => void;
 }) {
+  useUiLocale();
   const hasHeader =
     Boolean(section.title) || section.id === "recent" || section.action;
 
@@ -283,9 +290,7 @@ function StickerSection({
                 variant="text"
                 size="sm"
                 className="h-auto gap-1 p-0 text-xs text-muted-foreground"
-              >
-                Clear
-              </Button>
+              >{uiText("common.clear")}{" "}</Button>
             )}
 
             {section.action?.type === "see-all" && section.action.category && (
@@ -296,9 +301,7 @@ function StickerSection({
                 onClick={() => {
                   onSeeAll(section.action?.category as StickerCategory);
                 }}
-              >
-                See all
-              </Button>
+              >{uiText("common.see.all")}{" "}</Button>
             )}
           </div>
         </div>
@@ -324,6 +327,7 @@ function StickerItem({
   shouldCapSize = false,
   containerClassName,
 }: StickerItemProps) {
+  useUiLocale();
   const editor = useEditor();
   const { toast } = useEditorAdapters();
   const { addToRecentStickers } = useStickersStore();
@@ -377,7 +381,7 @@ function StickerItem({
       addToRecentStickers({ stickerId: item.id });
     } catch (error) {
       console.error("Failed to add sticker:", error);
-      toast.error("Failed to add sticker to timeline");
+      toast.error(uiText("video-editor.failed.to.add.sticker.to.timeline"));
     } finally {
       setIsAdding(false);
     }

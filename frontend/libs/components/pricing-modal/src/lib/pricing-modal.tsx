@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ReactNode } from "react";
 import { Modal } from "@storyteller/ui-modal";
 import { Button } from "@storyteller/ui-button";
@@ -16,7 +17,7 @@ import { useCreditsModalStore } from "./credits-modal-store";
 
 const pricingConfig = {
   header: {
-    title: "Pick a plan",
+    get title() { return uiText("pricing-modal.pick.a.plan"); },
     subtitle:
       "Get a ton of generations and invest in a tool you'll always own. Your subscription helps keep ArtCraft free and open for everyone.",
   },
@@ -31,6 +32,7 @@ interface PricingContentProps {
 }
 
 export function PricingContent({ title, subtitle }: PricingContentProps) {
+  useUiLocale();
   const subscriptionStore = useSubscriptionState();
   const hasActiveSub = subscriptionStore.hasPaidPlan();
   const activePlanSlug = hasActiveSub
@@ -75,20 +77,15 @@ export function PricingContent({ title, subtitle }: PricingContentProps) {
       <div className="bg-primary text-white">
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2.5 pl-6 pr-14 md:pl-10">
           <p className="pricing-hud flex items-center gap-2 font-bold">
-            <TagIcon aria-hidden className="h-3.5 w-3.5" />
-            Limited-time offer
-          </p>
-          <p className="text-sm">
-            Save {PROMO_PCT}% on every plan, monthly or yearly — lock in the
-            lowest price today.
-          </p>
+            <TagIcon aria-hidden className="h-3.5 w-3.5" />{uiText("common.limited.time.offer")}{" "}</p>
+          <p className="text-sm">{uiText("common.save")}{" "}{PROMO_PCT}{uiText("pricing-modal.on.every.plan.monthly.or.yearly.lock.in.the.lowest.price.today")}{" "}</p>
         </div>
       </div>
 
       <PricingSection>
         <PricingSectionLabel
           index="01"
-          label="Pricing"
+          label={uiText("pricing-modal.pricing")}
           annotation="Free & open source · Subscriptions optional†"
         />
         <div className="px-6 py-12 md:px-10 md:py-16">
@@ -105,17 +102,13 @@ export function PricingContent({ title, subtitle }: PricingContentProps) {
                 className={SECONDARY_BUTTON_CLASSES}
                 onClick={handleBuyCredits}
               >
-                <CoinsIcon aria-hidden className="h-4 w-4" />
-                Buy more credits
-              </Button>
+                <CoinsIcon aria-hidden className="h-4 w-4" />{uiText("pricing-modal.buy.more.credits")}{" "}</Button>
               <Button
                 variant="secondary"
                 className={SECONDARY_BUTTON_CLASSES}
                 onClick={handleUpdatePaymentMethod}
               >
-                <CreditCardIcon aria-hidden className="h-4 w-4" />
-                Update payment method
-              </Button>
+                <CreditCardIcon aria-hidden className="h-4 w-4" />{uiText("pricing-modal.update.payment.method")}{" "}</Button>
             </div>
           )}
         </div>
@@ -124,7 +117,7 @@ export function PricingContent({ title, subtitle }: PricingContentProps) {
       <PricingSection>
         <PricingSectionLabel
           index="02"
-          label="Choose your plan"
+          label={uiText("pricing-modal.choose.your.plan")}
           annotation="Every paid plan includes video credits"
         />
         <PricingTable
@@ -140,30 +133,19 @@ export function PricingContent({ title, subtitle }: PricingContentProps) {
       <PricingSection>
         <div className="grid md:grid-cols-2">
           <div className="p-6 md:p-10">
-            <p className="pricing-hud text-white/40">Need more credits?</p>
-            <h2 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-white">
-              One-time credit packs
-            </h2>
-            <p className="mt-2 max-w-md leading-relaxed text-white/55">
-              Top up without changing your plan. Credit packs never expire.
-            </p>
+            <p className="pricing-hud text-white/40">{uiText("pricing-modal.need.more.credits")}</p>
+            <h2 className="mt-4 font-display text-2xl font-medium tracking-[-0.02em] text-white">{uiText("pricing-modal.one.time.credit.packs")}{" "}</h2>
+            <p className="mt-2 max-w-md leading-relaxed text-white/55">{uiText("pricing-modal.top.up.without.changing.your.plan.credit.packs.never.expire")}{" "}</p>
             <Button
               variant="secondary"
               className={`mt-6 ${SECONDARY_BUTTON_CLASSES}`}
               onClick={handleBuyCredits}
             >
-              <CoinsIcon aria-hidden className="h-4 w-4 text-primary" />
-              Buy credits
-            </Button>
+              <CoinsIcon aria-hidden className="h-4 w-4 text-primary" />{uiText("common.buy.credits")}{" "}</Button>
           </div>
           <div className="border-t border-white/15 p-6 md:border-l md:border-t-0 md:p-10">
-            <p className="pricing-hud text-white/40">† Footnote</p>
-            <p className="mt-4 max-w-md leading-relaxed text-white/55">
-              ArtCraft can be used without paying for a subscription. You can
-              bring your own compute and third-party subscriptions. We hope
-              you’ll subscribe, though, as that helps accelerate our
-              development.
-            </p>
+            <p className="pricing-hud text-white/40">{uiText("pricing-modal.footnote")}</p>
+            <p className="mt-4 max-w-md leading-relaxed text-white/55">{uiText("pricing-modal.artcraft.can.be.used.without.paying.for.a.subscription.you.can.bring.your.own.compute")}{" "}</p>
           </div>
         </div>
       </PricingSection>
@@ -172,12 +154,14 @@ export function PricingContent({ title, subtitle }: PricingContentProps) {
 }
 
 function PricingSection({ children }: { children: ReactNode }) {
+  useUiLocale();
   return <section className="border-t border-white/15">{children}</section>;
 }
 
 interface PricingModalProps {}
 
 export function PricingModal({}: PricingModalProps = {}) {
+  useUiLocale();
   const { isOpen, closeModal, title, subtitle } = usePricingModalStore();
 
   return (

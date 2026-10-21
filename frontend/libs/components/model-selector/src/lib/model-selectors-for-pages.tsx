@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useMemo } from "react";
 import type { PopoverItem } from "@storyteller/ui-popover";
 import { BoxIcon, FilmIcon, ImageIcon } from "lucide-react";
@@ -8,6 +9,7 @@ import {
   VideoModel,
   SPLAT_MODELS,
   OBJECT_3D_MODELS,
+  getModelDescription,
 } from "@storyteller/model-list";
 import { ModelTag } from "@storyteller/model-list";
 import { useImageModels, useVideoModels } from "@storyteller/tauri-api";
@@ -21,9 +23,9 @@ const videoCapabilityBadges = (model: Model) => {
   if (model.kind !== "video_model") return undefined;
   const video = model as VideoModel;
   const badges = [
-    ...(video.generateWithSound ? [{ label: "Audio Support" }] : []),
-    ...(video.endFrame ? [{ label: "Start/End" }] : []),
-    ...(video.supportsReferenceMode ? [{ label: "Reference" }] : []),
+    ...(video.generateWithSound ? [{ get label() { return uiText("model-selector.audio.support"); } }] : []),
+    ...(video.endFrame ? [{ get label() { return uiText("model-selector.start.end"); } }] : []),
+    ...(video.supportsReferenceMode ? [{ get label() { return uiText("common.reference"); } }] : []),
   ];
   return badges.length > 0 ? badges : undefined;
 };
@@ -32,7 +34,7 @@ const buildItems = (models: Model[], fallbackIcon: any) =>
   models.map((model: Model) => ({
     label: model.selectorName,
     icon: withIcon(getCreatorListIcon(model.creator), fallbackIcon),
-    description: model.selectorDescription,
+    get description() { return getModelDescription(model.id, model.selectorDescription); },
     badges: videoCapabilityBadges(model),
     modelConfig: model.toLegacyModelConfig(), // Access to full object.
     model: model,

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { ScrollArea } from "../../components/ui/scroll-area";
@@ -108,6 +109,7 @@ const TRACK_ICONS: Record<TimelineTrack["type"], ReactNode> = {
 };
 
 export function Timeline() {
+  useUiLocale();
   const snappingEnabled = useTimelineStore((s) => s.snappingEnabled);
   const {
     selectedElements,
@@ -427,7 +429,7 @@ export function Timeline() {
         "panel bg-background relative flex h-full flex-col overflow-hidden rounded-lg border border-ui-panel-border"
       }
       {...dragProps}
-      aria-label="Timeline"
+      aria-label={uiText("common.timeline")}
     >
       <TimelineToolbar
         zoomLevel={zoomLevel}
@@ -601,6 +603,7 @@ function TrackLabelsPanel({
   hasHorizontalScrollbar: boolean;
   getTrackExpansionHeight: (trackIndex: number) => number;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const scene = useEditor((e) => e.scenes.getActiveSceneOrNull());
   const tracks = useMemo<TimelineTrack[]>(
@@ -742,6 +745,7 @@ function TimelineTrackRows({
   isDragOver: boolean;
   dropTarget: DropTarget | null;
 }) {
+  useUiLocale();
   const timeline = useEditor((e) => e.timeline);
   const scene = useEditor((e) => e.scenes.getActiveSceneOrNull());
   const tracks = useMemo<TimelineTrack[]>(
@@ -833,9 +837,7 @@ function TimelineTrackRows({
                 event.stopPropagation();
                 invokeAction("paste-copied");
               }}
-            >
-              Paste elements
-            </ContextMenuItem>
+            >{uiText("video-editor.paste.elements")}{" "}</ContextMenuItem>
             <ContextMenuItem
               icon={<HugeiconsIcon icon={VolumeHighIcon} />}
               onClick={(event: React.MouseEvent) => {
@@ -844,8 +846,8 @@ function TimelineTrackRows({
               }}
             >
               {canTrackHaveAudio(track) && track.muted
-                ? "Unmute track"
-                : "Mute track"}
+                ? uiText("video-editor.unmute.track")
+                : uiText("video-editor.mute.track")}
             </ContextMenuItem>
             <ContextMenuItem
               icon={<HugeiconsIcon icon={ViewIcon} />}
@@ -855,8 +857,8 @@ function TimelineTrackRows({
               }}
             >
               {canTrackBeHidden(track) && track.hidden
-                ? "Show track"
-                : "Hide track"}
+                ? uiText("video-editor.show.track")
+                : uiText("video-editor.hide.track")}
             </ContextMenuItem>
             {track.id !== mainTrackId && (
               <ContextMenuItem
@@ -866,9 +868,7 @@ function TimelineTrackRows({
                   timeline.removeTrack({ trackId: track.id });
                 }}
                 variant="destructive"
-              >
-                Delete track
-              </ContextMenuItem>
+              >{uiText("video-editor.delete.track")}{" "}</ContextMenuItem>
             )}
           </ContextMenuContent>
         </ContextMenu>
@@ -884,6 +884,7 @@ function TimelineGutter({
   onMouseDown: (event: React.MouseEvent) => void;
   onClick: (event: React.MouseEvent) => void;
 }) {
+  useUiLocale();
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- spatial gesture surface (empty space below tracks); clicks here clear selection. Keyboard control is global timeline shortcuts.
     <div className="flex-1" onMouseDown={onMouseDown} onClick={onClick} />
@@ -891,6 +892,7 @@ function TimelineGutter({
 }
 
 function TrackIcon({ track }: { track: TimelineTrack }) {
+  useUiLocale();
   return <>{TRACK_ICONS[track.type]}</>;
 }
 
@@ -906,6 +908,7 @@ function TrackToggleIcon({
   };
   onClick: () => void;
 }) {
+  useUiLocale();
   return (
     <>
       {isOff ? (
@@ -926,6 +929,7 @@ function TrackToggleIcon({
 }
 
 function PropertyTree({ rows }: { rows: ExpandedRow[] }) {
+  useUiLocale();
   return (
     <div className="flex flex-col overflow-hidden">
       {rows.map((row) => (

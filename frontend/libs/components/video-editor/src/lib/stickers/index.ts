@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { STICKER_CATEGORIES } from "./categories";
 import { STICKER_INTRINSIC_SIZE_FALLBACK } from "./intrinsic-size";
 import type { StickerCategory } from "./types";
@@ -241,7 +242,7 @@ export async function browseAll({
   if (recentItems.length > 0) {
     sections.push({
       id: "recent",
-      title: "Recently used",
+      get title() { return uiText("video-editor.recently.used"); },
       items: recentItems.slice(0, limit),
       hasMore: recentItems.length > limit,
       layout: "row",

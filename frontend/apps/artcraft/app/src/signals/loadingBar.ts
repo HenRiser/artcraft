@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { signal } from "@preact/signals-core";
 
 export const loadingBarIsShowing = signal(false);
@@ -6,7 +7,7 @@ export const loadingBarData = signal<{
   message: string;
   progress: number;
 }>({
-  label: "Loading Editor Engine... 🦊",
+  get label() { return uiText("app.loading.editor.engine"); },
   progress: 5,
   message: "",
 });

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ParamDefinition } from "../../params";
 import { applyAlignedStroke } from "../stroke";
 import { STROKE_ALIGN_PARAM, type GraphicStrokeAlign } from "./shared";
@@ -13,20 +14,20 @@ interface EllipseParams {
 const ELLIPSE_PARAMS: ParamDefinition<keyof EllipseParams & string>[] = [
   {
     key: "fill",
-    label: "Fill",
+    get label() { return uiText("common.fill"); },
     type: "color",
     default: "#ffffff",
   },
   {
     key: "stroke",
-    label: "Color",
+    get label() { return uiText("common.color"); },
     type: "color",
     default: "#000000",
     group: "stroke",
   },
   {
     key: "strokeWidth",
-    label: "Width",
+    get label() { return uiText("common.width"); },
     type: "number",
     default: 0,
     min: 0,

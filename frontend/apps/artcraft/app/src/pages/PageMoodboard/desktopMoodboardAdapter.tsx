@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { UploaderStates } from "@storyteller/common";
@@ -18,7 +19,7 @@ const uploadImage = async (file: File): Promise<string | null> => {
   let token: string | null = null;
   try {
     await UploadImageMedia({
-      title: file.name || "Moodboard image",
+      title: file.name || uiText("desktop.moodboard.image"),
       assetFile: file,
       progressCallback: (state) => {
         if (state.status === UploaderStates.success && state.data) {
@@ -43,7 +44,7 @@ const sendToGeneration = (refs: MoodboardReference[]): void => {
   store.setReferenceImages(dedupeByToken([...store.referenceImages, ...newRefs]));
   void useTabStore.getState().setActiveTab("IMAGE");
   toast.success(
-    `${refs.length} reference${refs.length > 1 ? "s" : ""} added to the prompt`,
+    uiText("moodboard.value.reference.value.added.to.the.prompt", { value0: refs.length, value1: getUiLocale() === "en" ? (refs.length > 1 ? "s" : "") : "" }),
   );
 };
 
@@ -52,6 +53,7 @@ const DesktopLibraryPicker = ({
   onClose,
   onPick,
 }: MoodboardLibraryPickerProps) => {
+  useUiLocale();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const close = () => {
     setSelectedIds([]);

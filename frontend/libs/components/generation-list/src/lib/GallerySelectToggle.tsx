@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { SquareCheckIcon } from "lucide-react";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { useGallerySelectionStore } from "./gallery-selection-store";
@@ -8,7 +9,7 @@ import { useGallerySelectionStore } from "./gallery-selection-store";
 export function GallerySelectToggle() {
   const active = useGallerySelectionStore((s) => s.active);
   const setActive = useGallerySelectionStore((s) => s.setActive);
-  const label = active ? "Exit selection" : "Select items";
+  const label = active ? uiText("generation-list.exit.selection") : uiText("desktop.select.items");
 
   return (
     <div className="flex items-center rounded-[3px] border border-white/[0.08] bg-white/[0.04] p-0.5">

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale, localize } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRightIcon, BookIcon, ChevronLeftIcon, CircleHelpIcon, NewspaperIcon } from "lucide-react";
 import { DiscordIcon, GithubIcon, YoutubeIcon } from "@storyteller/icons";
@@ -18,10 +19,16 @@ export type HelpMenuButtonProps = {
 
 // Internal News Component
 const NewsView = ({ onBack }: { onBack: () => void }) => {
+  const language = useUiLocale();
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
-  const bundledItems = useMemo(() => getNewsPosts(), []);
-  const [items, setItems] = useState(bundledItems);
+  const bundledItems = useMemo(() => getNewsPosts(), [language]);
+  const [remoteItems, setRemoteItems] = useState<typeof bundledItems>([]);
+  // Bundled articles have translations; remote additions remain available in English.
+  const bundledSlugs = new Set(bundledItems.map((item) => item.slug));
+  const items = getLocale() === "zh-CN"
+    ? [...bundledItems, ...remoteItems.filter((item) => !bundledSlugs.has(item.slug))]
+    : remoteItems.length ? remoteItems : bundledItems;
 
   useEffect(() => {
     // Attempt to fetch fresh news
@@ -34,7 +41,7 @@ const NewsView = ({ onBack }: { onBack: () => void }) => {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data)) {
-            setItems(data);
+            setRemoteItems(data);
           }
         }
       } catch (e) {
@@ -62,8 +69,7 @@ const NewsView = ({ onBack }: { onBack: () => void }) => {
           onClick={() => setSelectedSlug(null)}
           className="self-start mb-4 text-sm flex items-center gap-2 text-white/60 hover:text-white transition-colors"
         >
-          <ChevronLeftIcon /> Back to News
-        </button>
+          <ChevronLeftIcon />{" "}{uiText("common.back.to.news")}{" "}</button>
 
         <div className="article-content">
           <h1 className="font-display text-2xl font-bold mb-2">{selectedPost.title}</h1>
@@ -133,7 +139,7 @@ const NewsView = ({ onBack }: { onBack: () => void }) => {
         </div>
       ))}
       {items.length === 0 && (
-        <div className="text-center text-white/40 py-10">No news yet.</div>
+        <div className="text-center text-white/40 py-10">{uiText("help-menu.no.news.yet")}</div>
       )}
     </div>
   );
@@ -141,10 +147,11 @@ const NewsView = ({ onBack }: { onBack: () => void }) => {
 
 export function HelpMenuButton({
   items,
-  panelTitle = "Tutorials",
+  panelTitle = uiText("help-menu.tutorials"),
   className,
   onOpenChange,
 }: HelpMenuButtonProps) {
+  useUiLocale();
   const [open, setOpen] = useState(false);
   const tutorials = useMemo(() => items ?? defaultTutorials, [items]);
   const view = useTutorialModalStore((s) => s.view);
@@ -177,13 +184,13 @@ export function HelpMenuButton({
   // Menu items for the popover
   const menuItems: PopoverItem[] = [
     {
-      label: "Tutorials",
+      get label() { return uiText("help-menu.tutorials"); },
       selected: false,
       icon: <BookIcon  className="text-base" />,
       action: "tutorials",
     },
     {
-      label: "News & Updates",
+      get label() { return uiText("help-menu.news.updates"); },
       selected: false,
       icon: <NewspaperIcon  className="text-base" />,
       action: "news",
@@ -331,7 +338,7 @@ export function HelpMenuButton({
     view === "video"
       ? undefined
       : view === "news"
-        ? "News & Updates"
+        ? uiText("help-menu.news.updates")
         : panelTitle;
 
   return (
@@ -345,7 +352,7 @@ export function HelpMenuButton({
         triggerIcon={
           <CircleHelpIcon  className="text-base-fg" />
         }
-        triggerLabel="Help"
+        triggerLabel={localize("Help")}
         buttonClassName="h-9"
       />
 
@@ -362,9 +369,7 @@ export function HelpMenuButton({
         {view === "grid" && (
           <>
             {tutorials.length === 0 ? (
-              <div className="flex items-center justify-center py-12 text-white/60">
-                No tutorials yet.
-              </div>
+              <div className="flex items-center justify-center py-12 text-white/60">{uiText("help-menu.no.tutorials.yet")}{" "}</div>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {tutorials.map((item: TutorialItem) => (
@@ -399,11 +404,8 @@ export function HelpMenuButton({
                 className="w-fit text-base-fg opacity-80 hover:opacity-100 font-medium"
                 variant="action"
                 icon={ChevronLeftIcon}
-              >
-                Back
-              </Button>
-              <div className="font-display text-lg font-bold text-base-fg">
-                Tutorial: {selected.title}
+              >{uiText("common.back")}{" "}</Button>
+              <div className="font-display text-lg font-bold text-base-fg">{uiText("help-menu.tutorial")}{" "}{selected.title}
               </div>
             </div>
             <div className="w-full">

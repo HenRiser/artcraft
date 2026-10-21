@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext, useEffect, useRef, useState } from "react";
 import { CloudUploadIcon, LoaderCircleIcon, RotateCwIcon, TrashIcon, TriangleAlertIcon } from "lucide-react";
 import { EngineContext } from "../../contexts/EngineContext";
@@ -11,6 +12,7 @@ import { usePageSceneStore, type ProducedArtifact } from "../../PageSceneStore";
 type UploadStatus = "idle" | "uploading" | "error";
 
 export const CompletionModal = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const artifact = usePageSceneStore((s) => s.producedArtifact);
   const clearProducedArtifact = usePageSceneStore(
@@ -54,7 +56,7 @@ export const CompletionModal = () => {
       }
     } catch (error) {
       console.error("Scene output upload or preview failed:", error);
-      setErrorMessage(error instanceof Error ? error.message : "Upload failed. Please retry.");
+      setErrorMessage(error instanceof Error ? error.message : uiText("desktop.upload.failed.please.retry"));
       setStatus("error");
     } finally {
       inFlightRef.current = false;
@@ -84,7 +86,7 @@ export const CompletionModal = () => {
     <div className="absolute inset-0 z-[70] flex items-center justify-center bg-black/60 p-6 backdrop-blur-sm">
       <div className="border border-ui-panel-border bg-ui-controls flex w-full max-w-xl flex-col gap-4 rounded-none p-5 text-white">
         <div className="text-sm font-semibold text-base-fg/90">
-          {isVideo ? "Recording complete" : "Capture complete"}
+          {isVideo ? uiText("pagescene.recording.complete") : uiText("pagescene.capture.complete")}
         </div>
 
         <div className="flex max-h-[52vh] items-center justify-center overflow-hidden rounded-none bg-white/5">
@@ -99,7 +101,7 @@ export const CompletionModal = () => {
           ) : (
             <img
               src={artifact.objectUrl}
-              alt="Captured frame"
+              alt={uiText("pagescene.captured.frame")}
               className="max-h-[52vh] w-full object-contain"
             />
           )}
@@ -110,9 +112,7 @@ export const CompletionModal = () => {
           <div className="flex items-center gap-2 text-sm text-base-fg/70">
             <LoaderCircleIcon
               
-              className="h-4 w-4 animate-spin" />
-            Uploading to gallery…
-          </div>
+              className="h-4 w-4 animate-spin" />{uiText("pagescene.uploading.to.gallery")}{" "}</div>
         )}
         {status === "error" && (
           <div role="alert" className="flex items-center gap-2 text-sm text-red">
@@ -131,9 +131,7 @@ export const CompletionModal = () => {
             disabled={busy}
             className="flex h-9 items-center gap-2 rounded-[3px] px-3 text-sm text-base-fg/60 transition-colors hover:bg-white/10 hover:text-base-fg disabled:opacity-50"
           >
-            <TrashIcon  className="h-3.5 w-3.5" />
-            Discard
-          </button>
+            <TrashIcon  className="h-3.5 w-3.5" />{uiText("pagescene.discard")}{" "}</button>
 
           {status === "error" ? (
             <button
@@ -141,18 +139,14 @@ export const CompletionModal = () => {
               onClick={() => void upload()}
               className="flex h-9 items-center gap-2 rounded-[3px] bg-brand-primary px-4 text-sm font-medium text-white transition-colors hover:brightness-110"
             >
-              <RotateCwIcon  className="h-3.5 w-3.5" />
-              Retry
-            </button>
+              <RotateCwIcon  className="h-3.5 w-3.5" />{uiText("common.retry")}{" "}</button>
           ) : isVideo && status === "idle" ? (
             <button
               type="button"
               onClick={() => void upload()}
               className="flex h-9 items-center gap-2 rounded-[3px] bg-brand-primary px-4 text-sm font-medium text-white transition-colors hover:brightness-110"
             >
-              <CloudUploadIcon  className="h-3.5 w-3.5" />
-              Upload &amp; continue
-            </button>
+              <CloudUploadIcon  className="h-3.5 w-3.5" />{uiText("pagescene.upload.amp.continue")}{" "}</button>
           ) : null}
         </div>
       </div>

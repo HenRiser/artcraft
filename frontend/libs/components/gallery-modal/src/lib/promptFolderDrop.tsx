@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import {
   showActionReminder,
   isActionReminderOpen,
@@ -25,14 +26,11 @@ export function promptFolderDrop({
   const dest = targetFolderName ? ` to "${targetFolderName}"` : "";
   showActionReminder({
     reminderType: "default",
-    title: `Move or copy ${count} item${plural}?`,
+    get title() { return uiText("gallery-modal.move.or.copy.value.item.value", { value0: count, value1: plural }); },
     message: (
-      <p className="text-sm text-white/70">
-        Move{dest} removes {count === 1 ? "it" : "them"} from the current folder.
-        Add a copy keeps {count === 1 ? "it" : "them"} in both.
-      </p>
+      <p className="text-sm text-white/70">{uiText("common.move")}{dest}{" "}{uiText("gallery-modal.removes")}{" "}{count === 1 ? uiText("common.it") : uiText("common.them")}{" "}{uiText("gallery-modal.from.the.current.folder.add.a.copy.keeps")}{" "}{count === 1 ? uiText("common.it") : uiText("common.them")}{" "}{uiText("gallery-modal.in.both")}{" "}</p>
     ),
-    primaryActionText: "Move here",
+    primaryActionText: uiText("desktop.move.here"),
     onPrimaryAction: async () => {
       try {
         await onMove();
@@ -40,7 +38,7 @@ export function promptFolderDrop({
         isActionReminderOpen.value = false;
       }
     },
-    secondaryActionText: "Add a copy",
+    secondaryActionText: uiText("desktop.add.a.copy"),
     onSecondaryAction: async () => {
       try {
         await onAdd();

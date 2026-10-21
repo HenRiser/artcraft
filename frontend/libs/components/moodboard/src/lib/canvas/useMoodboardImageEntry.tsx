@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ReactNode, useCallback, useRef, useState } from "react";
 import Konva from "konva";
 import toast from "react-hot-toast";
@@ -38,7 +39,7 @@ export const useMoodboardImageEntry = (
   const triggerGallery = useCallback(() => {
     if (adapter.renderLibraryPicker) setPickerOpen(true);
     else
-      toast("Library picker isn't available here — upload or paste for now", {
+      toast(uiText("desktop.library.picker.isn.t.available.here.upload.or.paste.for.now"), {
         icon: "🖼️",
       });
   }, [adapter]);

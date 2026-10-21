@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { BoneIcon, EyeIcon, EyeOffIcon, LockIcon, LockOpenIcon, LogInIcon, PlusIcon, XIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -14,6 +15,7 @@ import { toggleSkeletonHelper } from "../../actions/toggleSkeletonHelper";
 import { toggleCameraView } from "../../actions/cameraView";
 
 const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
+  useUiLocale();
   const isSelected = usePageSceneStore(
     (s) => s.outlinerSelectedItem?.id === item.id,
   );
@@ -83,7 +85,7 @@ const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
         {item.isCamera && (
           <button
             onClick={handleViewFromCamera}
-            title="View from camera"
+            title={uiText("pagescene.view.from.camera")}
             className="text-white/60 transition-colors duration-100 hover:text-white text-xs"
           >
             <div className="w-3">
@@ -96,7 +98,7 @@ const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
              persists with the scene. */
           <button
             onClick={handleToggleSkeleton}
-            title={item.skeletonVisible ? "Hide skeleton" : "Show skeleton"}
+            title={item.skeletonVisible ? uiText("common.hide.skeleton") : uiText("common.show.skeleton")}
             className={twMerge(
               "text-white/60 transition-colors duration-100 hover:text-white text-xs",
               item.skeletonVisible && "text-white/90",
@@ -109,7 +111,7 @@ const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
         )}
         <button
           onClick={handleToggleLock}
-          title={item.locked ? "Unlock" : "Lock"}
+          title={item.locked ? uiText("common.unlock") : uiText("common.lock")}
           className={twMerge(
             "text-white/60 transition-colors duration-100 hover:text-white text-xs",
             item.locked && "text-white/90",
@@ -121,7 +123,7 @@ const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
         </button>
         <button
           onClick={handleToggleVisibility}
-          title={item.visible ? "Hide" : "Show"}
+          title={item.visible ? uiText("common.hide") : uiText("common.show")}
           className={twMerge(
             "text-white/60 transition-colors duration-100 hover:text-white text-xs",
             !item.visible && "text-white/90",
@@ -137,6 +139,7 @@ const OutlinerRow = ({ item }: { item: OutlinerItem }) => {
 };
 
 export const Outliner = () => {
+  useUiLocale();
   useSignals();
   const items = usePageSceneStore((s) => s.outlinerItems);
   const showing = usePageSceneStore((s) => s.outlinerShowing);
@@ -156,20 +159,18 @@ export const Outliner = () => {
       leaveTo="opacity-0"
     >
       <div className="flex items-center border-b border-ui-panel-border px-3 py-2.5">
-        <h2 className="grow font-mono text-[11px] font-semibold uppercase tracking-[0.12em]">Scene</h2>
+        <h2 className="grow font-mono text-[11px] font-semibold uppercase tracking-[0.12em]">{uiText("pagescene.scene")}</h2>
         <Button
           icon={PlusIcon}
           variant="ghost"
           iconClassName="h-3.5 w-3.5 shrink-0"
           className="h-7 gap-1 px-1.5 py-0 text-[11px] leading-none text-white/70 hover:text-white"
           onClick={openAssetModal}
-        >
-          Add
-        </Button>
+        >{uiText("common.add")}{" "}</Button>
         <Button
           icon={XIcon}
           variant="ghost"
-          aria-label="Close scene panel"
+          aria-label={uiText("pagescene.close.scene.panel")}
           iconClassName="h-4 w-4 shrink-0"
           className="h-7 w-7 p-0 text-white/50 hover:text-white"
           onClick={() => {

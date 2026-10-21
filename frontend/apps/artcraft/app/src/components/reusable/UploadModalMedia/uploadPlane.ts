@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { v4 as uuidv4 } from "uuid";
 import { UploaderStates, FilterEngineCategories } from "~/enums";
 import { MediaUploadApi, MediaFilesApi } from "~/Classes/ApiManager";
@@ -60,7 +61,7 @@ export const uploadPlane = async ({
   if (thumbnailResponse == undefined) {
     progressCallback({
       status: UploaderStates.coverCreateError,
-      errorMessage: "Could not upload thumbnail!",
+      errorMessage: uiText("desktop.could.not.upload.thumbnail"),
     });
     return;
   }
@@ -109,7 +110,7 @@ const takeVideoSnapshot = async (
   if (video === null) {
     errorCallback({
       status: UploaderStates.coverCreateError,
-      errorMessage: "Could not upload thumbnail, video does not exist!",
+      errorMessage: uiText("desktop.could.not.upload.thumbnail.video.does.not.exist"),
     });
     return;
   }
@@ -145,7 +146,7 @@ export const uploadPlaneFromMediaToken = async ({
       status: UploaderStates.assetError,
       errorMessage:
         mediaFileResponse.errorMessage ||
-        "Could not fetch media file by token.",
+        uiText("desktop.could.not.fetch.media.file.by.token"),
     });
     return;
   }
@@ -160,7 +161,7 @@ export const uploadPlaneFromMediaToken = async ({
       progressCallback({
         status: UploaderStates.assetError,
         errorMessage:
-          renameResponse.errorMessage || "Could not rename media file.",
+          renameResponse.errorMessage || uiText("desktop.could.not.rename.media.file"),
       });
       return;
     }

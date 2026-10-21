@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { generateUUID } from "../../utils/id";
 import type { ParamDefinition } from "../../params";
 import type { ElementBounds } from "../../preview/element-bounds";
@@ -61,7 +62,7 @@ const FREEFORM_PATH_MASK_PARAMS: ParamDefinition<keyof FreeformPathMaskParams & 
   },
   {
     key: "rotation",
-    label: "Rotation",
+    get label() { return uiText("common.rotation"); },
     type: "number",
     default: 0,
     min: 0,
@@ -70,7 +71,7 @@ const FREEFORM_PATH_MASK_PARAMS: ParamDefinition<keyof FreeformPathMaskParams & 
   },
   {
     key: "scale",
-    label: "Scale",
+    get label() { return uiText("common.scale"); },
     type: "number",
     default: 1,
     min: 1,

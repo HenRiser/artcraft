@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 // UI-facing dispatchers for the animation timeline. Thin wrappers that
 // forward to editor.timelineController (mirrors the other files in this
 // folder). Pure-UI state (expanded, selected keyframe) is set directly on
@@ -137,7 +138,7 @@ export function addClipToCharacter(
   const laneId = editor.timelineController.recordEdit("Add Animation Clip", () =>
     editor.timelineController.addClipLane(characterUuid, {
       sourceMediaId: item.media_id,
-      name: item.name ?? "Animation",
+      name: item.name ?? uiText("common.animation"),
       startTime,
       duration: DEFAULT_CLIP_DURATION,
       loop: true,

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { MAX_FEATHER } from "./feather";
 import type { ParamDefinition } from "../params";
 import type {
@@ -40,7 +41,7 @@ export const BASE_MASK_PARAM_DEFINITIONS: ParamDefinition<
 >[] = [
   {
     key: "feather",
-    label: "Feather",
+    get label() { return uiText("common.feather"); },
     type: "number",
     default: 0,
     min: 0,
@@ -50,7 +51,7 @@ export const BASE_MASK_PARAM_DEFINITIONS: ParamDefinition<
   },
   {
     key: "strokeWidth",
-    label: "Stroke width",
+    get label() { return uiText("video-editor.stroke.width"); },
     type: "number",
     default: 0,
     min: 0,
@@ -59,7 +60,7 @@ export const BASE_MASK_PARAM_DEFINITIONS: ParamDefinition<
   },
   {
     key: "strokeColor",
-    label: "Stroke color",
+    get label() { return uiText("common.stroke.color"); },
     type: "color",
     default: "#ffffff",
   },

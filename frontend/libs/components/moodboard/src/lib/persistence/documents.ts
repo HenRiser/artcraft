@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 ﻿import type { Board, BoardItem, BoardSection } from "../boards/boardTypes";
 import type { MoodboardNode } from "../canvas/types";
 import type { CanvasSize, Viewport } from "../canvas/layout/geometry";
@@ -76,7 +77,7 @@ export function deserializeMoodboardDocument(
   return {
     version: 1,
     board: {
-      name: document.board.name ?? "Untitled board",
+      name: document.board.name ?? uiText("desktop.untitled.board"),
       itemOrder: document.board.itemOrder ?? [],
       items: document.board.items ?? {},
       sections: document.board.sections ?? [],

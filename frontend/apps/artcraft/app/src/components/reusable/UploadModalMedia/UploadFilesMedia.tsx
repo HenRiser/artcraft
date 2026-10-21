@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { Button } from "@storyteller/ui-button";
 import { Input } from "@storyteller/ui-input";
@@ -18,6 +19,7 @@ export const UploadFilesMedia = ({
   title,
   onUploadProgress,
 }: Props) => {
+  useUiLocale();
   const [uploadTitle, setUploadTitle] = useState<{
     value: string;
     error?: string;
@@ -35,7 +37,7 @@ export const UploadFilesMedia = ({
     if (!uploadTitle.value) {
       setUploadTitle((curr) => ({
         ...curr,
-        error: "Please enter a title.",
+        error: uiText("desktop.please.enter.a.title"),
       }));
       return;
     }
@@ -43,7 +45,7 @@ export const UploadFilesMedia = ({
     if (!assetFile.value) {
       setAssetFile((curr) => ({
         ...curr,
-        error: "Please select a file to upload.",
+        error: uiText("desktop.please.select.a.file.to.upload"),
       }));
       return;
     }
@@ -59,7 +61,7 @@ export const UploadFilesMedia = ({
     <>
       <div className="mb-4 flex flex-col gap-4">
         <Input
-          placeholder="Enter the title here"
+          placeholder={uiText("common.enter.the.title.here")}
           errorMessage={uploadTitle.error}
           value={uploadTitle.value}
           onChange={(event) => setUploadTitle({ value: event.target.value })}
@@ -86,9 +88,7 @@ export const UploadFilesMedia = ({
 
         <div className="relative m-auto aspect-square w-full overflow-hidden border border-white/15 bg-ui-controls">
           {!assetFile.value && (
-            <h6 className="absolute left-0 top-1/2 -mt-5 w-full text-center">
-              File Preview
-            </h6>
+            <h6 className="absolute left-0 top-1/2 -mt-5 w-full text-center">{uiText("common.file.preview")}{" "}</h6>
           )}
           {assetFile.value &&
             (assetFile.value.type === "video/mp4" ? (
@@ -99,12 +99,10 @@ export const UploadFilesMedia = ({
                 className="m-auto max-h-full max-w-full"
                 id="thumbnail-video"
                 src={assetFile.src}
-              >
-                Your browser does not support the video tag.
-              </video>
+              >{uiText("common.your.browser.does.not.support.the.video.tag")}{" "}</video>
             ) : (
               <img
-                alt="file upload preview"
+                alt={uiText("common.file.upload.preview")}
                 className="m-auto max-h-full max-w-full"
                 src={assetFile.src}
               />
@@ -112,12 +110,8 @@ export const UploadFilesMedia = ({
         </div>
 
         <div className="flex justify-end gap-4">
-          <Button variant="primary" onClick={handleSubmit}>
-            Upload
-          </Button>
-          <Button variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
+          <Button variant="primary" onClick={handleSubmit}>{uiText("common.upload")}{" "}</Button>
+          <Button variant="secondary" onClick={onClose}>{uiText("common.cancel")}{" "}</Button>
         </div>
       </div>
     </>

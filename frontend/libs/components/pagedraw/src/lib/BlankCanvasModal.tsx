@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, localize } from "@storyteller/common";
 import { useState } from "react";
 import { Modal } from "@storyteller/ui-modal";
 import { Button } from "@storyteller/ui-button";
@@ -28,9 +29,9 @@ const PRESETS: { group: string; items: ResolutionPreset[] }[] = [
   {
     group: "Landscape",
     items: [
-      { label: "HD  1280 × 720", width: 1280, height: 720 },
-      { label: "Full HD  1920 × 1080", width: 1920, height: 1080 },
-      { label: "QHD  2560 × 1440", width: 2560, height: 1440 },
+      { get label() { return uiText("pagedraw.hd.1280.720"); }, width: 1280, height: 720 },
+      { get label() { return uiText("pagedraw.full.hd.1920.1080"); }, width: 1920, height: 1080 },
+      { get label() { return uiText("pagedraw.qhd.2560.1440"); }, width: 2560, height: 1440 },
     ],
   },
   {
@@ -47,6 +48,7 @@ export const BlankCanvasModal = ({
   onClose,
   onConfirm,
 }: BlankCanvasModalProps) => {
+  useUiLocale();
   const [selected, setSelected] = useState<ResolutionPreset | null>(null);
 
   const handleConfirm = () => {
@@ -63,7 +65,7 @@ export const BlankCanvasModal = ({
   return (
     <Modal
       isOpen={isOpen}
-      title="Choose Canvas Size"
+      title={uiText("pagedraw.choose.canvas.size")}
       onClose={handleClose}
       width={560}
     >
@@ -71,7 +73,7 @@ export const BlankCanvasModal = ({
         {PRESETS.map((group) => (
           <div key={group.group}>
             <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-base-fg/50">
-              {group.group}
+              {localize(group.group)}
             </p>
             <div className="flex flex-wrap gap-2">
               {group.items.map((preset) => {
@@ -110,12 +112,8 @@ export const BlankCanvasModal = ({
         ))}
 
         <div className="mt-2 flex justify-end gap-3">
-          <Button variant="action" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleConfirm} disabled={!selected}>
-            Create Canvas
-          </Button>
+          <Button variant="action" onClick={handleClose}>{uiText("common.cancel")}{" "}</Button>
+          <Button variant="primary" onClick={handleConfirm} disabled={!selected}>{uiText("pagedraw.create.canvas")}{" "}</Button>
         </div>
       </div>
     </Modal>

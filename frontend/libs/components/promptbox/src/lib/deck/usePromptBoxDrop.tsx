@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ImagesIcon, MusicIcon, VideoIcon } from "lucide-react";
@@ -199,11 +200,11 @@ export function usePromptBoxDrop({
     // because the current input mode (e.g. keyframes) doesn't show it.
     if (rejectedKinds.size > 0) {
       toast.error(
-        `${capitalize(listKinds([...rejectedKinds]))} references aren't available here`,
+        uiText("promptbox.value.references.aren.t.available.here", { value0: capitalize(listKinds([...rejectedKinds])) }),
       );
     } else if (unknownCount > 0 && !anyAccepted) {
       toast.error(
-        `Only ${listKinds(acceptedKindLabels(acceptsImages, acceptsVideos, acceptsAudio))} files can be added here`,
+        uiText("promptbox.only.value.files.can.be.added.here", { value0: listKinds(acceptedKindLabels(acceptsImages, acceptsVideos, acceptsAudio)) }),
       );
     }
   };
@@ -371,7 +372,7 @@ export function usePromptBoxDrop({
           const failedCount = readable.length - readFiles.length;
           if (failedCount > 0) {
             toast.error(
-              `Couldn't read ${failedCount} file${failedCount > 1 ? "s" : ""}`,
+              uiText("promptbox.couldn.t.read.value.file.value", { value0: failedCount, value1: getUiLocale() === "en" ? (failedCount > 1 ? "s" : "") : "" }),
             );
           }
 
@@ -452,14 +453,15 @@ export function PromptBoxDropOverlay({
   acceptsAudio,
   keyframeMode,
 }: PromptBoxDropOverlayProps) {
+  useUiLocale();
   if (dragState === "idle") return null;
 
   const kinds = [
     ...(acceptsImages
-      ? [{ icon: ImagesIcon, label: keyframeMode ? "Frames" : "Images" }]
+      ? [{ icon: ImagesIcon, label: keyframeMode ? uiText("videoframeextractor.frames") : uiText("common.images") }]
       : []),
-    ...(acceptsVideos ? [{ icon: VideoIcon, label: "Video" }] : []),
-    ...(acceptsAudio ? [{ icon: MusicIcon, label: "Audio" }] : []),
+    ...(acceptsVideos ? [{ icon: VideoIcon, get label() { return uiText("common.video"); } }] : []),
+    ...(acceptsAudio ? [{ icon: MusicIcon, get label() { return uiText("common.audio"); } }] : []),
   ];
   const rejected = dragState === "reject";
 
@@ -483,14 +485,14 @@ export function PromptBoxDropOverlay({
       </div>
       <div className="text-sm font-semibold text-base-fg">
         {rejected
-          ? "That file type isn't supported"
+          ? uiText("promptbox.that.file.type.isn.t.supported")
           : keyframeMode && !acceptsVideos && !acceptsAudio
-            ? "Drop to set your frames"
-            : "Drop to add references"}
+            ? uiText("promptbox.drop.to.set.your.frames")
+            : uiText("promptbox.drop.to.add.references")}
       </div>
       <div className="-mt-1 text-xs text-base-fg/60">
         {rejected
-          ? `Accepts ${listKinds(acceptedKindLabels(acceptsImages, acceptsVideos, acceptsAudio))} files`
+          ? uiText("promptbox.accepts.value.files", { value0: listKinds(acceptedKindLabels(acceptsImages, acceptsVideos, acceptsAudio)) })
           : kinds.map((kind) => kind.label).join(" · ")}
       </div>
     </div>

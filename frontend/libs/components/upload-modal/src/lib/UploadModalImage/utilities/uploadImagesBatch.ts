@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { FileEntryStatus, UploaderStates } from "../../Types";
 import { uploadImage } from "./uploadImage";
 
@@ -57,7 +58,7 @@ export const uploadImagesBatch = async ({
         onFileStatusChange(
           i,
           "error",
-          err instanceof Error ? err.message : "Unexpected error",
+          err instanceof Error ? err.message : uiText("desktop.unexpected.error"),
         );
       }
     });

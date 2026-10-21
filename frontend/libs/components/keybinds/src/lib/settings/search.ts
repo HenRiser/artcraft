@@ -1,4 +1,5 @@
 import { formatBindingTokens } from "../format";
+import { localize } from "@storyteller/common";
 import { ActionDef, Binding, KeyGroup } from "../types";
 
 // Free-text matching for the Keybinds settings search box. A query matches an
@@ -13,7 +14,7 @@ export function actionMatchesQuery(
 ): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
-  const haystack = `${action.label} ${action.group} ${bindings
+  const haystack = `${action.label} ${localize(action.label)} ${action.group} ${localize(action.group)} ${bindings
     .map(bindingSearchText)
     .join(" ")}`.toLowerCase();
   // A compact pass strips spaces/`+` so "ctrl+z" / "⇧d" match contiguously…

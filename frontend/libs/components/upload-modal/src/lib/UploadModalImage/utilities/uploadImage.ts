@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { v4 as uuidv4 } from "uuid";
 import { MediaUploadApi } from "@storyteller/api";
 import {
@@ -29,7 +30,7 @@ export const uploadImage = async ({
   if (assetResponse == undefined) {
     progressCallback({
       status: UploaderStates.assetError,
-      errorMessage: "Could not upload image plane!",
+      errorMessage: uiText("desktop.could.not.upload.image.plane"),
     });
     return;
   }

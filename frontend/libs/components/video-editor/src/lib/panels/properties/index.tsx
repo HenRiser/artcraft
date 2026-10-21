@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { ScrollArea } from "../../components/ui/scroll-area";
@@ -16,6 +17,7 @@ import { cn } from "../../utils/ui";
 import { EmptyView } from "./empty-view";
 
 export function PropertiesPanel() {
+  useUiLocale();
   const editor = useEditor();
   useEditor((e) => e.scenes.getActiveSceneOrNull());
   useEditor((e) => e.media.getAssets());
@@ -34,8 +36,7 @@ export function PropertiesPanel() {
     return (
       <div className="panel bg-background flex h-full flex-col items-center justify-center overflow-hidden rounded-lg border border-ui-panel-border">
         <p className="text-muted-foreground text-sm">
-          {selectedElements.length} elements selected.
-        </p>
+          {selectedElements.length}{" "}{uiText("video-editor.elements.selected")}{" "}</p>
       </div>
     );
   }

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { DEFAULT_NEW_ELEMENT_DURATION } from "./creation";
 import type { TTimelineViewState } from "../project/types";
 import type { BlendMode, Transform } from "../rendering";
@@ -41,7 +42,7 @@ const defaultTextElement: Omit<TextElement, "id"> = {
   trimStart: ZERO_MEDIA_TIME,
   trimEnd: ZERO_MEDIA_TIME,
   params: {
-    content: "Default text",
+    get content() { return uiText("common.default.text"); },
     fontSize: 15,
     fontFamily: "Arial",
     color: "#ffffff",

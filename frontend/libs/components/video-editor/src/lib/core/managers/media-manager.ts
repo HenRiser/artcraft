@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { EditorCore } from "../index";
 import type { MediaAsset } from "../../media/types";
 import { videoCache } from "../../services/video-cache";
@@ -55,7 +56,7 @@ export class MediaManager {
         ...this.assets.slice(insertIndex + 1),
       ];
       this.notify();
-      this.editor.adapters.toast.error("Failed to add media", {
+      this.editor.adapters.toast.error(uiText("video-editor.failed.to.add.media"), {
         description: error instanceof Error ? error.message : undefined,
       });
       return null;

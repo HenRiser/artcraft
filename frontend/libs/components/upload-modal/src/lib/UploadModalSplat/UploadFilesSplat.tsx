@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { ListDropdown } from "@storyteller/ui-list-dropdown";
@@ -44,6 +45,7 @@ export const UploadFilesSplat = ({
   onClose,
   onUploadProgress,
 }: Props) => {
+  useUiLocale();
   const canvasRef = useRef<HTMLCanvasElement | undefined>(undefined);
   const rendererRef = useRef<WebGLRenderer | null>(null);
   const cameraRef = useRef<PerspectiveCamera | null>(null);
@@ -206,7 +208,7 @@ export const UploadFilesSplat = ({
 
   const handleSubmit = () => {
     if (fileEntries.length === 0) {
-      setSelectionError("Please select a file to upload.");
+      setSelectionError(uiText("desktop.please.select.a.file.to.upload"));
       return;
     }
 
@@ -252,7 +254,7 @@ export const UploadFilesSplat = ({
         } else if (!anySucceeded) {
           onUploadProgress({
             status: UploaderStates.assetError,
-            errorMessage: "All uploads failed.",
+            errorMessage: uiText("desktop.all.uploads.failed"),
           });
         }
       },
@@ -293,7 +295,7 @@ export const UploadFilesSplat = ({
         } else if (!anySucceeded) {
           onUploadProgress({
             status: UploaderStates.assetError,
-            errorMessage: "All uploads failed.",
+            errorMessage: uiText("desktop.all.uploads.failed"),
           });
         }
       },
@@ -353,7 +355,7 @@ export const UploadFilesSplat = ({
                         e.stopPropagation();
                         removeFile(i);
                       }}
-                      title="Remove"
+                      title={uiText("common.remove")}
                     >
                       <XIcon />
                     </button>
@@ -377,7 +379,7 @@ export const UploadFilesSplat = ({
                           e.stopPropagation();
                           retrySingleFile(i);
                         }}
-                        title="Retry"
+                        title={uiText("common.retry")}
                       >
                         <RotateCwIcon />
                       </button>
@@ -405,9 +407,7 @@ export const UploadFilesSplat = ({
               />
               {!currentFile && (
                 <h6 className="pointer-events-auto absolute left-0 top-1/2 -mt-5 flex w-full items-center justify-center gap-2.5 text-center opacity-50">
-                  <BoxIcon />
-                  Your model preview will appear here
-                </h6>
+                  <BoxIcon />{uiText("common.your.model.preview.will.appear.here")}{" "}</h6>
               )}
               {previewStatus.type.includes("Error") && (
                 <h6 className="pointer-events-auto absolute left-0 top-1/2 -mt-5 w-full text-center">
@@ -451,9 +451,7 @@ export const UploadFilesSplat = ({
           />
           {!currentFile && (
             <h6 className="pointer-events-auto absolute left-0 top-1/2 -mt-5 flex w-full items-center justify-center gap-2.5 text-center opacity-50">
-              <BoxIcon />
-              Your model preview will appear here
-            </h6>
+              <BoxIcon />{uiText("common.your.model.preview.will.appear.here")}{" "}</h6>
           )}
           {previewStatus.type.includes("Error") && (
             <h6 className="pointer-events-auto absolute left-0 top-1/2 -mt-5 w-full text-center">
@@ -466,34 +464,26 @@ export const UploadFilesSplat = ({
       )}
 
       {(isUploading || anyUploading) && overallProgress && isMulti && (
-        <p className="text-center text-sm opacity-60">
-          Uploading {overallProgress.current} / {overallProgress.total}...
+        <p className="text-center text-sm opacity-60">{uiText("common.uploading.3")}{" "}{overallProgress.current} / {overallProgress.total}...
         </p>
       )}
 
       {!isUploading && !anyUploading && allDone && anyFailed && isMulti && (
         <p className="text-center text-sm text-red-400">
-          {fileEntries.filter((e) => e.status === "error").length} file(s) failed to upload.
-        </p>
+          {fileEntries.filter((e) => e.status === "error").length}{" "}{uiText("common.file.s.failed.to.upload")}{" "}</p>
       )}
 
       <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
+        <Button variant="secondary" onClick={onClose}>{uiText("common.cancel")}{" "}</Button>
         {!isUploading && !anyUploading && allDone && anyFailed && isMulti && (
-          <Button variant="secondary" onClick={retryAllFailed}>
-            Retry Failed
-          </Button>
+          <Button variant="secondary" onClick={retryAllFailed}>{uiText("common.retry.failed")}{" "}</Button>
         )}
         {!hasUploadStarted && (
           <Button
             variant="primary"
             onClick={handleSubmit}
             disabled={fileEntries.length === 0}
-          >
-            Upload
-          </Button>
+          >{uiText("common.upload")}{" "}</Button>
         )}
       </div>
     </div>

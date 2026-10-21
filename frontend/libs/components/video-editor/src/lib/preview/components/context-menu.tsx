@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import {
@@ -25,6 +26,7 @@ export function PreviewContextMenu({
     isVisible: boolean;
   }) => void;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const viewport = usePreviewViewport();
   const { toast } = useEditorAdapters();
@@ -33,8 +35,8 @@ export function PreviewContextMenu({
     const result = await editor.renderer.copySnapshot();
 
     if (!result.success) {
-      toast.error("Failed to copy snapshot", {
-        description: result.error ?? "Please try again",
+      toast.error(uiText("video-editor.failed.to.copy.snapshot"), {
+        description: result.error ?? uiText("desktop.please.try.again"),
       });
       return;
     }
@@ -44,8 +46,8 @@ export function PreviewContextMenu({
     const result = await editor.renderer.saveSnapshot();
 
     if (!result.success) {
-      toast.error("Failed to save snapshot", {
-        description: result.error ?? "Please try again",
+      toast.error(uiText("video-editor.failed.to.save.snapshot"), {
+        description: result.error ?? uiText("desktop.please.try.again"),
       });
       return;
     }
@@ -53,19 +55,11 @@ export function PreviewContextMenu({
 
   return (
     <ContextMenuContent className="w-56" container={container}>
-      <ContextMenuItem onClick={viewport.fitToScreen} inset>
-        Fit to screen
-      </ContextMenuItem>
+      <ContextMenuItem onClick={viewport.fitToScreen} inset>{uiText("video-editor.fit.to.screen")}{" "}</ContextMenuItem>
       <ContextMenuSeparator />
-      <ContextMenuItem onClick={onToggleFullscreen} inset>
-        Full screen
-      </ContextMenuItem>
-      <ContextMenuItem onClick={handleSaveSnapshot} inset>
-        Save snapshot
-      </ContextMenuItem>
-      <ContextMenuItem onClick={handleCopySnapshot} inset>
-        Copy snapshot
-      </ContextMenuItem>
+      <ContextMenuItem onClick={onToggleFullscreen} inset>{uiText("video-editor.full.screen")}{" "}</ContextMenuItem>
+      <ContextMenuItem onClick={handleSaveSnapshot} inset>{uiText("video-editor.save.snapshot")}{" "}</ContextMenuItem>
+      <ContextMenuItem onClick={handleCopySnapshot} inset>{uiText("video-editor.copy.snapshot")}{" "}</ContextMenuItem>
       {overlayControls.length > 0 ? <ContextMenuSeparator /> : null}
       {overlayControls.map((overlayControl) => (
         <ContextMenuCheckboxItem

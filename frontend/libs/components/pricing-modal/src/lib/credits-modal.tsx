@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Modal } from "@storyteller/ui-modal";
@@ -39,6 +40,7 @@ export function CreditsModal({
   onClose,
   onPurchase,
 }: CreditsModalProps) {
+  useUiLocale();
   const [purchasingId, setPurchasingId] = useState<string | null>(null);
 
   const handlePurchase = async (pack: CreditPack) => {
@@ -73,12 +75,9 @@ export function CreditsModal({
     >
       <div className="relative overflow-hidden">
         <div className="relative px-8 pt-10 pb-8 sm:px-10 sm:pt-11 sm:pb-9">
-          <h2 className="font-display text-3xl font-semibold tracking-tight text-white sm:text-[34px] sm:leading-[1.1]">
-            Buy <span className="text-primary">credits</span>
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-white sm:text-[34px] sm:leading-[1.1]">{uiText("common.buy")}{" "}<span className="text-primary">{uiText("pricing-modal.credits")}</span>
           </h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-white/55">
-            One-time credit packs. No subscription required.
-          </p>
+          <p className="mt-3 text-[15px] leading-relaxed text-white/55">{uiText("pricing-modal.one.time.credit.packs.no.subscription.required")}{" "}</p>
 
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {creditPacks.map((pack) => {
@@ -116,8 +115,7 @@ export function CreditsModal({
                           <>
                             {pack.base.toLocaleString()} +{" "}
                             <span className="font-semibold text-white">
-                              {pack.bonus.toLocaleString()} bonus
-                            </span>
+                              {pack.bonus.toLocaleString()}{" "}{uiText("pricing-modal.bonus")}{" "}</span>
                           </>
                         ) : (
                           "credits"
@@ -134,9 +132,7 @@ export function CreditsModal({
                       {isLoading ? (
                         <LoaderCircleIcon className="animate-spin" />
                       ) : (
-                        <>
-                          Buy
-                          <ArrowRightIcon className="text-xs transition-transform group-hover:translate-x-0.5" />
+                        <>{uiText("common.buy")}{" "}<ArrowRightIcon className="text-xs transition-transform group-hover:translate-x-0.5" />
                         </>
                       )}
                     </span>
@@ -146,9 +142,7 @@ export function CreditsModal({
             })}
           </div>
 
-          <p className="mt-6 text-center text-xs text-white/35">
-            Secure checkout via Stripe.
-          </p>
+          <p className="mt-6 text-center text-xs text-white/35">{uiText("pricing-modal.secure.checkout.via.stripe")}{" "}</p>
         </div>
       </div>
     </Modal>

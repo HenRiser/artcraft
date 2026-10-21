@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, localize } from "@storyteller/common";
 import { ArrowRightIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
 import { twMerge } from "tailwind-merge";
@@ -11,11 +12,12 @@ import {
 } from "~/config/appMenu";
 
 export const AppsIndexPage = () => {
+  useUiLocale();
   const generateApps = useGenerateApps();
   const editApps = useEditApps();
   const categories = [
-    { title: "Create", apps: generateApps },
-    { title: "Edit", apps: editApps },
+    { get title() { return uiText("common.create"); }, apps: generateApps },
+    { get title() { return uiText("common.edit"); }, apps: editApps },
   ];
 
   return (
@@ -24,15 +26,9 @@ export const AppsIndexPage = () => {
     // wrapper instead.
     <div className="fixed inset-0 overflow-y-auto bg-ui-background pt-[56px] text-base-fg">
       <main className="mx-auto w-full max-w-6xl px-5 pb-20 pt-8 sm:px-8 sm:pt-12">
-        <p className="hud-label mb-4 text-ui-accent-ink">
-          Your creative workspace
-        </p>
-        <h1 className="max-w-3xl font-display text-3xl leading-tight tracking-tight sm:text-5xl">
-          What will you <span className="text-ui-accent-ink">craft</span> today?
-        </h1>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-base-fg/70 sm:text-base">
-          Start with an idea. Choose a tool to bring it to life.
-        </p>
+        <p className="hud-label mb-4 text-ui-accent-ink">{uiText("apps.your.creative.workspace")}{" "}</p>
+        <h1 className="max-w-3xl font-display text-3xl leading-tight tracking-tight sm:text-5xl">{uiText("apps.what.will.you")}{" "}<span className="text-ui-accent-ink">{uiText("apps.craft")}</span>{" "}{uiText("apps.today")}{" "}</h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-base-fg/70 sm:text-base">{uiText("apps.start.with.an.idea.choose.a.tool.to.bring.it.to.life")}{" "}</p>
 
         {categories.map((category, index) => (
           <section
@@ -58,6 +54,7 @@ export const AppsIndexPage = () => {
 };
 
 function AppCard({ app }: { app: FullAppItem }) {
+  useUiLocale();
   const palette = getAppCardPalette(app.id);
   const enabled = !!app.action;
 
@@ -95,7 +92,7 @@ function AppCard({ app }: { app: FullAppItem }) {
                       : "border-primary/30 text-ui-accent-ink",
                   )}
                 >
-                  {app.badge}
+                  {localize(app.badge)}
                 </span>
               )}
             </div>

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { CheckIcon, CircleAlertIcon, CopyIcon, LoaderCircleIcon, WandSparklesIcon, XIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -37,6 +38,7 @@ export const VFXResultCard = ({
   promptLabelClassName = "text-white/50",
   tryButtonClassName = "border-primary/40 bg-primary/15 text-white hover:bg-primary/25",
 }: VFXResultCardProps) => {
+  useUiLocale();
   return (
     <div
       className={twMerge(
@@ -57,39 +59,35 @@ export const VFXResultCard = ({
             <LoaderCircleIcon
               
               className="h-8 w-8 animate-spin" />
-            <span className="text-sm">Generating background change...</span>
+            <span className="text-sm">{uiText("vfx.generating.background.change")}</span>
           </div>
         ) : data.status === "failed" ? (
           <div className="flex h-full w-full flex-col items-center justify-center gap-3 px-4 text-center text-red-300">
             <CircleAlertIcon  className="h-8 w-8" />
             <span className="text-sm">
-              {data.failureReason || "Generation failed"}
+              {data.failureReason || uiText("common.generation.failed")}
             </span>
             {onDismiss && (
               <button
                 onClick={onDismiss}
                 className="mt-1 flex items-center gap-1.5 rounded-md bg-white/5 px-3 py-1.5 text-xs text-white/60 transition-colors hover:bg-white/10 hover:text-white/80"
               >
-                <XIcon />
-                Dismiss
-              </button>
+                <XIcon />{uiText("common.dismiss")}{" "}</button>
             )}
           </div>
         ) : null}
         {data.title && data.status === "complete" && (
-          <div className="absolute left-3 top-3 rounded-md bg-black/60 px-2 py-1 text-xs font-medium uppercase tracking-wider text-white/80 backdrop-blur-sm">
-            Output
-          </div>
+          <div className="absolute left-3 top-3 rounded-md bg-black/60 px-2 py-1 text-xs font-medium uppercase tracking-wider text-white/80 backdrop-blur-sm">{uiText("vfx.output")}{" "}</div>
         )}
       </div>
 
       <aside className="flex min-w-0 flex-col gap-2">
         {data.source && (
-          <SidePanelMedia label="Source" url={data.source.url} isVideo />
+          <SidePanelMedia label={uiText("common.source")} url={data.source.url} isVideo />
         )}
-        {data.mask && <SidePanelMedia label="Alpha" url={data.mask.url} />}
+        {data.mask && <SidePanelMedia label={uiText("vfx.alpha")} url={data.mask.url} />}
         {data.reference && (
-          <SidePanelMedia label="Reference" url={data.reference.url} />
+          <SidePanelMedia label={uiText("common.reference")} url={data.reference.url} />
         )}
         {data.prompt && data.prompt.trim().length > 0 && (
           <div
@@ -105,7 +103,7 @@ export const VFXResultCard = ({
                 promptLabelClassName,
               )}
             >
-              <span>Prompt</span>
+              <span>{uiText("common.prompt")}</span>
               <CopyPromptButton text={data.prompt} />
             </div>
             <div className="leading-relaxed">{data.prompt}</div>
@@ -119,9 +117,7 @@ export const VFXResultCard = ({
               tryButtonClassName,
             )}
           >
-            <WandSparklesIcon  className="h-3 w-3" />
-            Try this
-          </button>
+            <WandSparklesIcon  className="h-3 w-3" />{uiText("vfx.try.this")}{" "}</button>
         )}
       </aside>
     </div>
@@ -133,6 +129,7 @@ interface CopyPromptButtonProps {
 }
 
 const CopyPromptButton = ({ text }: CopyPromptButtonProps) => {
+  useUiLocale();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -155,7 +152,7 @@ const CopyPromptButton = ({ text }: CopyPromptButtonProps) => {
         icon={copied ? CheckIcon : CopyIcon}
         className="h-2.5 w-2.5"
       />
-      <span>{copied ? "Copied!" : "Copy"}</span>
+      <span>{copied ? uiText("common.copied.2") : uiText("common.copy")}</span>
     </button>
   );
 };
@@ -166,7 +163,7 @@ interface SidePanelMediaProps {
   isVideo?: boolean;
 }
 
-const SidePanelMedia = ({ label, url, isVideo }: SidePanelMediaProps) => (
+const SidePanelMedia = ({ label, url, isVideo }: SidePanelMediaProps) => { useUiLocale(); return (
   <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black/40 ring-1 ring-white/10">
     {isVideo ? (
       <video
@@ -184,4 +181,4 @@ const SidePanelMedia = ({ label, url, isVideo }: SidePanelMediaProps) => (
       {label}
     </span>
   </div>
-);
+); };

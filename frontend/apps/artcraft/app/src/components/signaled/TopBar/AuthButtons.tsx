@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useSignals } from "@preact/signals-react/runtime";
 import { AUTH_STATUS } from "~/enums";
 import { authentication } from "~/signals";
@@ -8,6 +9,7 @@ export const AuthButtons = ({
 }: {
   loginSignUpPressed: () => void;
 }) => {
+  useUiLocale();
   useSignals();
 
   const { status } = authentication;
@@ -23,9 +25,7 @@ export const AuthButtons = ({
             onClick={() => {
               loginSignUpPressed();
             }}
-          >
-            Login / Sign Up
-          </button>
+          >{uiText("signaled.login.sign.up")}{" "}</button>
         </div>
       </>
     );

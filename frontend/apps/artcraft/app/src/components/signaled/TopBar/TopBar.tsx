@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, localize } from "@storyteller/common";
 import { CalculatorIcon, CheckIcon, ChevronRightIcon, CircleAlertIcon, CoinsIcon, GemIcon, HouseIcon, ImagesIcon, MinusIcon, PictureInPicture2Icon, SettingsIcon, SquareIcon, XIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
 import { signal } from "@preact/signals-react";
@@ -90,9 +91,9 @@ const CREDITS_POLL_INTERVAL = 60_000; // milliseconds
 const appMenuTabs: MenuIconItem[] = [
   {
     id: "APPS",
-    label: "Home",
+    get label() { return uiText("signaled.home"); },
     icon: <HouseIcon />,
-    description: "Explore all apps and miniapps",
+    get description() { return uiText("signaled.explore.all.apps.and.miniapps"); },
     large: true,
     tooltipContent: <AppsQuickMenu />,
     tooltipInteractive: true,
@@ -100,10 +101,10 @@ const appMenuTabs: MenuIconItem[] = [
   },
   ...APP_DESCRIPTORS.map((d) => ({
     id: d.id,
-    label: d.label,
+    get label() { return d.label; },
     icon: <DynamicIcon icon={d.icon} />,
     imageSrc: d.imageSrc,
-    description: d.description,
+    get description() { return d.description; },
     large: d.large,
   })),
 ];
@@ -116,6 +117,7 @@ const CreditsCoinWithStatus = ({
 }: {
   iconStatus: CreditsIconStatus;
 }) => {
+  useUiLocale();
   const showBadge = iconStatus !== "hidden";
 
   const badgeColorClass =
@@ -129,10 +131,10 @@ const CreditsCoinWithStatus = ({
 
   const tooltipMessage =
     iconStatus === "failed"
-      ? "Couldn't refresh your balance."
+      ? uiText("desktop.couldn.t.refresh.your.balance")
       : iconStatus === "recovered"
-        ? "Balance up to date."
-        : "Refreshing your balance — current amount may not be up to date.";
+        ? uiText("desktop.balance.up.to.date")
+        : uiText("desktop.refreshing.your.balance.current.amount.may.not.be.up.to.date");
 
   const showRetry = iconStatus === "slow" || iconStatus === "failed";
 
@@ -158,9 +160,7 @@ const CreditsCoinWithStatus = ({
               variant="secondary"
               className="h-7 self-start px-2 text-xs"
               onClick={handleRetry}
-            >
-              Retry
-            </Button>
+            >{uiText("common.retry")}{" "}</Button>
           )}
         </div>
       }
@@ -180,6 +180,7 @@ const CreditsCoinWithStatus = ({
 };
 
 export const TopBar = ({ pageName }: Props) => {
+  useUiLocale();
   useSignals();
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -389,7 +390,7 @@ export const TopBar = ({ pageName }: Props) => {
     }
   };
 
-  const pageCrumbs = getPageCrumbs();
+  const pageCrumbs = getPageCrumbs().map(localize);
 
   const { toggleModal: toggleSubscriptionModal } = usePricingModalStore();
   const { toggleModal: toggleCreditsModal } = useCreditsModalStore();
@@ -432,7 +433,7 @@ export const TopBar = ({ pageName }: Props) => {
       >
         <nav
           className="mx-auto grid h-[56px] w-screen grid-cols-3 items-center justify-between ps-3"
-          aria-label="navigation"
+          aria-label={uiText("signaled.navigation")}
           data-tauri-drag-region
         >
           <div
@@ -552,18 +553,14 @@ export const TopBar = ({ pageName }: Props) => {
                 {(close) => (
                   <div className="w-72 p-3 text-white">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-sm font-medium text-white/70">
-                        Your credit balance
-                      </span>
+                      <span className="text-sm font-medium text-white/70">{uiText("signaled.your.credit.balance")}{" "}</span>
                       <button
                         className="text-sm font-medium text-primary transition-colors hover:text-primary-300"
                         onClick={() => {
                           close();
                           toggleCreditsModal();
                         }}
-                      >
-                        Buy credits
-                      </button>
+                      >{uiText("common.buy.credits")}{" "}</button>
                     </div>
                     <div className="flex items-center gap-2 text-3xl font-semibold tracking-tight text-white">
                       <CoinsIcon className="text-xl text-primary" />
@@ -577,9 +574,7 @@ export const TopBar = ({ pageName }: Props) => {
                         useCostBreakdownModalStore.getState().openModal();
                       }}
                     >
-                      <CalculatorIcon />
-                      Cost calculator
-                    </button>
+                      <CalculatorIcon />{uiText("signaled.cost.calculator")}{" "}</button>
 
                     <div className="mt-3 flex gap-2">
                       <Button
@@ -589,9 +584,7 @@ export const TopBar = ({ pageName }: Props) => {
                           close();
                           handleOpenBillingSettings();
                         }}
-                      >
-                        See details
-                      </Button>
+                      >{uiText("signaled.see.details")}{" "}</Button>
                       <Button
                         variant="primary"
                         className="h-9 grow"
@@ -600,9 +593,7 @@ export const TopBar = ({ pageName }: Props) => {
                           toggleSubscriptionModal();
                         }}
                         icon={GemIcon}
-                      >
-                        Support
-                      </Button>
+                      >{uiText("signaled.support")}{" "}</Button>
                     </div>
                   </div>
                 )}
@@ -613,10 +604,8 @@ export const TopBar = ({ pageName }: Props) => {
                   variant="primary"
                   icon={GemIcon}
                   onClick={toggleSubscriptionModal}
-                  className="h-8 px-3"
-                >
-                  Upgrade
-                </Button>
+                  className="h-8 shrink-0 whitespace-nowrap px-3"
+                >{uiText("signaled.upgrade")}{" "}</Button>
               )}
 
               <TaskQueue />
@@ -624,20 +613,18 @@ export const TopBar = ({ pageName }: Props) => {
               <button
                 type="button"
                 onClick={handleOpenGalleryModal}
-                aria-label="My Library"
+                aria-label={uiText("common.my.library")}
                 className="flex h-8 items-center gap-1.5 rounded-[3px] border border-white/15 px-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/80 transition-colors hover:border-white/30 hover:bg-white/10"
               >
                 <ImagesIcon className="text-[11px]" />
-                <span className="hidden whitespace-nowrap xl:block">
-                  My Library
-                </span>
+                <span className="hidden whitespace-nowrap xl:block">{uiText("common.my.library")}{" "}</span>
               </button>
 
               <UploadImagesButton />
 
-              <Tooltip content="Settings" position="bottom" delay={300}>
+              <Tooltip content={uiText("common.settings")} position="bottom" delay={300}>
                 <Button
-                  aria-label="Settings"
+                  aria-label={uiText("common.settings")}
                   variant="secondary"
                   icon={SettingsIcon}
                   iconClassName="h-4 w-4 shrink-0"

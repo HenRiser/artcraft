@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   GridTableIcon,
   Layout3ColumnIcon as LayoutThreeColumnIcon,
@@ -24,6 +25,7 @@ function GridLines({
   cols: number;
   color: string;
 }) {
+  useUiLocale();
   const verticals = Array.from(
     { length: cols - 1 },
     (_, i) => ((i + 1) / cols) * 100,
@@ -54,6 +56,7 @@ function GridLines({
 }
 
 function GridGuidePreview() {
+  useUiLocale();
   return (
     <div className="relative aspect-video w-full">
       <GridLines rows={3} cols={4} color="bg-foreground/15" />
@@ -62,6 +65,7 @@ function GridGuidePreview() {
 }
 
 function GridGuideOverlay() {
+  useUiLocale();
   const { rows, cols } = usePreviewStore((s) => s.gridConfig);
 
   return (
@@ -76,6 +80,7 @@ function GridGuideOverlay() {
 // Until that lands, fall back to plain number inputs labelled with the
 // same row/column icons so the guide is still configurable.
 function GridGuideOptions() {
+  useUiLocale();
   const rows = usePreviewStore((s) => s.gridConfig.rows);
   const cols = usePreviewStore((s) => s.gridConfig.cols);
   const setGridConfig = usePreviewStore((s) => s.setGridConfig);
@@ -122,7 +127,7 @@ function GridGuideOptions() {
 
 export const gridGuide = {
   id: "grid",
-  label: "Grid",
+  get label() { return uiText("common.grid"); },
   renderPreview: () => <GridGuidePreview />,
   renderTriggerIcon: () => <HugeiconsIcon icon={GridTableIcon} />,
   renderOverlay: () => <GridGuideOverlay />,

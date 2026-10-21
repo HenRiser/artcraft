@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEditor } from "../../editor/use-editor";
 import { useElementSelection } from "../hooks/element/use-element-selection";
 import {
@@ -59,6 +60,7 @@ export function TimelineToolbar({
   minZoom: number;
   setZoomLevel: ({ zoom }: { zoom: number }) => void;
 }) {
+  useUiLocale();
   const handleZoom = ({ direction }: { direction: "in" | "out" }) => {
     const newZoomLevel =
       direction === "in"
@@ -86,6 +88,7 @@ export function TimelineToolbar({
 }
 
 function ToolbarLeftSection() {
+  useUiLocale();
   const editor = useEditor();
   const mediaAssets = useEditor((currentEditor) =>
     currentEditor.media.getAssets(),
@@ -121,7 +124,7 @@ function ToolbarLeftSection() {
       ? getSourceAudioActionLabel({
           element: selectedElement.element,
         })
-      : "Extract audio";
+      : uiText("desktop.extract.audio");
   const isSelectedSourceAudioSeparated =
     selectedElement?.element.type === "video" &&
     isSourceAudioSeparated({
@@ -144,19 +147,19 @@ function ToolbarLeftSection() {
       <TooltipProvider delayDuration={500}>
         <ToolbarButton
           icon={<HugeiconsIcon icon={ScissorIcon} />}
-          tooltip="Split element"
+          tooltip={uiText("video-editor.split.element")}
           onClick={({ event }) => handleAction({ action: "split", event })}
         />
 
         <ToolbarButton
           icon={<HugeiconsIcon icon={AlignLeftIcon} />}
-          tooltip="Split left"
+          tooltip={uiText("video-editor.split.left")}
           onClick={({ event }) => handleAction({ action: "split-left", event })}
         />
 
         <ToolbarButton
           icon={<HugeiconsIcon icon={AlignRightIcon} />}
-          tooltip="Split right"
+          tooltip={uiText("video-editor.split.right")}
           onClick={({ event }) =>
             handleAction({ action: "split-right", event })
           }
@@ -177,7 +180,7 @@ function ToolbarLeftSection() {
 
         <ToolbarButton
           icon={<HugeiconsIcon icon={Copy01Icon} />}
-          tooltip="Duplicate element"
+          tooltip={uiText("video-editor.duplicate.element")}
           onClick={({ event }) =>
             handleAction({ action: "duplicate-selected", event })
           }
@@ -185,14 +188,14 @@ function ToolbarLeftSection() {
 
         <ToolbarButton
           icon={<HugeiconsIcon icon={SnowIcon} />}
-          tooltip="Freeze frame (coming soon)"
+          tooltip={uiText("video-editor.freeze.frame.coming.soon")}
           disabled={true}
           onClick={({ event: _event }) => {}}
         />
 
         <ToolbarButton
           icon={<HugeiconsIcon icon={Delete02Icon} />}
-          tooltip="Delete element"
+          tooltip={uiText("video-editor.delete.element")}
           onClick={({ event }) =>
             handleAction({ action: "delete-selected", event })
           }
@@ -204,7 +207,7 @@ function ToolbarLeftSection() {
           <ToolbarButton
             icon={<HugeiconsIcon icon={Bookmark02Icon} />}
             isActive={isCurrentlyBookmarked}
-            tooltip={isCurrentlyBookmarked ? "Remove bookmark" : "Add bookmark"}
+            tooltip={isCurrentlyBookmarked ? uiText("video-editor.remove.bookmark") : uiText("video-editor.add.bookmark")}
             onClick={({ event }) =>
               handleAction({ action: "toggle-bookmark", event })
             }
@@ -246,13 +249,14 @@ function ToolbarLeftSection() {
 }
 
 function SceneSelector() {
+  useUiLocale();
   const editor = useEditor();
   const currentScene = editor.scenes.getActiveScene();
 
   return (
     <div>
       <SplitButton className="border-foreground/10 border">
-        <SplitButtonLeft>{currentScene?.name || "No Scene"}</SplitButtonLeft>
+        <SplitButtonLeft>{currentScene?.name || uiText("video-editor.no.scene")}</SplitButtonLeft>
         <SplitButtonSeparator />
         <ScenesView>
           <SplitButtonRight onClick={() => {}}>
@@ -275,6 +279,7 @@ function ToolbarRightSection({
   onZoomChange: (zoom: number) => void;
   onZoom: (options: { direction: "in" | "out" }) => void;
 }) {
+  useUiLocale();
   const snappingEnabled = useTimelineStore((s) => s.snappingEnabled);
   const rippleEditingEnabled = useTimelineStore((s) => s.rippleEditingEnabled);
   const toggleSnapping = useTimelineStore((s) => s.toggleSnapping);
@@ -286,14 +291,14 @@ function ToolbarRightSection({
         <ToolbarButton
           icon={<HugeiconsIcon icon={MagnetIcon} />}
           isActive={snappingEnabled}
-          tooltip="Auto snapping"
+          tooltip={uiText("video-editor.auto.snapping")}
           onClick={() => toggleSnapping()}
         />
 
         <ToolbarButton
           icon={<OcRippleIcon size={24} className="scale-110" />}
           isActive={rippleEditingEnabled}
-          tooltip="Ripple editing"
+          tooltip={uiText("video-editor.ripple.editing")}
           onClick={() => toggleRippleEditing()}
         />
       </TooltipProvider>
@@ -345,6 +350,7 @@ function ToolbarButton({
   isActive?: boolean;
   buttonWrapper?: (button: React.ReactElement) => React.ReactElement;
 }) {
+  useUiLocale();
   const button = (
     <Button
       variant={isActive ? "secondary" : "text"}

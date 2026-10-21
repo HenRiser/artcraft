@@ -4,15 +4,19 @@ use crate::core::state::app_preferences::preferred_download_filename::PreferredD
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
 use errors::AnyhowResult;
 use serde_derive::{Deserialize, Serialize};
+use crate::core::state::app_preferences::ui_language::UiLanguage;
 
 /// Vector clock versioning string rather than semver.
 /// - Version 1 - initial version.
 /// - Version 2 - added "delete_file_sound", marked optionals "skip_serializing_if"
 /// - Version 3 - added auto download and filename convention.
-const CURRENT_VERSION: &str = "3";
+/// - Version 4 - added the UI language; older files default to simplified Chinese.
+const CURRENT_VERSION: &str = "4";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppPreferencesSerializable {
+  #[serde(default, skip_serializing_if = "Option::is_none")]
+  pub ui_language: Option<String>,
   /// Versioning string.
   pub version: String,
   
@@ -61,6 +65,10 @@ impl AppPreferencesSerializable {
   pub fn from_preferences(preferences: &AppPreferences) -> Self {
     Self {
       version: CURRENT_VERSION.to_string(),
+      ui_language: Some(match preferences.ui_language {
+        UiLanguage::SimplifiedChinese => "zh-CN",
+        UiLanguage::English => "en",
+      }.to_string()),
       preferred_download_directory: Some(preferences.preferred_download_directory.clone()),
       maybe_preferred_download_filename: Some(preferences.preferred_download_filename.clone()),
       maybe_auto_download: Some(preferences.auto_download),
@@ -74,6 +82,8 @@ impl AppPreferencesSerializable {
 
   pub fn to_preferences(&self) -> AppPreferences {
     let mut preferences = AppPreferences::default();
+    preferences.ui_language = self.ui_language.as_deref()
+      .and_then(UiLanguage::from_value).unwrap_or_default();
 
     if let Some(preferred_download_directory) = &self.preferred_download_directory {
       preferences.preferred_download_directory = preferred_download_directory.clone();
@@ -102,6 +112,19 @@ impl AppPreferencesSerializable {
 #[cfg(test)]
 mod tests {
   use super::*;
+
+  #[test]
+  fn language_preference_is_backward_compatible_and_round_trips() {
+    for value in [serde_json::json!({"version": "3"}), serde_json::json!({"version": "4", "ui_language": "invalid"})] {
+      let old: AppPreferencesSerializable = serde_json::from_value(value).unwrap();
+      assert_eq!(old.to_preferences().ui_language, UiLanguage::SimplifiedChinese);
+    }
+    let prefs = AppPreferences { ui_language: UiLanguage::English, ..AppPreferences::default() };
+    let saved = serde_json::to_value(prefs.to_serializable()).unwrap();
+    assert_eq!(saved["ui_language"], "en");
+    let loaded: AppPreferencesSerializable = serde_json::from_value(saved).unwrap();
+    assert_eq!(loaded.to_preferences().ui_language, UiLanguage::English);
+  }
 
   #[test]
   fn old_preferences_keep_the_directory_and_default_auto_download_off() {

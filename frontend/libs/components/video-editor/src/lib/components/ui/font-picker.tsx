@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useState, useMemo, useRef, useEffect, useCallback, type CSSProperties } from "react";
@@ -19,9 +20,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { TextIcon } from "@hugeicons/core-free-icons";
 
 const FONT_TABS = [
-  { key: "all", label: "All fonts" },
-  { key: "my-fonts", label: "My fonts" },
-  { key: "favorites", label: "Favorites" },
+  { key: "all", get label() { return uiText("video-editor.all.fonts"); } },
+  { key: "my-fonts", get label() { return uiText("video-editor.my.fonts"); } },
+  { key: "favorites", get label() { return uiText("video-editor.favorites"); } },
 ] as const;
 
 type FontTab = (typeof FONT_TABS)[number]["key"];
@@ -43,6 +44,7 @@ export function FontPicker({
   onValueChange,
   className,
 }: FontPickerProps) {
+  useUiLocale();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<FontTab>("all");
@@ -98,7 +100,7 @@ export function FontPicker({
             <HugeiconsIcon icon={TextIcon} />
           </span>
           <span className="truncate" style={{ fontFamily: defaultValue }}>
-            {defaultValue ?? "Select a font"}
+            {defaultValue ?? uiText("desktop.select.a.font")}
           </span>
         </div>
         <ChevronDown className="size-3 shrink-0 opacity-50" />
@@ -120,7 +122,7 @@ export function FontPicker({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 shrink-0 opacity-50" />
           <Input
             ref={searchInputRef}
-            placeholder={`Search ${activeTabLabel}...`}
+            placeholder={uiText("video-editor.search.value", { value0: activeTabLabel })}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             size="xs"
@@ -145,26 +147,18 @@ export function FontPicker({
           ))}
         </div>
         {status === "loading" && (
-          <div className="py-8 text-center text-sm text-muted-foreground">
-            Loading fonts...
-          </div>
+          <div className="py-8 text-center text-sm text-muted-foreground">{uiText("video-editor.loading.fonts")}{" "}</div>
         )}
         {status === "error" && (
           <div className="flex flex-col items-center gap-3 py-8 px-4">
-            <p className="text-sm text-muted-foreground text-center">
-              Failed to load font previews.
-            </p>
-            <Button variant="outline" size="sm" onClick={handleRetry}>
-              Retry
-            </Button>
+            <p className="text-sm text-muted-foreground text-center">{uiText("video-editor.failed.to.load.font.previews")}{" "}</p>
+            <Button variant="outline" size="sm" onClick={handleRetry}>{uiText("common.retry")}{" "}</Button>
           </div>
         )}
         {status === "idle" &&
           fontNames.length > 0 &&
           filteredFonts.length === 0 && (
-            <div className="py-6 text-center text-sm text-muted-foreground">
-              No fonts found.
-            </div>
+            <div className="py-6 text-center text-sm text-muted-foreground">{uiText("video-editor.no.fonts.found")}{" "}</div>
           )}
         {status === "idle" && atlas && filteredFonts.length > 0 && (
           <List
@@ -187,6 +181,7 @@ export function FontPicker({
 }
 
 function FontSpritePreview({ entry }: { entry: FontAtlasEntry }) {
+  useUiLocale();
   return (
     <div
       className="shrink-0"
@@ -222,6 +217,7 @@ function FontRow({
   selectedFont,
   onFontSelect,
 }: RowComponentProps<FontRowProps>) {
+  useUiLocale();
   const fontName = filteredFonts[index];
   const entry = atlas.fonts[fontName];
   const isSelected = fontName === selectedFont;

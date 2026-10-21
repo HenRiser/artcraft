@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { twMerge } from "tailwind-merge";
@@ -139,6 +140,7 @@ const AnimatedBackdrop = ({
   disableHotkeyInput: (level: number) => void;
   enableHotkeyInput: (level: number) => void;
 }) => {
+  useUiLocale();
   useEffect(() => {
     disableHotkeyInput(DomLevels.DIALOGUE);
     return () => {
@@ -161,7 +163,7 @@ const AnimatedBackdrop = ({
 };
 
 // Drag handle subcomponent
-const DragHandle = ({ children }: { children: ReactNode }) => <>{children}</>;
+const DragHandle = ({ children }: { children: ReactNode }) => { useUiLocale(); return <>{children}</>; };
 
 // Context for expanded state
 interface ModalExpandContextType {
@@ -179,6 +181,7 @@ interface ExpandButtonProps {
 }
 
 const ExpandButton = ({ className, size = "md" }: ExpandButtonProps) => {
+  useUiLocale();
   const ctx = useContext(ModalExpandContext);
   if (!ctx) return null;
   const { expanded, toggleExpanded } = ctx;
@@ -190,7 +193,7 @@ const ExpandButton = ({ className, size = "md" }: ExpandButtonProps) => {
   return (
     <button
       type="button"
-      aria-label={expanded ? "Restore modal size" : "Expand modal"}
+      aria-label={expanded ? uiText("modal.restore.modal.size") : uiText("modal.expand.modal")}
       onClick={toggleExpanded}
       className={twMerge(
         "flex items-center justify-center rounded-[3px] bg-black/40 text-white/60 transition-colors hover:bg-white hover:text-black",
@@ -280,6 +283,7 @@ export const Modal = ({
   accessibleTitle?: string;
   accessibleDescription?: string;
 }) => {
+  useUiLocale();
   // Draggable logic
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null,

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { createContext, useContext } from "react";
@@ -232,6 +233,7 @@ export function TimelineElement({
   dragView,
   isDropTarget = false,
 }: TimelineElementProps) {
+  useUiLocale();
   const mediaAssets = useEditor((e) => e.media.getAssets());
   const { selectedElements } = useElementSelection();
   const requestRevealMedia = useAssetsPanelStore((s) => s.requestRevealMedia);
@@ -345,7 +347,7 @@ export function TimelineElement({
   const sourceAudioLabel =
     element.type === "video"
       ? getSourceAudioActionLabel({ element })
-      : "Extract audio";
+      : uiText("desktop.extract.audio");
   const isElementSourceAudioSeparated =
     element.type === "video" && isSourceAudioSeparated({ element });
   const hasKeyframes = elementKeyframes.length > 0;
@@ -428,17 +430,13 @@ export function TimelineElement({
           <ActionMenuItem
             action="split"
             icon={<HugeiconsIcon icon={ScissorIcon} />}
-          >
-            Split
-          </ActionMenuItem>
+          >{uiText("video-editor.split")}{" "}</ActionMenuItem>
           <CopyMenuItem />
           {selectedElements.length === 1 && (
             <ActionMenuItem
               action="duplicate-selected"
               icon={<HugeiconsIcon icon={Copy01Icon} />}
-            >
-              Duplicate
-            </ActionMenuItem>
+            >{uiText("common.duplicate")}{" "}</ActionMenuItem>
           )}
           {canElementHaveAudio(element) && hasAudio && (
             <MuteMenuItem
@@ -479,7 +477,7 @@ export function TimelineElement({
                 toggleElementExpanded(element.id);
               }}
             >
-              {isExpanded ? "Collapse keyframes" : "Expand keyframes"}
+              {isExpanded ? uiText("video-editor.collapse.keyframes") : uiText("video-editor.expand.keyframes")}
             </ContextMenuItem>
           )}
           {selectedElements.length === 1 && hasMediaId(element) && (
@@ -489,15 +487,11 @@ export function TimelineElement({
                 onClick={(event: React.MouseEvent) =>
                   handleRevealInMedia({ event })
                 }
-              >
-                Reveal media
-              </ContextMenuItem>
+              >{uiText("video-editor.reveal.media")}{" "}</ContextMenuItem>
               <ContextMenuItem
                 icon={<HugeiconsIcon icon={Exchange01Icon} />}
                 disabled
-              >
-                Replace media
-              </ContextMenuItem>
+              >{uiText("video-editor.replace.media")}{" "}</ContextMenuItem>
             </>
           )}
           <ContextMenuSeparator />
@@ -549,6 +543,7 @@ function ElementInner({
   }) => void;
   isDropTarget?: boolean;
 }) {
+  useUiLocale();
   const visibleElement = displayElement ?? element;
   const isReducedOpacity =
     (canElementBeHidden(visibleElement) && visibleElement.hidden) ||
@@ -641,6 +636,7 @@ function ResizeHandle({
     side: "left" | "right";
   }) => void;
 }) {
+  useUiLocale();
   const isLeft = side === "left";
   return (
     <button
@@ -651,7 +647,7 @@ function ResizeHandle({
       )}
       onMouseDown={(event) => onResizeStart({ event, element, track, side })}
       onClick={(event) => event.stopPropagation()}
-      aria-label={`${isLeft ? "Left" : "Right"} resize handle`}
+      aria-label={uiText("video-editor.value.resize.handle", { value0: isLeft ? "Left" : "Right" })}
     ></button>
   );
 }
@@ -687,6 +683,7 @@ function KeyframeIndicators({
     elementLeft: number;
   }) => number;
 }) {
+  useUiLocale();
   const { isKeyframeSelected } = useKeyframeSelection();
   const orderedKeyframes = indicators.flatMap(
     (indicator) => indicator.keyframes,
@@ -724,7 +721,7 @@ function KeyframeIndicators({
             indicatorTime: indicator.time,
           })
         }
-        aria-label="Select keyframe"
+        aria-label={uiText("common.select.keyframe")}
       >
         <HugeiconsIcon
           icon={KeyframeIcon}
@@ -790,6 +787,7 @@ function ExpandedKeyframeLanes({
     elementLeft: number;
   }) => number;
 }) {
+  useUiLocale();
   const { isKeyframeSelected } = useKeyframeSelection();
 
   const orderedKeyframes = useMemo(
@@ -877,7 +875,7 @@ function ExpandedKeyframeLanes({
                       indicatorTime: kf.time,
                     });
                   }}
-                  aria-label="Select keyframe"
+                  aria-label={uiText("common.select.keyframe")}
                 >
                   <HugeiconsIcon
                     icon={KeyframeIcon}
@@ -908,6 +906,7 @@ function TextElementContent({
 }: {
   element: Extract<TimelineElementType, { type: "text" }>;
 }) {
+  useUiLocale();
   return (
     <div className="flex size-full items-center justify-start pl-2">
       <span className="truncate text-xs text-white">
@@ -922,6 +921,7 @@ function EffectElementContent({
 }: {
   element: Extract<TimelineElementType, { type: "effect" }>;
 }) {
+  useUiLocale();
   return (
     <div className="flex size-full items-center justify-start gap-1 pl-2">
       <HugeiconsIcon
@@ -938,6 +938,7 @@ function StickerElementContent({
 }: {
   element: Extract<TimelineElementType, { type: "sticker" }>;
 }) {
+  useUiLocale();
   return (
     <div className="flex size-full items-center gap-2 pl-2">
       <img
@@ -960,6 +961,7 @@ function GraphicElementContent({
 }: {
   element: Extract<TimelineElementType, { type: "graphic" }>;
 }) {
+  useUiLocale();
   return (
     <div className="flex size-full items-center gap-2 pl-2">
       <img
@@ -985,6 +987,7 @@ function AudioElementContent({
   element: AudioElement;
   trackId: string;
 }) {
+  useUiLocale();
   const pixelsPerSecond = useContext(PixelsPerSecondContext);
   if (pixelsPerSecond === null) {
     throw new Error(
@@ -1058,6 +1061,7 @@ function EffectsButton({
   element: VideoElement | ImageElement;
   track: TimelineTrack;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const setActiveTab = usePropertiesStore((s) => s.setActiveTab);
 
@@ -1088,6 +1092,7 @@ function TiledMediaContent({
   element: VideoElement | ImageElement;
   track: TimelineTrack;
 }) {
+  useUiLocale();
   const mediaAssets = useEditor((e) => e.media.getAssets());
 
   const mediaAsset = mediaAssets.find((asset) => asset.id === element.mediaId);
@@ -1142,6 +1147,7 @@ function MediaElementHeader({
   leading?: ReactNode;
   hasFade?: boolean;
 }) {
+  useUiLocale();
   if (!name && !leading) {
     return null;
   }
@@ -1164,6 +1170,7 @@ function MediaElementHeader({
 }
 
 function ElementContent({ element, track }: ElementContentProps) {
+  useUiLocale();
   switch (element.type) {
     case "text":
       return <TextElementContent element={element} />;
@@ -1182,13 +1189,12 @@ function ElementContent({ element, track }: ElementContentProps) {
 }
 
 function CopyMenuItem() {
+  useUiLocale();
   return (
     <ActionMenuItem
       action="copy-selected"
       icon={<HugeiconsIcon icon={Copy01Icon} />}
-    >
-      Copy
-    </ActionMenuItem>
+    >{uiText("common.copy")}{" "}</ActionMenuItem>
   );
 }
 
@@ -1201,6 +1207,7 @@ function MuteMenuItem({
   isCurrentElementSelected: boolean;
   isMuted: boolean;
 }) {
+  useUiLocale();
   const getIcon = () => {
     if (isMultipleSelected && isCurrentElementSelected) {
       return <HugeiconsIcon icon={VolumeMute02Icon} />;
@@ -1214,7 +1221,7 @@ function MuteMenuItem({
 
   return (
     <ActionMenuItem action="toggle-elements-muted-selected" icon={getIcon()}>
-      {isMuted ? "Unmute" : "Mute"}
+      {isMuted ? uiText("video-editor.unmute") : uiText("video-editor.mute")}
     </ActionMenuItem>
   );
 }
@@ -1228,6 +1235,7 @@ function VisibilityMenuItem({
   isMultipleSelected: boolean;
   isCurrentElementSelected: boolean;
 }) {
+  useUiLocale();
   const isHidden = canElementBeHidden(element) && element.hidden;
 
   const getIcon = () => {
@@ -1246,7 +1254,7 @@ function VisibilityMenuItem({
       action="toggle-elements-visibility-selected"
       icon={getIcon()}
     >
-      {isHidden ? "Show" : "Hide"}
+      {isHidden ? uiText("common.show") : uiText("common.hide")}
     </ActionMenuItem>
   );
 }
@@ -1262,6 +1270,7 @@ function DeleteMenuItem({
   elementType: TimelineElementType["type"];
   selectedCount: number;
 }) {
+  useUiLocale();
   return (
     <ActionMenuItem
       action="delete-selected"
@@ -1269,8 +1278,8 @@ function DeleteMenuItem({
       icon={<HugeiconsIcon icon={Delete02Icon} />}
     >
       {isMultipleSelected && isCurrentElementSelected
-        ? `Delete ${selectedCount} elements`
-        : `Delete ${elementType === "text" ? "text" : "clip"}`}
+        ? uiText("video-editor.delete.value.elements", { value0: selectedCount })
+        : uiText("common.delete.value", { value0: elementType === "text" ? "text" : "clip" })}
     </ActionMenuItem>
   );
 }
@@ -1283,6 +1292,7 @@ function ActionMenuItem({
   action: TActionWithOptionalArgs;
   children: ReactNode;
 }) {
+  useUiLocale();
   return (
     <ContextMenuItem
       onClick={(event: React.MouseEvent) => {

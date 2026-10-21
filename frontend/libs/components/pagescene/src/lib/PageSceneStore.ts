@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { create } from "zustand";
 import type { LucideIcon } from "lucide-react";
 import { Camera, FocalLengthDragging } from "@storyteller/common";
@@ -147,7 +148,7 @@ const DEFAULT_CAMERAS: Camera[] = [
     id: "main",
     // Blender-style default: viewport pulled back + elevated at a 3/4 angle so
     // the whole render-camera frustum (cam2, below) is visible in the scene.
-    label: "Main View",
+    get label() { return uiText("pagescene.main.view"); },
     focalLength: 17,
     position: { x: -4.5, y: 4, z: 6 },
     rotation: { x: 0, y: 0, z: 0 },
@@ -155,7 +156,7 @@ const DEFAULT_CAMERAS: Camera[] = [
   },
   {
     id: "cam2",
-    label: "Camera 2",
+    get label() { return uiText("pagescene.camera.2"); },
     focalLength: 10,
     position: { x: 0, y: 0.6, z: 1.5 },
     rotation: { x: 0, y: 0, z: 0 },
@@ -465,12 +466,12 @@ export const usePageSceneStore = create<PageSceneState>((set, get) => ({
   assetDraggingUnder: false,
   reopenAfterDrag: false,
 
-  editorLoader: { isShowing: false, message: "Loading Editor Engine 🦊" },
+  editorLoader: { isShowing: false, get message() { return uiText("common.loading.editor.engine"); } },
   editorLetterBox: true,
   statsVisible: false,
   showErrorDialog: false,
   errorDialogTitle: "Error!",
-  errorDialogMessage: "Something went wrong.",
+  errorDialogMessage: uiText("desktop.something.went.wrong"),
 
   canDrop: false,
   dragItem: null,

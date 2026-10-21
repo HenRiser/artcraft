@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Button } from "../../components/ui/button";
 import {
   Dialog,
@@ -22,6 +23,7 @@ export function DeleteProjectDialog({
   onConfirm: () => void;
   projectNames: string[];
 }) {
+  useUiLocale();
   const count = projectNames.length;
   const isSingle = count === 1;
   const singleName = isSingle ? projectNames[0] : null;
@@ -38,7 +40,7 @@ export function DeleteProjectDialog({
           <DialogTitle>
             {singleName ? (
               <>
-                {"Delete '"}
+                {uiText("video-editor.delete.2")}
                 <span className="inline-block max-w-[300px] truncate align-bottom">
                   {singleName}
                 </span>
@@ -51,17 +53,12 @@ export function DeleteProjectDialog({
         </DialogHeader>
         <DialogBody>
           <Alert variant="destructive">
-            <AlertTitle>Warning</AlertTitle>
-            <AlertDescription>
-              This will permanently delete{" "}
-              {singleName ? `"${singleName}"` : `${count} projects`} and all
-              associated files.
-            </AlertDescription>
+            <AlertTitle>{uiText("video-editor.warning")}</AlertTitle>
+            <AlertDescription>{uiText("common.this.will.permanently.delete")}{" "}
+              {singleName ? `"${singleName}"` : uiText("video-editor.value.projects", { value0: count })}{" "}{uiText("video-editor.and.all.associated.files")}{" "}</AlertDescription>
           </Alert>
           <div className="flex flex-col gap-3">
-            <Label className="text-xs font-semibold text-slate-500">
-              Type "DELETE" to confirm
-            </Label>
+            <Label className="text-xs font-semibold text-slate-500">{uiText("video-editor.type.delete.to.confirm")}{" "}</Label>
             <Input
               type="text"
               placeholder="DELETE"
@@ -71,12 +68,8 @@ export function DeleteProjectDialog({
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={onConfirm}>
-            Delete project
-          </Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{uiText("common.cancel")}{" "}</Button>
+          <Button variant="destructive" onClick={onConfirm}>{uiText("video-editor.delete.project")}{" "}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

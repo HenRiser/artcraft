@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { Modal } from "@storyteller/ui-modal";
 import { LightboxModal } from "@storyteller/ui-lightbox-modal";
 import { Button } from "@storyteller/ui-button";
@@ -130,6 +131,7 @@ async function fetchCurrentUsername(): Promise<string | null> {
 const SKELETON_COUNT = 15;
 
 const SkeletonGrid = ({ columns }: { columns: number }) => {
+  useUiLocale();
   const gapClass = columns <= 4 ? "gap-2" : columns <= 7 ? "gap-2" : "gap-0.5";
   return (
     <div className="space-y-6 p-4 animate-in fade-in duration-200">
@@ -189,6 +191,7 @@ export const LazyDateGroup = React.memo(
     scrollRoot,
     children,
   }: LazyDateGroupProps) => {
+  useUiLocale();
     const containerRef = useRef<HTMLDivElement>(null);
     const [isNearViewport, setIsNearViewport] = useState(eager);
     // Store the last measured height so placeholders match exactly
@@ -324,13 +327,13 @@ interface GalleryModalProps {
 const EMPTY_SELECTED_IDS: string[] = [];
 
 const SIDEBAR_FILTERS = [
-  { id: "all", label: "All Assets", icon: Grid3x3Icon },
-  { id: "image", label: "Image", icon: ImageIcon },
-  { id: "video", label: "Video", icon: VideoIcon },
-  { id: "audio", label: "Audio", icon: MusicIcon },
-  { id: "mesh", label: "Mesh", icon: BoxIcon },
-  { id: "splat", label: "Splat", icon: GlobeIcon },
-  { id: "uploaded", label: "Uploaded", icon: UploadIcon },
+  { id: "all", get label() { return uiText("common.all.assets"); }, icon: Grid3x3Icon },
+  { id: "image", get label() { return uiText("common.image"); }, icon: ImageIcon },
+  { id: "video", get label() { return uiText("common.video"); }, icon: VideoIcon },
+  { id: "audio", get label() { return uiText("common.audio"); }, icon: MusicIcon },
+  { id: "mesh", get label() { return uiText("gallery-modal.mesh"); }, icon: BoxIcon },
+  { id: "splat", get label() { return uiText("common.splat"); }, icon: GlobeIcon },
+  { id: "uploaded", get label() { return uiText("common.uploaded"); }, icon: UploadIcon },
 ];
 
 // Media classes for the user-list endpoint. The Mesh and Splat tabs don't use
@@ -386,7 +389,7 @@ const getLabel = (item: any) => {
 
 const formatDate = (date: string) => {
   const d = new Date(date);
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString(getUiLocale() === "en" ? "en-US" : "zh-CN", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -420,6 +423,7 @@ function TagCloudView({
   tags: TagDetails[];
   onOpen: (tagToken: string) => void;
 }) {
+  useUiLocale();
   const words = useMemo(() => {
     const counts = tags.map((t) => t.use_count);
     const min = Math.min(...counts);
@@ -441,7 +445,7 @@ function TagCloudView({
             key={tag.tag_token}
             type="button"
             onClick={() => onOpen(tag.tag_token)}
-            title={`${tag.use_count} file${tag.use_count === 1 ? "" : "s"}`}
+            title={uiText("gallery-modal.value.file.value", { value0: tag.use_count, value1: getUiLocale() === "en" ? (tag.use_count === 1 ? "" : "s") : "" })}
             style={{ fontSize: `${Math.round(15 + weight * 33)}px` }}
             className={twMerge(
               "max-w-full truncate leading-none transition-all duration-200 hover:scale-110 hover:text-violet-400",
@@ -473,6 +477,7 @@ const BulkThumb = ({
   thumbnail: string | null;
   placeholderIcon: any;
 }) => {
+  useUiLocale();
   const [failed, setFailed] = useState(false);
   const showImage = !!thumbnail && !failed;
 
@@ -520,7 +525,7 @@ const FolderContextMenuItems = ({
   onSetColor: (id: string, color: string | null) => void;
   className?: string;
   style?: React.CSSProperties;
-}) => (
+}) => { useUiLocale(); return (
   <div
     className={twMerge(
       "min-w-44 rounded-[3px] border border-ui-panel-border bg-ui-panel p-1 shadow-xl z-[59]",
@@ -539,7 +544,7 @@ const FolderContextMenuItems = ({
           hasStar ? "text-amber-400" : "text-base-fg/40",
         )}
       />
-      <span>{hasStar ? "Unstar" : "Star"}</span>
+      <span>{hasStar ? uiText("gallery-modal.unstar") : uiText("gallery-modal.star")}</span>
     </button>
     <FolderColorRow
       colorCode={colorCode}
@@ -552,7 +557,7 @@ const FolderContextMenuItems = ({
       onClick={() => onNewSubfolder(folderId)}
     >
       <FolderPlusIcon className="w-4" />
-      <span>New subfolder</span>
+      <span>{uiText("gallery-modal.new.subfolder")}</span>
     </button>
     <button
       type="button"
@@ -560,7 +565,7 @@ const FolderContextMenuItems = ({
       onClick={() => onRename(folderId)}
     >
       <PencilIcon className="w-4" />
-      <span>Rename</span>
+      <span>{uiText("common.rename")}</span>
     </button>
     <button
       type="button"
@@ -568,10 +573,10 @@ const FolderContextMenuItems = ({
       onClick={() => onDelete(folderId)}
     >
       <Trash2Icon className="w-4" />
-      <span>Delete folder</span>
+      <span>{uiText("gallery-modal.delete.folder")}</span>
     </button>
   </div>
-);
+); };
 
 export const GalleryModal = React.memo(
   ({
@@ -598,6 +603,7 @@ export const GalleryModal = React.memo(
     onDeleteMedia,
     subscribeToMediaEvents,
   }: GalleryModalProps) => {
+  useUiLocale();
     const [loading, setLoading] = useState(false);
     // Separate state for pagination spinner (bottom of list) — not shared with background refresh
     const [paginationLoading, setPaginationLoading] = useState(false);
@@ -1117,7 +1123,7 @@ export const GalleryModal = React.memo(
               });
             } else {
               setItemsLoadError(
-                response.errorMessage || "Request failed (unknown error)",
+                response.errorMessage || uiText("desktop.request.failed.unknown.error"),
               );
             }
 
@@ -1224,7 +1230,7 @@ export const GalleryModal = React.memo(
             });
           } else {
             setItemsLoadError(
-              response.errorMessage || "Request failed (unknown error)",
+              response.errorMessage || uiText("desktop.request.failed.unknown.error"),
             );
           }
         } catch (error) {
@@ -1644,15 +1650,12 @@ export const GalleryModal = React.memo(
       const count = bulkSelectedIds.size;
       showActionReminder({
         reminderType: "default",
-        title: `Delete ${count} item${count > 1 ? "s" : ""}?`,
+        get title() { return uiText("gallery-modal.delete.value.item.value", { value0: count, value1: getUiLocale() === "en" ? (count > 1 ? "s" : "") : "" }); },
         message: (
-          <p className="text-sm text-white/70">
-            This will permanently remove {count} item{count > 1 ? "s" : ""} from
-            your library. This action cannot be undone.
-          </p>
+          <p className="text-sm text-white/70">{uiText("gallery-modal.this.will.permanently.remove")}{" "}{count}{" "}{uiText("common.item")}{count > 1 ? "s" : ""}{" "}{uiText("gallery-modal.from.your.library.this.action.cannot.be.undone")}{" "}</p>
         ),
-        primaryActionText: "Delete",
-        secondaryActionText: "Cancel",
+        primaryActionText: uiText("common.delete"),
+        secondaryActionText: uiText("common.cancel"),
         primaryActionBtnClassName: "bg-red text-white hover:bg-red/90",
         onPrimaryAction: async () => {
           try {
@@ -1837,11 +1840,11 @@ export const GalleryModal = React.memo(
               setBulkSelectedIds(new Set());
             }
           } else {
-            toast.error(res.errorMessage || "Failed to create folder.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.create.folder"));
           }
         } catch (err) {
           toast.error(
-            `Failed to create folder: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.create.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
         }
       },
@@ -1977,12 +1980,12 @@ export const GalleryModal = React.memo(
             newName: trimmed,
           });
           if (!res.success) {
-            toast.error(res.errorMessage || "Failed to rename folder.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.rename.folder"));
             loadFolders();
           }
         } catch (err) {
           toast.error(
-            `Failed to rename folder: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.rename.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
           loadFolders();
         }
@@ -2003,12 +2006,12 @@ export const GalleryModal = React.memo(
             hasStar,
           });
           if (!res.success) {
-            toast.error(res.errorMessage || "Failed to update folder.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.update.folder"));
             loadFolders();
           }
         } catch (err) {
           toast.error(
-            `Failed to update folder: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.update.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
           loadFolders();
         }
@@ -2028,12 +2031,12 @@ export const GalleryModal = React.memo(
             colorCode,
           });
           if (!res.success) {
-            toast.error(res.errorMessage || "Failed to update folder color.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.update.folder.color"));
             loadFolders();
           }
         } catch (err) {
           toast.error(
-            `Failed to update folder color: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.update.folder.color.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
           loadFolders();
         }
@@ -2052,17 +2055,15 @@ export const GalleryModal = React.memo(
         const hasSubfolders = folders.some((f) => f.parentId === folderId);
         showActionReminder({
           reminderType: "default",
-          title: `Delete "${folder.name}"?`,
+          get title() { return uiText("gallery-modal.delete.value", { value0: folder.name }); },
           message: (
             <p className="text-sm text-white/70">
               {hasSubfolders
-                ? "This folder will be deleted and its subfolders moved to the top level. "
-                : "This folder will be deleted. "}
-              Items inside stay in your library.
-            </p>
+                ? uiText("gallery-modal.this.folder.will.be.deleted.and.its.subfolders.moved.to.the.top.level")
+                : uiText("gallery-modal.this.folder.will.be.deleted")}{uiText("gallery-modal.items.inside.stay.in.your.library")}{" "}</p>
           ),
-          primaryActionText: "Delete",
-          secondaryActionText: "Cancel",
+          primaryActionText: uiText("common.delete"),
+          secondaryActionText: uiText("common.cancel"),
           primaryActionBtnClassName: "bg-red text-white hover:bg-red/90",
           onPrimaryAction: async () => {
             // Optimistic: drop this folder and reparent its direct children to
@@ -2088,11 +2089,11 @@ export const GalleryModal = React.memo(
                 folderToken: folderId,
               });
               if (!res.success) {
-                toast.error(res.errorMessage || "Failed to delete folder.");
+                toast.error(res.errorMessage || uiText("desktop.failed.to.delete.folder"));
               }
             } catch (err) {
               toast.error(
-                `Failed to delete folder: ${err instanceof Error ? err.message : String(err)}`,
+                uiText("gallery-modal.failed.to.delete.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
               );
             }
             // Reconcile authoritative orphan flags / parent pointers.
@@ -2168,14 +2169,14 @@ export const GalleryModal = React.memo(
             const name =
               folders.find((f) => f.id === folderId)?.name ?? "folder";
             toast.success(
-              `Added ${itemIds.length} item${itemIds.length === 1 ? "" : "s"} to ${name}`,
+              uiText("gallery-modal.added.value.item.value.to.value", { value0: itemIds.length, value1: getUiLocale() === "en" ? (itemIds.length === 1 ? "" : "s") : "", value2: name }),
             );
           } else {
-            toast.error(res.errorMessage || "Failed to add to folder.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.add.to.folder"));
           }
         } catch (err) {
           toast.error(
-            `Failed to add to folder: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.add.to.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
         }
       },
@@ -2231,15 +2232,15 @@ export const GalleryModal = React.memo(
           if (res.success) {
             const name = folders.find((f) => f.id === target)?.name ?? "folder";
             toast.success(
-              `Moved ${itemIds.length} item${itemIds.length === 1 ? "" : "s"} to ${name}`,
+              uiText("gallery-modal.moved.value.item.value.to.value", { value0: itemIds.length, value1: getUiLocale() === "en" ? (itemIds.length === 1 ? "" : "s") : "", value2: name }),
             );
           } else {
-            toast.error(res.errorMessage || "Failed to move items.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.move.items"));
             loadFolders();
           }
         } catch (err) {
           toast.error(
-            `Failed to move items: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.move.items.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
           loadFolders();
         }
@@ -2285,12 +2286,12 @@ export const GalleryModal = React.memo(
             mediaFileTokens: itemIds,
           });
           if (!res.success) {
-            toast.error(res.errorMessage || "Failed to remove from folder.");
+            toast.error(res.errorMessage || uiText("desktop.failed.to.remove.from.folder"));
             loadFolders();
           }
         } catch (err) {
           toast.error(
-            `Failed to remove from folder: ${err instanceof Error ? err.message : String(err)}`,
+            uiText("gallery-modal.failed.to.remove.from.folder.value", { value0: err instanceof Error ? err.message : String(err) }),
           );
           loadFolders();
         }
@@ -2519,9 +2520,7 @@ export const GalleryModal = React.memo(
       galleryTab === "folders" && currentSubfolders.length > 0 ? (
         <div className="px-4 pt-4">
           {activeFolderId && (
-            <h3 className="text-md mb-2 font-medium text-base-fg/60">
-              Folders
-            </h3>
+            <h3 className="text-md mb-2 font-medium text-base-fg/60">{uiText("common.folders")}{" "}</h3>
           )}
           <div
             className={twMerge("grid", gapClass)}
@@ -2614,7 +2613,7 @@ export const GalleryModal = React.memo(
                               : "text-base-fg/60 hover:text-base-fg",
                           )}
                         >
-                          {t === "unsorted" ? "All Assets" : "Folders"}
+                          {t === "unsorted" ? uiText("common.all.assets") : uiText("common.folders")}
                         </button>
                       ))}
                     </div>
@@ -2627,9 +2626,7 @@ export const GalleryModal = React.memo(
                         onClick={() => handleOpenNewFolderModal(null)}
                         className="flex items-center gap-2 rounded-[3px] bg-ui-controls/60 px-3 py-1.5 text-sm font-medium text-base-fg hover:bg-ui-controls/90 transition-colors relative z-[51]"
                       >
-                        <FolderPlusIcon className="text-xs" />
-                        New folder
-                      </button>
+                        <FolderPlusIcon className="text-xs" />{uiText("common.new.folder")}{" "}</button>
                     )}
                   {activeTag ? (
                     /* ── Tag view header (Tags / name) ── */
@@ -2638,22 +2635,19 @@ export const GalleryModal = React.memo(
                         type="button"
                         onClick={handleOpenTagBrowser}
                         className="text-base-fg/50 hover:text-base-fg text-sm transition-colors"
-                      >
-                        Tags
-                      </button>
+                      >{uiText("common.tags")}{" "}</button>
                       <span className="text-base-fg/30">/</span>
                       <TagIcon className="text-sm text-violet-400" />
                       <h2 className="text-lg font-semibold truncate max-w-[16rem]">
                         {activeTag.tag_value}
                       </h2>
                       <span className="text-base-fg/40 text-sm">
-                        {activeTag.use_count} file
-                        {activeTag.use_count === 1 ? "" : "s"}
+                        {activeTag.use_count}{" "}{uiText("gallery-modal.file")}{" "}{activeTag.use_count === 1 ? "" : "s"}
                       </span>
                       <button
                         type="button"
                         onClick={handleCloseTagView}
-                        aria-label="Close tag view"
+                        aria-label={uiText("gallery-modal.close.tag.view")}
                         className="flex h-7 w-7 items-center justify-center rounded-[3px] hover:bg-ui-controls/60 text-base-fg/60 hover:text-base-fg transition-colors"
                       >
                         <XIcon className="text-sm" />
@@ -2663,11 +2657,11 @@ export const GalleryModal = React.memo(
                     /* ── All-tags browser header ── */
                     <div className="flex items-center gap-2 relative z-[51]">
                       <TagIcon className="text-sm text-violet-400" />
-                      <h2 className="text-lg font-semibold">Tags</h2>
+                      <h2 className="text-lg font-semibold">{uiText("common.tags")}</h2>
                       <button
                         type="button"
                         onClick={handleCloseTagView}
-                        aria-label="Close tags"
+                        aria-label={uiText("gallery-modal.close.tags")}
                         className="flex h-7 w-7 items-center justify-center rounded-[3px] hover:bg-ui-controls/60 text-base-fg/60 hover:text-base-fg transition-colors"
                       >
                         <XIcon className="text-sm" />
@@ -2680,9 +2674,7 @@ export const GalleryModal = React.memo(
                         type="button"
                         onClick={handleBackToLibrary}
                         className="text-base-fg/50 hover:text-base-fg text-sm transition-colors"
-                      >
-                        Folders
-                      </button>
+                      >{uiText("common.folders")}{" "}</button>
                       {/* Ancestor crumbs (everything above the active folder) */}
                       {folderPath.slice(0, -1).map((crumb) => (
                         <React.Fragment key={crumb.id}>
@@ -2767,27 +2759,27 @@ export const GalleryModal = React.memo(
                         <h2 className="text-xl font-semibold">
                           {activeFilter === "video"
                             ? maxSelections === 1
-                              ? "Select Video"
-                              : "Select Videos"
+                              ? uiText("gallery-modal.select.video")
+                              : uiText("gallery-modal.select.videos")
                             : activeFilter === "audio"
-                              ? "Select Audio"
+                              ? uiText("gallery-modal.select.audio")
                               : activeFilter === "mesh"
                                 ? maxSelections === 1
-                                  ? "Select 3D Object"
-                                  : "Select 3D Objects"
+                                  ? uiText("gallery-modal.select.3d.object")
+                                  : uiText("gallery-modal.select.3d.objects")
                                 : activeFilter === "splat"
                                   ? maxSelections === 1
-                                    ? "Select 3D World"
-                                    : "Select 3D Worlds"
+                                    ? uiText("gallery-modal.select.3d.world")
+                                    : uiText("gallery-modal.select.3d.worlds")
                                   : activeFilter === "uploaded"
                                     ? maxSelections === 1
-                                      ? "Select Upload"
-                                      : "Select Uploads"
+                                      ? uiText("gallery-modal.select.upload")
+                                      : uiText("gallery-modal.select.uploads")
                                     : activeFilter === "all"
-                                      ? "Select Media"
+                                      ? uiText("gallery-modal.select.media")
                                       : maxSelections === 1
-                                        ? "Select Image"
-                                        : "Select Images"}
+                                        ? uiText("gallery-modal.select.image")
+                                        : uiText("gallery-modal.select.images")}
                         </h2>
                       )}
                       {mode === "view" && galleryTab === "unsorted" && (
@@ -2799,7 +2791,7 @@ export const GalleryModal = React.memo(
                               (galleryReopenAfterDragSignal.value =
                                 e.target.checked)
                             }
-                            label="Reopen after adding"
+                            label={uiText("common.reopen.after.adding")}
                           />
                         </div>
                       )}
@@ -2814,7 +2806,7 @@ export const GalleryModal = React.memo(
                           id="gallery-show-uploads"
                           checked={showUploads}
                           onChange={(e) => setShowUploads(e.target.checked)}
-                          label="Show uploads"
+                          label={uiText("gallery-modal.show.uploads")}
                         />
                       </div>
                     )}
@@ -2823,7 +2815,7 @@ export const GalleryModal = React.memo(
                   {/* Refresh button */}
                   <Tooltip
                     position="top"
-                    content="Refresh list"
+                    content={uiText("common.refresh.list")}
                     closeOnClick={true}
                   >
                     <Button
@@ -2831,7 +2823,7 @@ export const GalleryModal = React.memo(
                       onClick={refreshGallery}
                       className="relative z-[51] h-9 w-9 p-2.5"
                       disabled={loading}
-                      aria-label="Refresh list"
+                      aria-label={uiText("common.refresh.list")}
                     >
                       <RefreshCwIcon
                         className={`text-lg text-base-fg ${loading ? "animate-spin" : ""}`}
@@ -2841,7 +2833,7 @@ export const GalleryModal = React.memo(
                   {/* Image fit toggle button */}
                   <Tooltip
                     position="top"
-                    content="Toggle image fit"
+                    content={uiText("gallery-modal.toggle.image.fit")}
                     closeOnClick={true}
                   >
                     <Button
@@ -2874,9 +2866,7 @@ export const GalleryModal = React.memo(
                       showTooltip={false}
                       className="w-full"
                       showProgressBar={false}
-                      tooltipContent={`${
-                        maxColumns - (sliderValue - minColumns)
-                      } columns`}
+                      tooltipContent={uiText("desktop.value.columns", { value0: maxColumns - (sliderValue - minColumns) })}
                     />
                   </div>
                   {mode === "view" && <Modal.ExpandButton />}
@@ -2941,14 +2931,12 @@ export const GalleryModal = React.memo(
                   </div>
                   {/* Folders header — pinned alongside the filters */}
                   <div className="flex items-center justify-between px-3 pt-2 pb-1 flex-shrink-0">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40">
-                      Folders
-                    </span>
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40">{uiText("common.folders")}{" "}</span>
                     {mode === "view" && (
                       <button
                         type="button"
                         onClick={() => handleOpenNewFolderModal(null)}
-                        aria-label="New folder"
+                        aria-label={uiText("common.new.folder")}
                         className="flex h-5 w-5 items-center justify-center rounded-[3px] text-base-fg/50 hover:bg-ui-controls/60 hover:text-base-fg transition-colors"
                       >
                         <PlusIcon className="text-[10px]" />
@@ -2958,9 +2946,7 @@ export const GalleryModal = React.memo(
                   {/* Folder list — the only scrolling region; fills the rest of the column */}
                   <div className="flex flex-1 min-h-0 flex-col overflow-y-auto px-1.5 pb-2">
                     {rootFolders.length === 0 ? (
-                      <div className="px-2.5 py-1.5 text-xs text-base-fg/30 italic">
-                        No folders yet
-                      </div>
+                      <div className="px-2.5 py-1.5 text-xs text-base-fg/30 italic">{uiText("common.no.folders.yet")}{" "}</div>
                     ) : (
                       rootFolders.map((folder) => (
                         <button
@@ -3013,9 +2999,7 @@ export const GalleryModal = React.memo(
                     {userTags.length > 0 && (
                       <>
                         <div className="flex items-center justify-between px-1.5 pt-3 pb-1 flex-shrink-0">
-                          <span className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40">
-                            Tags
-                          </span>
+                          <span className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40">{uiText("common.tags")}{" "}</span>
                         </div>
                         {sidebarTags.map((tag) => (
                           <button
@@ -3049,7 +3033,7 @@ export const GalleryModal = React.memo(
                           )}
                         >
                           <EllipsisIcon className="text-xs w-4" />
-                          <span>All tags</span>
+                          <span>{uiText("gallery-modal.all.tags")}</span>
                           <span className="ml-auto text-[10px] text-base-fg/40">
                             {sortedTags.length}
                           </span>
@@ -3082,12 +3066,8 @@ export const GalleryModal = React.memo(
                       <div className="flex h-16 w-16 items-center justify-center bg-violet-400/10">
                         <TagIcon className="text-violet-400 text-2xl" />
                       </div>
-                      <div className="text-base-fg font-semibold">
-                        No files carry this tag
-                      </div>
-                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">
-                        Add tags to media from the item view's Tags section.
-                      </div>
+                      <div className="text-base-fg font-semibold">{uiText("gallery-modal.no.files.carry.this.tag")}{" "}</div>
+                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">{uiText("gallery-modal.add.tags.to.media.from.the.item.view.s.tags.section")}{" "}</div>
                     </div>
                   ) : (
                     <div className="space-y-6 p-4">
@@ -3173,13 +3153,8 @@ export const GalleryModal = React.memo(
                       <div className="flex h-16 w-16 items-center justify-center bg-violet-400/10">
                         <TagIcon className="text-violet-400 text-2xl" />
                       </div>
-                      <div className="text-base-fg font-semibold">
-                        No tags yet
-                      </div>
-                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">
-                        Open any item and add tags in its details panel —
-                        they'll show up here.
-                      </div>
+                      <div className="text-base-fg font-semibold">{uiText("gallery-modal.no.tags.yet")}{" "}</div>
+                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">{uiText("gallery-modal.open.any.item.and.add.tags.in.its.details.panel.they.ll.show.up.here")}{" "}</div>
                     </div>
                   ) : (
                     <TagCloudView
@@ -3194,21 +3169,15 @@ export const GalleryModal = React.memo(
                       <div className="flex h-16 w-16 items-center justify-center bg-primary/10">
                         <FolderIcon className="text-primary text-2xl" />
                       </div>
-                      <div className="text-base-fg font-semibold">
-                        No folders yet
-                      </div>
-                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">
-                        Create a folder to organize your media.
-                      </div>
+                      <div className="text-base-fg font-semibold">{uiText("common.no.folders.yet")}{" "}</div>
+                      <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">{uiText("gallery-modal.create.a.folder.to.organize.your.media")}{" "}</div>
                       {mode === "view" && (
                         <Button
                           variant="action"
                           icon={FolderPlusIcon}
                           onClick={() => handleOpenNewFolderModal(null)}
                           className="mt-1 px-3 py-1.5 text-sm"
-                        >
-                          New folder
-                        </Button>
+                        >{uiText("common.new.folder")}{" "}</Button>
                       )}
                     </div>
                   ) : null
@@ -3226,13 +3195,11 @@ export const GalleryModal = React.memo(
                         <div className="flex h-16 w-16 items-center justify-center bg-primary/10">
                           <FolderIcon className="text-primary text-2xl" />
                         </div>
-                        <div className="text-base-fg font-semibold">
-                          This folder is empty
-                        </div>
+                        <div className="text-base-fg font-semibold">{uiText("gallery-modal.this.folder.is.empty")}{" "}</div>
                         <div className="text-base-fg/40 text-sm text-center max-w-[16rem]">
                           {mode === "view"
-                            ? "Drag images here, generate new ones, or create a subfolder."
-                            : "There's nothing in this folder yet."}
+                            ? uiText("gallery-modal.drag.images.here.generate.new.ones.or.create.a.subfolder")
+                            : uiText("gallery-modal.there.s.nothing.in.this.folder.yet")}
                         </div>
                         {mode === "view" && (
                           <Button
@@ -3242,9 +3209,7 @@ export const GalleryModal = React.memo(
                               handleOpenNewFolderModal(activeFolderId)
                             }
                             className="mt-1 px-3 py-1.5 text-sm"
-                          >
-                            New folder
-                          </Button>
+                          >{uiText("common.new.folder")}{" "}</Button>
                         )}
                       </div>
                     )
@@ -3336,16 +3301,12 @@ export const GalleryModal = React.memo(
                     {usernameError && allItems.length === 0 ? (
                       <div className="flex h-full items-center justify-center">
                         <div className="flex max-w-xs flex-col items-center gap-4 text-center text-sm">
-                          <div className="text-base-fg/60">
-                            Log in to browse and use your library.
-                          </div>
+                          <div className="text-base-fg/60">{uiText("gallery-modal.log.in.to.browse.and.use.your.library")}{" "}</div>
                           {onLoginClick ? (
                             <button
                               className="rounded-[3px] bg-primary px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-primary/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
                               onClick={() => onLoginClick()}
-                            >
-                              Log in
-                            </button>
+                            >{uiText("common.log.in")}{" "}</button>
                           ) : (
                             <button
                               className="text-xs text-blue-400 underline hover:text-blue-300"
@@ -3353,18 +3314,14 @@ export const GalleryModal = React.memo(
                                 setUsernameError(false);
                                 setUsernameRetryCount((c) => c + 1);
                               }}
-                            >
-                              Retry
-                            </button>
+                            >{uiText("common.retry")}{" "}</button>
                           )}
                         </div>
                       </div>
                     ) : itemsLoadError && allItems.length === 0 ? (
                       <div className="flex h-full items-center justify-center">
                         <div className="flex flex-col items-center gap-3 text-sm max-w-xs text-center">
-                          <div className="text-base-fg/60">
-                            Failed to load gallery.
-                          </div>
+                          <div className="text-base-fg/60">{uiText("gallery-modal.failed.to.load.gallery")}{" "}</div>
                           <div className="text-xs text-base-fg/40 font-mono break-all">
                             {itemsLoadError}
                           </div>
@@ -3374,15 +3331,11 @@ export const GalleryModal = React.memo(
                               onClick={() =>
                                 navigator.clipboard?.writeText(itemsLoadError!)
                               }
-                            >
-                              Copy error
-                            </button>
+                            >{uiText("gallery-modal.copy.error")}{" "}</button>
                             <button
                               className="text-xs text-blue-400 hover:text-blue-300 underline"
                               onClick={() => refreshGallery()}
-                            >
-                              Retry
-                            </button>
+                            >{uiText("common.retry")}{" "}</button>
                           </div>
                         </div>
                       </div>
@@ -3393,9 +3346,7 @@ export const GalleryModal = React.memo(
                       !loading &&
                       currentSubfolders.length === 0 ? (
                       <div className="flex h-full items-center justify-center">
-                        <div className="text-base-fg/40 text-sm">
-                          No items yet
-                        </div>
+                        <div className="text-base-fg/40 text-sm">{uiText("gallery-modal.no.items.yet")}{" "}</div>
                       </div>
                     ) : (
                       <div className="space-y-6 p-4">
@@ -3477,9 +3428,7 @@ export const GalleryModal = React.memo(
                           </div>
                         )}
                         {!hasMore && allItems.length > 0 && (
-                          <div className="flex justify-center py-4 text-base-fg/40 text-xs">
-                            No more items
-                          </div>
+                          <div className="flex justify-center py-4 text-base-fg/40 text-xs">{uiText("gallery-modal.no.more.items")}{" "}</div>
                         )}
                       </div>
                     )}
@@ -3491,15 +3440,13 @@ export const GalleryModal = React.memo(
             {/* ── New Folder dialog ── */}
             <FolderNameDialog
               isOpen={newFolderModalOpen}
-              title="New folder"
-              subtitle={`in ${
-                newFolderParentId
+              title={uiText("common.new.folder")}
+              subtitle={uiText("desktop.in.value", { value0: newFolderParentId
                   ? (folders.find((f) => f.id === newFolderParentId)?.name ??
                     "My Library")
-                  : "My Library"
-              }`}
+                  : "My Library" })}
               initialValue="New Folder"
-              confirmLabel="Create"
+              confirmLabel={uiText("common.create")}
               onConfirm={handleCreateFolder}
               onClose={() => {
                 setNewFolderModalOpen(false);
@@ -3510,11 +3457,11 @@ export const GalleryModal = React.memo(
             {/* ── Rename Folder dialog (sidebar context menu) ── */}
             <FolderNameDialog
               isOpen={!!(renameViaModal && renamingFolderId)}
-              title="Rename folder"
+              title={uiText("gallery-modal.rename.folder")}
               initialValue={
                 folders.find((f) => f.id === renamingFolderId)?.name ?? ""
               }
-              confirmLabel="Rename"
+              confirmLabel={uiText("common.rename")}
               onConfirm={handleConfirmRename}
               onClose={() => {
                 setRenamingFolderId(null);
@@ -3555,8 +3502,7 @@ export const GalleryModal = React.memo(
                     </div>
                   )}
                   <span className="ms-2.5 text-sm font-medium text-base-fg/80">
-                    {bulkSelectedIds.size} selected
-                  </span>
+                    {bulkSelectedIds.size}{" "}{uiText("common.selected")}{" "}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {/* Add to folder */}
@@ -3566,9 +3512,7 @@ export const GalleryModal = React.memo(
                       onClick={() => setBulkFolderPopoverOpen((v) => !v)}
                       className="px-3 bg-ui-controls/60 hover:bg-ui-controls/90"
                       icon={FolderPlusIcon}
-                    >
-                      Add to folder
-                    </Button>
+                    >{uiText("gallery-modal.add.to.folder.2")}{" "}</Button>
                     {bulkFolderPopoverOpen && (
                       <>
                         {/* Backdrop to close */}
@@ -3578,13 +3522,9 @@ export const GalleryModal = React.memo(
                         />
                         <div className="absolute bottom-full mb-2 right-0 w-56 rounded-[3px] border border-ui-panel-border bg-ui-panel p-2 shadow-xl z-[60]">
                           {/* Folders */}
-                          <div className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40 px-2 py-1">
-                            Folders
-                          </div>
+                          <div className="text-[11px] font-semibold uppercase tracking-wider text-base-fg/40 px-2 py-1">{uiText("common.folders")}{" "}</div>
                           {folders.length === 0 ? (
-                            <div className="px-2 py-1.5 text-xs text-base-fg/30 italic">
-                              No folders yet
-                            </div>
+                            <div className="px-2 py-1.5 text-xs text-base-fg/30 italic">{uiText("common.no.folders.yet")}{" "}</div>
                           ) : (
                             // Same ordering as the folder chips: starred
                             // first, then alphabetical.
@@ -3615,7 +3555,7 @@ export const GalleryModal = React.memo(
                             }}
                           >
                             <PlusIcon className="text-xs w-4" />
-                            <span>Create new folder</span>
+                            <span>{uiText("gallery-modal.create.new.folder")}</span>
                           </button>
                         </div>
                       </>
@@ -3627,14 +3567,12 @@ export const GalleryModal = React.memo(
                       onClick={handleBulkDelete}
                       className="px-3"
                       icon={Trash2Icon}
-                    >
-                      Delete
-                    </Button>
+                    >{uiText("common.delete")}{" "}</Button>
                   )}
                   <button
                     onClick={clearBulkSelection}
                     className="flex h-8 w-8 items-center justify-center rounded-[3px] bg-ui-controls/60 hover:bg-ui-controls/90 text-base-fg transition-colors"
-                    aria-label="Clear selection"
+                    aria-label={uiText("common.clear.selection")}
                   >
                     <XIcon className="text-base" />
                   </button>
@@ -3646,8 +3584,7 @@ export const GalleryModal = React.memo(
               <div className="flex items-center justify-between border-t border-ui-panel-border bg-ui-panel p-4">
                 <div className="flex items-center gap-3">
                   <div className="text-sm font-semibold text-base-fg/80">
-                    {selectedItemIds.length}/{maxSelections} selected
-                  </div>
+                    {selectedItemIds.length}/{maxSelections}{" "}{uiText("common.selected")}{" "}</div>
                   {selectedItemIds.length > 0 && (
                     <span className="text-base-fg/10">|</span>
                   )}
@@ -3655,18 +3592,14 @@ export const GalleryModal = React.memo(
                     <button
                       onClick={handleDeselectAll}
                       className="text-sm text-base-fg/60 hover:text-base-fg"
-                    >
-                      Deselect All
-                    </button>
+                    >{uiText("gallery-modal.deselect.all")}{" "}</button>
                   )}
                 </div>
                 <Button
                   onClick={handleUseSelected}
                   disabled={selectedItemIds.length === 0 || useSelectedLoading}
                   loading={useSelectedLoading}
-                >
-                  Use selected
-                </Button>
+                >{uiText("gallery-modal.use.selected")}{" "}</Button>
               </div>
             )}
           </div>

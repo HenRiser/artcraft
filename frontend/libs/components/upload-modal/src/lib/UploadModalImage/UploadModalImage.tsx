@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import { LoadingDots } from "@storyteller/ui-loading";
 import { Modal } from "@storyteller/ui-modal";
@@ -29,6 +30,7 @@ interface Props {
 const imageFileTypes = Object.values(IMAGEPLANE_FILE_TYPE);
 
 export function UploadModalImage(props: Props) {
+  useUiLocale();
   const { isOpen, onClose, onSuccess, title, titleIcon, initialFiles } = props;
   const [uploaderState, setUploaderState] =
     useState<UploaderState>(initialUploaderState);
@@ -73,8 +75,8 @@ export function UploadModalImage(props: Props) {
             <LoadingDots className="mb-1 bg-transparent" />
             <div className="w-100 text-center opacity-50">
               {p && p.total > 1
-                ? `Uploading ${p.current} / ${p.total}...`
-                : "Uploading..."}
+                ? uiText("common.uploading.value.value", { value0: p.current, value1: p.total })
+                : uiText("common.uploading")}
             </div>
           </>
         );
@@ -82,7 +84,7 @@ export function UploadModalImage(props: Props) {
       case UploaderStates.success: {
         return (
           <UploadSuccess
-            title="Image"
+            title={uiText("common.image")}
             onOk={() => {
               // Open the gallery so the user can drag the freshly
               // uploaded image onto the canvas.

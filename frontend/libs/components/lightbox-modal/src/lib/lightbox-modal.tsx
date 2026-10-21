@@ -1,7 +1,8 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Modal } from "@storyteller/ui-modal";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { Button } from "@storyteller/ui-button";
-import dayjs from "dayjs";
+import { formatDate } from "@storyteller/common";
 import { ArrowDownToLineIcon, BoxIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, CopyIcon, GlobeIcon, ImageIcon, InfoIcon, LinkIcon, LogOutIcon, MusicIcon, PauseIcon, PencilIcon, PlayIcon, RotateCwIcon, SearchIcon, Trash2Icon, UserIcon, VideoIcon, WandSparklesIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
 import { MediaFileDelete } from "@storyteller/tauri-api";
@@ -125,6 +126,7 @@ export function LightboxModal({
   onNavigateToMedia,
   initialIndex,
 }: LightboxModalProps) {
+  useUiLocale();
   // NB(bt,2025-06-14): We add ?cors=1 to the image url to prevent caching "sec-fetch-mode: no-cors" from
   // the <image> tag request from being cached. If we then drag it into the canvas after it's been cached,
   // it won't be able to load in cors mode and will show blank in the canvas and 3D engine. This is a really
@@ -394,15 +396,12 @@ export function LightboxModal({
     (mediaToken: string) => {
       showActionReminder({
         reminderType: "default",
-        title: "Delete this media?",
+        get title() { return uiText("common.delete.this.media"); },
         message: (
-          <p className="text-sm text-white/70">
-            This will permanently remove the media from your library. This
-            action cannot be undone.
-          </p>
+          <p className="text-sm text-white/70">{uiText("common.this.will.permanently.remove.the.media.from.your.library.this.action.cannot.be.undone")}{" "}</p>
         ),
-        primaryActionText: "Delete",
-        secondaryActionText: "Cancel",
+        primaryActionText: uiText("common.delete"),
+        secondaryActionText: uiText("common.cancel"),
         primaryActionBtnClassName: "bg-red text-white hover:bg-red/90",
         onPrimaryAction: async () => {
           try {
@@ -564,7 +563,7 @@ export function LightboxModal({
           <div className="group/nav relative flex h-full flex-1 items-center justify-center overflow-hidden bg-black">
             {!selectedImageUrl ? (
               <div className="flex h-full w-full items-center justify-center bg-black">
-                <span className="text-base-fg/60">Image not available</span>
+                <span className="text-base-fg/60">{uiText("common.image.not.available")}</span>
               </div>
             ) : mediaClass === "dimensional" ||
               mediaClass === "mesh" ||
@@ -596,9 +595,7 @@ export function LightboxModal({
                   setMediaHeight(el.videoHeight);
                 }}
               >
-                <source src={selectedImageUrl as string} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+                <source src={selectedImageUrl as string} type="video/mp4" />{uiText("common.your.browser.does.not.support.the.video.tag")}{" "}</video>
             ) : mediaClass === "audio" ? (
               <div className="flex h-full w-full items-center justify-center px-4 sm:px-8">
                 <div className="w-full max-w-xl border border-white/15 bg-ui-controls px-4 py-10 sm:px-6">
@@ -682,7 +679,7 @@ export function LightboxModal({
                             >
                               <img
                                 src={addCorsParam(url) || url}
-                                alt={`Thumbnail ${idx + 1}`}
+                                alt={uiText("lightbox-modal.thumbnail.value", { value0: idx + 1 })}
                                 className="h-full w-full object-cover bg-black/20"
                               />
                             </button>
@@ -714,7 +711,7 @@ export function LightboxModal({
                   onNavigatePrev();
                 }}
                 className="absolute left-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 items-center justify-center bg-black/50 text-white/70 opacity-0 transition-opacity duration-200 hover:bg-black/70 hover:text-white group-hover/nav:opacity-100 focus:outline-none"
-                aria-label="Previous item"
+                aria-label={uiText("lightbox-modal.previous.item")}
               >
                 <ChevronLeftIcon  className="text-lg" />
               </button>
@@ -726,7 +723,7 @@ export function LightboxModal({
                   onNavigateNext();
                 }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 z-30 flex h-10 w-10 items-center justify-center bg-black/50 text-white/70 opacity-0 transition-opacity duration-200 hover:bg-black/70 hover:text-white group-hover/nav:opacity-100 focus:outline-none"
-                aria-label="Next item"
+                aria-label={uiText("lightbox-modal.next.item")}
               >
                 <ChevronRightIcon  className="text-lg" />
               </button>
@@ -758,9 +755,7 @@ export function LightboxModal({
                     <span className="text-base-fg text-sm font-semibold leading-none truncate">
                       {creator.display_name}
                     </span>
-                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
-                      Author
-                    </span>
+                    <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">{uiText("lightbox-modal.author")}{" "}</span>
                   </div>
                 </div>
               ) : promptLoading ? (
@@ -779,7 +774,7 @@ export function LightboxModal({
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
                         <PencilIcon />
-                        <span>Prompt</span>
+                        <span>{uiText("common.prompt")}</span>
                       </div>
                       {!promptLoading && prompt && (
                         <button
@@ -790,7 +785,7 @@ export function LightboxModal({
                             navigator.clipboard
                               .writeText(prompt)
                               .catch(() => {});
-                            toast.success("Prompt copied");
+                            toast.success(uiText("common.prompt.copied"));
                             setPromptCopied(true);
                             if (promptCopiedTimeoutRef.current) {
                               window.clearTimeout(
@@ -810,7 +805,7 @@ export function LightboxModal({
                             icon={promptCopied ? CheckIcon : CopyIcon}
                             className="h-3 w-3"
                           />
-                          <span>{promptCopied ? "Copied!" : "Copy"}</span>
+                          <span>{promptCopied ? uiText("common.copied.2") : uiText("common.copy")}</span>
                         </button>
                       )}
                     </div>
@@ -831,9 +826,7 @@ export function LightboxModal({
                           )}
                         >
                           {prompt || (
-                            <span className="text-sm text-base-fg">
-                              No prompt
-                            </span>
+                            <span className="text-sm text-base-fg">{uiText("lightbox-modal.no.prompt")}{" "}</span>
                           )}
                         </div>
                       )}
@@ -849,7 +842,7 @@ export function LightboxModal({
                             setIsPromptExpanded((prev) => !prev);
                           }}
                         >
-                          <span>{isPromptExpanded ? "Hide" : "See all"}</span>
+                          <span>{isPromptExpanded ? uiText("common.hide") : uiText("common.see.all")}</span>
                           <svg
                             className={twMerge(
                               "h-3 w-3 transition-transform duration-200",
@@ -905,7 +898,7 @@ export function LightboxModal({
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
                             <ImageIcon />
-                            <span>Reference Media</span>
+                            <span>{uiText("lightbox-modal.reference.media")}</span>
                           </div>
                           <div className="grid grid-cols-5 gap-1.5 w-fit">
                             {contextImages.map((contextImage, index) => {
@@ -938,9 +931,7 @@ export function LightboxModal({
                                         >
                                           <SearchIcon
                                             
-                                            className="mr-1.5" />
-                                          Preview image
-                                        </button>
+                                            className="mr-1.5" />{uiText("lightbox-modal.preview.image")}{" "}</button>
                                       )}
                                       {onNavigateToMedia && (
                                         <button
@@ -954,9 +945,7 @@ export function LightboxModal({
                                         >
                                           <LogOutIcon
                                             
-                                            className="mr-1.5" />
-                                          View as media
-                                        </button>
+                                            className="mr-1.5" />{uiText("lightbox-modal.view.as.media")}{" "}</button>
                                       )}
                                     </div>
                                   }
@@ -982,7 +971,7 @@ export function LightboxModal({
                                       <>
                                         <img
                                           src={thumbnail}
-                                          alt={`Reference ${index + 1}`}
+                                          alt={uiText("lightbox-modal.reference.value", { value0: index + 1 })}
                                           className="h-full w-full object-cover"
                                         />
                                         {isVideoRef && (
@@ -1057,9 +1046,7 @@ export function LightboxModal({
                           mediaClass: derivedMediaClass,
                         });
                       }}
-                    >
-                      Recreate
-                    </Button>
+                    >{uiText("common.recreate")}{" "}</Button>
                   )}
 
                 {onEditClicked &&
@@ -1074,9 +1061,7 @@ export function LightboxModal({
                         gtagEvent("edit_image_clicked");
                         await onEditClicked(actionUrl, selectedMediaToken);
                       }}
-                    >
-                      Edit Image
-                    </Button>
+                    >{uiText("common.edit.image")}{" "}</Button>
                   )}
 
                 {onTurnIntoVideoClicked &&
@@ -1094,9 +1079,7 @@ export function LightboxModal({
                           selectedMediaToken,
                         );
                       }}
-                    >
-                      Make Video
-                    </Button>
+                    >{uiText("common.make.video")}{" "}</Button>
                   )}
 
                 {onRemoveBackgroundClicked &&
@@ -1116,9 +1099,7 @@ export function LightboxModal({
                         onClose();
                         onCloseGallery();
                       }}
-                    >
-                      Remove BG
-                    </Button>
+                    >{uiText("lightbox-modal.remove.bg")}{" "}</Button>
                   )}
 
                 {onMake3DObjectClicked &&
@@ -1138,9 +1119,7 @@ export function LightboxModal({
                         onClose();
                         onCloseGallery();
                       }}
-                    >
-                      Make 3D
-                    </Button>
+                    >{uiText("lightbox-modal.make.3d")}{" "}</Button>
                   )}
 
                 {onMake3DWorldClicked &&
@@ -1160,9 +1139,7 @@ export function LightboxModal({
                         onClose();
                         onCloseGallery();
                       }}
-                    >
-                      Make 3D World
-                    </Button>
+                    >{uiText("lightbox-modal.make.3d.world")}{" "}</Button>
                   )}
 
                 {onDownloadClicked && actionUrl && (
@@ -1179,9 +1156,7 @@ export function LightboxModal({
                       gtagEvent("download_clicked");
                       await onDownloadClicked(actionUrl, mediaClass, modelType ?? undefined);
                     }}
-                  >
-                    Download
-                  </Button>
+                  >{uiText("common.download")}{" "}</Button>
                 )}
 
                 {onAddToSceneClicked && actionUrl && (
@@ -1195,9 +1170,7 @@ export function LightboxModal({
                       onClose();
                       onCloseGallery();
                     }}
-                  >
-                    Add to Scene
-                  </Button>
+                  >{uiText("lightbox-modal.add.to.scene")}{" "}</Button>
                 )}
 
                 {selectedMediaToken && (
@@ -1211,7 +1184,7 @@ export function LightboxModal({
                       const shareUrl = `https://getartcraft.com/media/${selectedMediaToken}`;
                       try {
                         await navigator.clipboard.writeText(shareUrl);
-                        toast.success("Share link copied");
+                        toast.success(uiText("common.share.link.copied"));
                         setShareCopied(true);
                         if (shareCopiedTimeoutRef.current) {
                           window.clearTimeout(shareCopiedTimeoutRef.current);
@@ -1224,11 +1197,11 @@ export function LightboxModal({
                           1500,
                         );
                       } catch (err) {
-                        toast.error("Unable to copy link");
+                        toast.error(uiText("common.unable.to.copy.link"));
                       }
                     }}
                   >
-                    {shareCopied ? "Link Copied!" : "Share"}
+                    {shareCopied ? uiText("lightbox-modal.link.copied") : uiText("common.share")}
                   </Button>
                 )}
 
@@ -1242,9 +1215,7 @@ export function LightboxModal({
                       gtagEvent("delete_media_clicked");
                       await onDeleteClicked(selectedMediaToken);
                     }}
-                  >
-                    Delete
-                  </Button>
+                  >{uiText("common.delete")}{" "}</Button>
                 )}
               </div>
             )}
@@ -1271,7 +1242,7 @@ export function LightboxModal({
           <div className="relative flex items-center justify-center overflow-hidden bg-black">
             <img
               src={addCorsParam(refPreviewUrl) || refPreviewUrl}
-              alt="Reference preview"
+              alt={uiText("common.reference.preview")}
               className="max-w-[72vw] max-h-[70vh] object-contain"
             />
           </div>
@@ -1304,6 +1275,7 @@ function InfoSection({
   mediaHeight,
   createdAt,
 }: InfoSectionProps) {
+  useUiLocale();
   const hasAnyInfo =
     !!modelType ||
     !!generationProvider ||
@@ -1320,17 +1292,17 @@ function InfoSection({
     <div className="space-y-2">
       <div className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
         <InfoIcon />
-        <span>Information</span>
+        <span>{uiText("lightbox-modal.information")}</span>
       </div>
       <div className="flex flex-col bg-black/20 border border-white/10 overflow-hidden">
         {modelType && (
           <InfoRow
-            label="Model"
+            label={uiText("common.model")}
             value={
               <>
                 <img
                   src={getCreatorIconPathForModelId(modelType)}
-                  alt="Model creator logo"
+                  alt={uiText("lightbox-modal.model.creator.logo")}
                   className="h-4 w-4 invert"
                 />
                 <span>{getModelDisplayName(modelType)}</span>
@@ -1340,7 +1312,7 @@ function InfoSection({
         )}
         {generationProvider && (
           <InfoRow
-            label="Provider"
+            label={uiText("common.provider")}
             value={
               <>
                 {getProviderIconByName(generationProvider, "h-4 w-4 invert")}
@@ -1351,26 +1323,26 @@ function InfoSection({
         )}
         {aspectRatio && (
           <InfoRow
-            label="Aspect Ratio"
+            label={uiText("common.aspect.ratio")}
             value={formatAspectRatio(aspectRatio)}
           />
         )}
         {resolution && (
-          <InfoRow label="Resolution" value={formatResolution(resolution)} />
+          <InfoRow label={uiText("common.resolution")} value={formatResolution(resolution)} />
         )}
         {durationSeconds != null && (
-          <InfoRow label="Duration" value={formatDuration(durationSeconds)} />
+          <InfoRow label={uiText("common.duration")} value={formatDuration(durationSeconds)} />
         )}
         {generateAudio != null && (
-          <InfoRow label="Audio" value={generateAudio ? "On" : "Off"} />
+          <InfoRow label={uiText("common.audio")} value={generateAudio ? "On" : "Off"} />
         )}
         {mediaWidth && mediaHeight && (
-          <InfoRow label="Size" value={`${mediaWidth} × ${mediaHeight}`} />
+          <InfoRow label={uiText("common.size")} value={`${mediaWidth} × ${mediaHeight}`} />
         )}
         {createdAt && (
           <InfoRow
-            label="Created"
-            value={dayjs(createdAt).format("MMM D, YYYY h:mm:ss A")}
+            label={uiText("lightbox-modal.created")}
+            value={formatDate(new Date(createdAt), { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit" })}
           />
         )}
       </div>
@@ -1379,6 +1351,7 @@ function InfoSection({
 }
 
 function InfoRow({ label, value }: { label: string; value: ReactNode }) {
+  useUiLocale();
   return (
     <div className="flex items-start justify-between gap-4 px-3 py-2.5 border-b border-white/10 last:border-0">
       <span className="shrink-0 pt-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">

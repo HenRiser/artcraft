@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ActionId, Binding, Preset, PresetId } from "./types";
 
 // BASE_BINDINGS is the "Gamer" scheme — it MUST reproduce the app's current
@@ -119,16 +120,14 @@ export const BASE_BINDINGS: Record<ActionId, Binding[]> = {
 export const PRESETS: Record<PresetId, Preset> = {
   gamer: {
     id: "gamer",
-    label: "Gamer",
-    description:
-      "Game-style free camera — WASD to move, Q/E down/up, arrows to look. The current Artcraft default.",
+    get label() { return uiText("keybinds.gamer"); },
+    get description() { return uiText("keybinds.game.style.free.camera.wasd.to.move.q.e.down.up.arrows.to.look.the.current.artcraft.d"); },
     bindings: {}, // BASE is the gamer scheme.
   },
   blender: {
     id: "blender",
-    label: "Blender-like",
-    description:
-      "Familiar to Blender users — G/R/S for grab/rotate/scale and X/Y/Z axis locking during a transform.",
+    get label() { return uiText("keybinds.blender.like"); },
+    get description() { return uiText("keybinds.familiar.to.blender.users.g.r.s.for.grab.rotate.scale.and.x.y.z.axis.locking.during.a"); },
     bindings: {
       // Camera moves off WASD/QE onto the numpad (Blender's navigation cluster),
       // with the top-row digits as the laptop-friendly "Emulate Numpad" mirror.

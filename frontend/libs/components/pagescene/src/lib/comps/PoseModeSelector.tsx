@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React from "react";
 import { useShallow } from "zustand/shallow";
 import { Tooltip } from "@storyteller/ui-tooltip";
@@ -10,6 +11,7 @@ import { openAnimationsModal } from "../actions";
 interface PoseModeSelectorProps {}
 
 export const PoseModeSelector: React.FC<PoseModeSelectorProps> = () => {
+  useUiLocale();
   const { poseMode, showPoseControls, setPoseMode } = usePageSceneStore(
     useShallow((s) => ({
       poseMode: s.poseMode,
@@ -34,7 +36,7 @@ export const PoseModeSelector: React.FC<PoseModeSelectorProps> = () => {
       onMouseDown={(e) => e.stopPropagation()}
     >
       <Tooltip
-        content={"Toggle pose mode (K)"}
+        content={uiText("pagescene.toggle.pose.mode.k")}
         position={"bottom"}
         delay={300}
         closeOnClick={true}
@@ -45,17 +47,13 @@ export const PoseModeSelector: React.FC<PoseModeSelectorProps> = () => {
               icon={FootprintsIcon}
               onClick={handleModeChange}
               className="rounded-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-300"
-            >
-              Enter Pose Mode
-            </Button>
+            >{uiText("pagescene.enter.pose.mode")}{" "}</Button>
           ) : (
             <Button
               icon={CheckIcon}
               onClick={handleModeChange}
               className="rounded-[3px] outline-none  focus-visible:outline-none"
-            >
-              Done
-            </Button>
+            >{uiText("common.done")}{" "}</Button>
           )}
         </>
       </Tooltip>
@@ -63,7 +61,7 @@ export const PoseModeSelector: React.FC<PoseModeSelectorProps> = () => {
           posing so the row stays a single "Done" affordance. */}
       {poseMode === "select" && (
         <Tooltip
-          content={"Add an animation to this character"}
+          content={uiText("pagescene.add.an.animation.to.this.character")}
           position={"bottom"}
           delay={300}
           closeOnClick={true}
@@ -72,9 +70,7 @@ export const PoseModeSelector: React.FC<PoseModeSelectorProps> = () => {
             icon={FilmIcon}
             onClick={() => openAnimationsModal()}
             className="rounded-[3px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-300"
-          >
-            Add Animation
-          </Button>
+          >{uiText("pagescene.add.animation")}{" "}</Button>
         </Tooltip>
       )}
     </div>

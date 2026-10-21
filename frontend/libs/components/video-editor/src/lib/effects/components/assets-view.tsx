@@ -1,3 +1,5 @@
+import { localize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
@@ -10,16 +12,18 @@ import { buildEffectElement } from "../../timeline/element-utils";
 import type { EffectDefinition } from "../types";
 
 export function EffectsView() {
+  useUiLocale();
   const effects = effectsRegistry.getAll();
 
   return (
-    <PanelView title="Effects">
+    <PanelView title={uiText("common.effects")}>
       <EffectsGrid effects={effects} />
     </PanelView>
   );
 }
 
 function EffectsGrid({ effects }: { effects: EffectDefinition[] }) {
+  useUiLocale();
   return (
     <div
       className="grid gap-2"
@@ -33,6 +37,7 @@ function EffectsGrid({ effects }: { effects: EffectDefinition[] }) {
 }
 
 function EffectPreviewCanvas({ effectType }: { effectType: string }) {
+  useUiLocale();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -54,6 +59,7 @@ function EffectPreviewCanvas({ effectType }: { effectType: string }) {
 }
 
 function EffectItem({ effect }: { effect: EffectDefinition }) {
+  useUiLocale();
   const editor = useEditor();
 
   const handleAddToTimeline = useCallback(() => {
@@ -73,7 +79,7 @@ function EffectItem({ effect }: { effect: EffectDefinition }) {
 
   return (
     <DraggableItem
-      name={effect.name}
+      name={localize(effect.name)}
       preview={preview}
       dragData={{
         id: effect.type,

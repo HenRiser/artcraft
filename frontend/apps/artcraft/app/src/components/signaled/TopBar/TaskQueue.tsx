@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { findDesktopModel } from "@storyteller/tauri-api";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { PopoverMenu } from "@storyteller/ui-popover";
@@ -41,7 +42,7 @@ import { coverImageCache } from "~/pages/PageImageTo3DObject/ImageTo3DStore";
 import { useCreditsState } from "@storyteller/credits";
 import { getMetaForTask, cleanupOldEntries } from "./taskEnqueueMeta";
 import { twMerge } from "tailwind-merge";
-import dayjs from "dayjs";
+import { formatDate } from "@storyteller/common";
 
 type InProgressTask = {
   id: string;
@@ -101,6 +102,7 @@ const PromptLine = ({
   prompt: string;
   className?: string;
 }) => {
+  useUiLocale();
   const [marqueePlaying, setMarqueePlaying] = useState(false);
   const [promptOverflows, setPromptOverflows] = useState(false);
   const promptRef = useRef<HTMLDivElement>(null);
@@ -149,10 +151,11 @@ const PromptLine = ({
 };
 
 const CopyPromptButton = ({ prompt }: { prompt: string }) => {
+  useUiLocale();
   const [copied, setCopied] = useState(false);
   return (
     <Tooltip
-      content={copied ? "Copied!" : "Copy prompt"}
+      content={copied ? uiText("common.copied.2") : uiText("common.copy.prompt")}
       position="bottom"
       strategy="fixed"
       className="text-xs"
@@ -161,7 +164,7 @@ const CopyPromptButton = ({ prompt }: { prompt: string }) => {
     >
       <button
         className="flex h-6 w-6 items-center justify-center text-base-fg/60 hover:bg-ui-controls"
-        aria-label="Copy prompt"
+        aria-label={uiText("common.copy.prompt")}
         onClick={(e) => {
           e.stopPropagation();
           navigator.clipboard.writeText(prompt);
@@ -185,10 +188,11 @@ const InProgressCard = ({
   task: InProgressTask;
   onDismiss?: () => void;
 }) => {
+  useUiLocale();
   const progressPercent = Math.max(0, Math.min(100, Math.round(task.progress)));
   const isAlmostDone = task.progress >= 95;
   const timeLabel = isAlmostDone
-    ? "Almost done..."
+    ? uiText("desktop.almost.done")
     : task.estimatedTimeLeftMs != null && task.estimatedTimeLeftMs > 0
       ? formatTimeLeft(task.estimatedTimeLeftMs)
       : null;
@@ -199,7 +203,7 @@ const InProgressCard = ({
     <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden">
       <img
         src={task.refImageUrls![0]}
-        alt="Reference"
+        alt={uiText("common.reference")}
         className="h-full w-full object-cover opacity-50"
         onError={(e) => {
           e.currentTarget.style.display = "none";
@@ -237,7 +241,7 @@ const InProgressCard = ({
               {task.title}
               {isSeedance2 && (
                 <Tooltip
-                  content="Seedance 2.0 is in Early Alpha. Generations may be slow and may experience outages."
+                  content={uiText("signaled.seedance.2.0.is.in.early.alpha.generations.may.be.slow.and.may.experience.outages")}
                   position="top"
                   strategy="fixed"
                   className="w-[200px] text-wrap bg-yellow-400/60"
@@ -279,7 +283,7 @@ const InProgressCard = ({
           {onDismiss && (
             <button
               className="flex h-6 w-6 items-center justify-center text-base-fg/60 hover:bg-ui-controls"
-              aria-label="Dismiss"
+              aria-label={uiText("common.dismiss")}
               onClick={(e) => {
                 e.stopPropagation();
                 onDismiss();
@@ -303,6 +307,7 @@ const CompletedCard = ({
   onClick?: () => void;
   onDismiss?: () => void;
 }) => {
+  useUiLocale();
   return (
     <div
       className="flex cursor-pointer items-center gap-2.5 p-2 transition-colors hover:bg-ui-controls/40"
@@ -327,9 +332,7 @@ const CompletedCard = ({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-[10px] text-base-fg/40">
-            Done
-          </div>
+          <div className="flex h-full w-full items-center justify-center text-[10px] text-base-fg/40">{uiText("common.done")}{" "}</div>
         )}
       </div>
       <div className="min-w-0 flex-1">
@@ -343,7 +346,7 @@ const CompletedCard = ({
         )}
         {task.completedAt && (
           <div className="text-xs text-base-fg opacity-60">
-            {dayjs(task.completedAt).format("MMM D, h:mm A")}
+            {formatDate(new Date(task.completedAt), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
           </div>
         )}
         {task.prompt && <PromptLine prompt={task.prompt} />}
@@ -353,7 +356,7 @@ const CompletedCard = ({
         {onDismiss && (
           <button
             className="flex h-6 w-6 items-center justify-center text-base-fg/60 hover:bg-ui-controls"
-            aria-label="Dismiss"
+            aria-label={uiText("common.dismiss")}
             onClick={(e) => {
               e.stopPropagation();
               onDismiss();
@@ -395,14 +398,15 @@ const FailedCard = ({
   task: FailedTask;
   onDismiss?: () => void;
 }) => {
-  const statusLabel = FAILED_STATUS_LABEL[task.status] || "Failed";
+  useUiLocale();
+  const statusLabel = FAILED_STATUS_LABEL[task.status] || uiText("common.failed");
   const hasRefImages = task.refImageUrls && task.refImageUrls.length > 0;
 
   const thumbnailContent = hasRefImages ? (
     <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden">
       <img
         src={task.refImageUrls![0]}
-        alt="Reference"
+        alt={uiText("common.reference")}
         className="h-full w-full object-cover opacity-50"
         onError={(e) => {
           e.currentTarget.style.display = "none";
@@ -481,7 +485,7 @@ const FailedCard = ({
           </div>
           {task.failedAt && (
             <div className="mt-0.5 text-[11px] text-base-fg/40">
-              {dayjs(task.failedAt).format("MMM D, h:mm A")}
+              {formatDate(new Date(task.failedAt), { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
             </div>
           )}
           {task.prompt && <PromptLine prompt={task.prompt} />}
@@ -491,7 +495,7 @@ const FailedCard = ({
           {onDismiss && (
             <button
               className="flex h-6 w-6 items-center justify-center text-base-fg/60 hover:bg-ui-controls"
-              aria-label="Dismiss"
+              aria-label={uiText("common.dismiss")}
               onClick={(e) => {
                 e.stopPropagation();
                 onDismiss();
@@ -507,6 +511,7 @@ const FailedCard = ({
 };
 
 export const TaskQueue = () => {
+  useUiLocale();
   const [isModalOpen, setModalOpen] = useState(false);
   const [inProgress, setInProgress] = useState<InProgressTask[]>([]);
   const [completed, setCompleted] = useState<CompletedTask[]>([]);
@@ -546,13 +551,11 @@ export const TaskQueue = () => {
   const handleClearCompleted = (onSuccess?: () => void) => {
     setConfirmationConfig({
       isOpen: true,
-      title: "Clear completed tasks?",
+      get title() { return uiText("signaled.clear.completed.tasks"); },
       message: (
-        <span className="text-sm text-white/80">
-          This will remove all completed tasks from the task queue.
-        </span>
+        <span className="text-sm text-white/80">{uiText("signaled.this.will.remove.all.completed.tasks.from.the.task.queue")}{" "}</span>
       ),
-      primaryActionText: "Clear completed",
+      primaryActionText: uiText("common.clear.completed"),
       primaryActionIcon: BrushIcon,
       primaryActionBtnClassName:
         "bg-green-500/10 hover:bg-green-500/20 text-green-500",
@@ -566,13 +569,11 @@ export const TaskQueue = () => {
   const handleClearStale = () => {
     setConfirmationConfig({
       isOpen: true,
-      title: "Clear stale tasks?",
+      get title() { return uiText("signaled.clear.stale.tasks"); },
       message: (
-        <span className="text-sm text-white/80">
-          This will remove all stale/stuck in-progress tasks from the queue.
-        </span>
+        <span className="text-sm text-white/80">{uiText("signaled.this.will.remove.all.stale.stuck.in.progress.tasks.from.the.queue")}{" "}</span>
       ),
-      primaryActionText: "Clear stale",
+      primaryActionText: uiText("signaled.clear.stale"),
       primaryActionIcon: Trash2Icon,
       primaryActionBtnClassName:
         "bg-orange-500/10 hover:bg-orange-500/20 text-orange-500",
@@ -585,13 +586,11 @@ export const TaskQueue = () => {
   const handleClearFailed = () => {
     setConfirmationConfig({
       isOpen: true,
-      title: "Clear failed tasks?",
+      get title() { return uiText("signaled.clear.failed.tasks"); },
       message: (
-        <span className="text-sm text-white/80">
-          This will remove all failed/cancelled tasks from the queue.
-        </span>
+        <span className="text-sm text-white/80">{uiText("signaled.this.will.remove.all.failed.cancelled.tasks.from.the.queue")}{" "}</span>
       ),
-      primaryActionText: "Clear failed",
+      primaryActionText: uiText("common.clear.failed"),
       primaryActionIcon: Trash2Icon,
       primaryActionBtnClassName:
         "bg-red-500/10 hover:bg-red-500/20 text-red-500",
@@ -604,14 +603,11 @@ export const TaskQueue = () => {
   const handleRemoveAll = () => {
     setConfirmationConfig({
       isOpen: true,
-      title: "Remove all tasks?",
+      get title() { return uiText("signaled.remove.all.tasks"); },
       message: (
-        <span className="text-sm text-white/80">
-          This will remove ALL tasks (completed and in-progress) from the queue.
-          This cannot be undone.
-        </span>
+        <span className="text-sm text-white/80">{uiText("signaled.this.will.remove.all.tasks.completed.and.in.progress.from.the.queue.this.cannot.be.un")}{" "}</span>
       ),
-      primaryActionText: "Nuke all",
+      primaryActionText: uiText("desktop.nuke.all"),
       primaryActionIcon: BombIcon,
       primaryActionBtnClassName:
         "bg-red-500/10 hover:bg-red-500/20 text-red-500",
@@ -652,15 +648,15 @@ export const TaskQueue = () => {
       if (isSplatModel) {
         kind = "3D World";
       } else if (taskTypeStr.includes("image") && is3DModel) {
-        kind = "Image to 3D";
+        kind = uiText("experiences.image.to.3d");
       } else if (is3DModel) {
         kind = "3D Model";
       } else if (taskTypeStr.includes("audio")) {
-        kind = "Audio";
+        kind = uiText("common.audio");
       } else if (taskTypeStr.includes("video")) {
-        kind = "Video";
+        kind = uiText("common.video");
       } else if (taskTypeStr.includes("image")) {
-        kind = "Image";
+        kind = uiText("common.image");
       }
 
       const modelDisplay = t.model_type
@@ -724,7 +720,7 @@ export const TaskQueue = () => {
             );
             return {
               id: t.id,
-              title: `Generating ${parts.kind || "Task"}...`,
+              get title() { return uiText("signaled.generating.value", { value0: parts.kind || "Task" }); },
               subtitle: parts.subtitle,
               progress,
               updatedAt: t.updated_at,
@@ -1005,7 +1001,7 @@ export const TaskQueue = () => {
 
   return (
     <>
-      <Tooltip content="Task Queue" position="bottom" closeOnClick={true}>
+      <Tooltip content={uiText("common.task.queue")} position="bottom" closeOnClick={true}>
         <div className="relative">
           {badgeCount > 0 && (
             <div className="absolute -right-1 -top-1 z-20 flex h-[15px] min-w-[15px] items-center justify-center bg-white px-1 font-mono text-[10px] font-semibold text-black ring-2 ring-[#0b0b0c]">
@@ -1034,16 +1030,13 @@ export const TaskQueue = () => {
                     {hasNothing ? (
                       <div className="flex w-full flex-col items-center justify-center p-5 text-base-fg/60">
                         <div className="flex items-center gap-2.5 text-sm opacity-60">
-                          <ListChecksIcon /> No tasks yet
-                        </div>
+                          <ListChecksIcon />{" "}{uiText("common.no.tasks.yet")}{" "}</div>
                       </div>
                     ) : (
                       <div>
                         {inProgress.length > 0 && (
                           <div className="mb-4">
-                            <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">
-                              In Progress
-                            </div>
+                            <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">{uiText("common.in.progress")}{" "}</div>
                             {inProgress.map((t) => (
                               <InProgressCard
                                 key={t.id}
@@ -1060,18 +1053,14 @@ export const TaskQueue = () => {
                         {failed.length > 0 && (
                           <div className="mb-4">
                             <div className="mb-1 flex items-center justify-between px-1">
-                              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-red-400/70">
-                                Failed
-                              </div>
+                              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-red-400/70">{uiText("common.failed")}{" "}</div>
                               <button
                                 className="text-xs tracking-wide text-red-400/70 transition-colors hover:text-red-300"
                                 onClick={() => handleClearFailed()}
                               >
                                 <XIcon
                                   
-                                  className="mr-1" />
-                                Clear failed
-                              </button>
+                                  className="mr-1" />{uiText("common.clear.failed")}{" "}</button>
                             </div>
                             {failed.map((t) => (
                               <FailedCard
@@ -1085,18 +1074,14 @@ export const TaskQueue = () => {
                         {completed.length > 0 && (
                           <div>
                             <div className="mb-1 flex items-center justify-between px-1">
-                              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">
-                                Completed
-                              </div>
+                              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">{uiText("common.completed")}{" "}</div>
                               <button
                                 className="text-xs tracking-wide text-base-fg/50 transition-colors hover:text-base-fg/100"
                                 onClick={() => handleClearCompleted()}
                               >
                                 <XIcon
                                   
-                                  className="mr-1" />
-                                Clear completed
-                              </button>
+                                  className="mr-1" />{uiText("common.clear.completed")}{" "}</button>
                             </div>
                             {completed.map((t) => (
                               <CompletedCard
@@ -1145,9 +1130,7 @@ export const TaskQueue = () => {
                           setModalOpen(true);
                           close();
                         }}
-                      >
-                        Show all
-                      </Button>
+                      >{uiText("signaled.show.all")}{" "}</Button>
                     </div>
                   </div>
                 </div>
@@ -1165,36 +1148,28 @@ export const TaskQueue = () => {
         <div className="flex h-full flex-col">
           <div className="border-b border-ui-panel-border bg-ui-panel">
             <div className="flex items-center justify-between p-3">
-              <h2 className="text-lg font-semibold">Task Queue</h2>
+              <h2 className="text-lg font-semibold">{uiText("common.task.queue")}</h2>
               <div className="flex items-center gap-2">
                 <Button
                   className="flex h-9 items-center justify-center bg-green-500/10 px-3 text-green-500 hover:bg-green-500/20"
                   onClick={() => handleClearCompleted()}
                 >
-                  <BrushIcon  className="mr-1.5" />
-                  Clear completed
-                </Button>
+                  <BrushIcon  className="mr-1.5" />{uiText("common.clear.completed")}{" "}</Button>
                 <Button
                   className="flex h-9 items-center justify-center bg-orange-500/10 px-3 text-orange-500 hover:bg-orange-500/20"
                   onClick={() => handleClearStale()}
                 >
-                  <Trash2Icon  className="mr-1.5" />
-                  Clear stale
-                </Button>
+                  <Trash2Icon  className="mr-1.5" />{uiText("signaled.clear.stale")}{" "}</Button>
                 <Button
                   className="flex h-9 items-center justify-center bg-red-500/10 px-3 text-red-400 hover:bg-red-500/20"
                   onClick={() => handleClearFailed()}
                 >
-                  <Trash2Icon  className="mr-1.5" />
-                  Clear failed
-                </Button>
+                  <Trash2Icon  className="mr-1.5" />{uiText("common.clear.failed")}{" "}</Button>
                 <Button
                   className="flex h-9 items-center justify-center bg-red-500/10 px-3 text-red-500 hover:bg-red-500/20"
                   onClick={() => handleRemoveAll()}
                 >
-                  <BombIcon  className="mr-1.5" />
-                  Remove all
-                </Button>
+                  <BombIcon  className="mr-1.5" />{uiText("signaled.remove.all")}{" "}</Button>
                 <div className="mr-2 h-4 w-[1px] bg-base-fg/10" />
                 <CloseButton onClick={() => setModalOpen(false)} />
               </div>
@@ -1204,16 +1179,13 @@ export const TaskQueue = () => {
             {hasNothing ? (
               <div className="flex w-full flex-col items-center justify-center p-5 text-base-fg/60">
                 <div className="flex items-center gap-2.5 text-sm opacity-60">
-                  <ListChecksIcon /> No tasks yet
-                </div>
+                  <ListChecksIcon />{" "}{uiText("common.no.tasks.yet")}{" "}</div>
               </div>
             ) : (
               <div>
                 {inProgress.length > 0 && (
                   <div className="mb-4">
-                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">
-                      In Progress
-                    </div>
+                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">{uiText("common.in.progress")}{" "}</div>
                     {inProgress.map((t) => (
                       <InProgressCard
                         key={t.id}
@@ -1227,9 +1199,7 @@ export const TaskQueue = () => {
                 )}
                 {failed.length > 0 && (
                   <div className="mb-4">
-                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-red-400/70">
-                      Failed
-                    </div>
+                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-red-400/70">{uiText("common.failed")}{" "}</div>
                     {failed.map((t) => (
                       <FailedCard
                         key={t.id}
@@ -1241,9 +1211,7 @@ export const TaskQueue = () => {
                 )}
                 {completed.length > 0 && (
                   <div>
-                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">
-                      Completed
-                    </div>
+                    <div className="mb-1 px-1 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/50">{uiText("common.completed")}{" "}</div>
                     {completed.map((t) => (
                       <CompletedCard
                         key={t.id}
@@ -1290,7 +1258,7 @@ export const TaskQueue = () => {
           setConfirmationConfig((prev) => ({ ...prev, isOpen: false }));
         }}
         primaryActionText={confirmationConfig.primaryActionText}
-        secondaryActionText="Cancel"
+        secondaryActionText={uiText("common.cancel")}
         primaryActionIcon={confirmationConfig.primaryActionIcon}
         primaryActionBtnClassName={confirmationConfig.primaryActionBtnClassName}
       />

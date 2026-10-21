@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect } from "react";
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { SoundManager } from "@storyteller/soundboard";
@@ -56,6 +57,6 @@ const makeMessage = (event: GenerationFailedEvent) => {
     case GenerationAction.GenerateGaussian:
       return "3D world generation failed!";
     default:
-      return "Generation failed!";
+      return uiText("desktop.generation.failed");
   }
 }

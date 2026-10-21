@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { cn } from "../../utils/ui";
@@ -134,6 +135,7 @@ function NumberField({
   ref,
   ...props
 }: NumberFieldProps & { ref?: React.Ref<HTMLInputElement> }) {
+  useUiLocale();
   const iconRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const ghostRef = useRef<HTMLSpanElement>(null);
@@ -256,7 +258,7 @@ function NumberField({
           <button
             ref={iconRef}
             type="button"
-            aria-label="Drag to adjust value"
+            aria-label={uiText("video-editor.drag.to.adjust.value")}
             disabled={disabled}
             className="text-muted-foreground [&_svg]:size-3.5! shrink-0 select-none pl-2.5 text-sm leading-none cursor-ew-resize"
             onMouseDown={(event) => event.preventDefault()}
@@ -304,7 +306,7 @@ function NumberField({
           <Button
             variant="text"
             size="text"
-            aria-label="Reset to default"
+            aria-label={uiText("common.reset.to.default")}
             onClick={onReset}
           >
             <HugeiconsIcon icon={ArrowTurnBackwardIcon} className="size-3.5!" />

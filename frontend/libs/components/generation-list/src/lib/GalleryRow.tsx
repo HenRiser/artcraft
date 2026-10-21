@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { memo, useCallback, type ReactNode } from "react";
 import {
   BoxIcon,
@@ -52,6 +53,7 @@ export const GalleryRow = memo(function GalleryRow({
   onToggleSelect,
   lastViewed = false,
 }: GalleryRowProps) {
+  useUiLocale();
   const isVideo = item.mediaClass === "video";
   const is3D = is3DMediaClass(item.mediaClass);
   const isAudio = item.mediaClass === "audio";
@@ -63,12 +65,12 @@ export const GalleryRow = memo(function GalleryRow({
         ? MusicIcon
         : ImageIcon;
   const mediaLabel = isVideo
-    ? "Video"
+    ? uiText("common.video")
     : is3D
       ? "3D"
       : isAudio
-        ? "Audio"
-        : "Image";
+        ? uiText("common.audio")
+        : uiText("common.image");
 
   const effectiveModelId = modelId ?? item.modelId;
   const modelDisplayName = effectiveModelId
@@ -141,9 +143,7 @@ export const GalleryRow = memo(function GalleryRow({
             opened in the lightbox). */}
         {lastViewed && (
           <div className="pointer-events-none absolute left-1 top-1 z-10 flex items-center gap-1 rounded-full bg-black/70 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide text-white/80">
-            <EyeIcon />
-            Last viewed
-          </div>
+            <EyeIcon />{uiText("common.last.viewed")}{" "}</div>
         )}
       </div>
 

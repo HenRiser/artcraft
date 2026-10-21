@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { authentication } from "./authentication";
 import { UsersApi } from "~/Classes/ApiManager/UsersApi";
 import { BillingApi } from "~/Classes/ApiManager/BillingApi";
@@ -80,7 +81,7 @@ export const signUp = async ({
   console.log(response);
   if (!response.success || !response.data) {
     setLogoutStates();
-    return response.errorMessage ?? "Unknown error";
+    return response.errorMessage ?? uiText("desktop.unknown.error.2");
   }
 
   // technically user is login with the system now, HOWEVER,

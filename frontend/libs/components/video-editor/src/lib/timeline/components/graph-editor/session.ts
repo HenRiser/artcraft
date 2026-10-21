@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import {
   getCurveHandlesForNormalizedCubicBezier,
   getEditableScalarChannels,
@@ -252,14 +253,14 @@ function resolvePropertySelection({
   if (propertyKeyframes.keyframes.length > 2) {
     return {
       reason: "multiple-keyframes-selected",
-      message: "Select at most two adjacent keyframes per property.",
+      get message() { return uiText("video-editor.select.at.most.two.adjacent.keyframes.per.property"); },
     };
   }
 
   if (!element.animations) {
     return {
       reason: "selected-element-has-no-animations",
-      message: "The selected keyframe has no editable graph.",
+      get message() { return uiText("video-editor.the.selected.keyframe.has.no.editable.graph"); },
     };
   }
 
@@ -270,7 +271,7 @@ function resolvePropertySelection({
   if (!scalarResult || scalarResult.channels.length === 0) {
     return {
       reason: "selected-keyframe-has-no-scalar-channel",
-      message: "The selected keyframe has no editable graph channel.",
+      get message() { return uiText("video-editor.the.selected.keyframe.has.no.editable.graph.channel"); },
     };
   }
 
@@ -324,7 +325,7 @@ function resolvePropertySelection({
   if (contexts.length === 0) {
     return {
       reason: "selected-keyframe-missing-on-channel",
-      message: "The selected keyframe is not editable as a graph segment.",
+      get message() { return uiText("common.the.selected.keyframe.is.not.editable.as.a.graph.segment"); },
     };
   }
 
@@ -336,7 +337,7 @@ function resolvePropertySelection({
       ? [
           {
             key: "value",
-            label: "Curve",
+            get label() { return uiText("video-editor.curve"); },
             context: contexts[0].context,
             allContexts: contexts.map(({ context }) => context),
           },
@@ -389,14 +390,14 @@ function resolveSegmentForOption({
   if (!option) {
     return {
       reason: "selected-properties-have-no-shared-component",
-      message: "Selected properties do not share a graph-editable channel.",
+      get message() { return uiText("common.selected.properties.do.not.share.a.graph.editable.channel"); },
     };
   }
 
   if (!option.context.nextKey) {
     return {
       reason: "selected-keyframe-has-no-next-segment",
-      message: "Select a keyframe that has an outgoing segment.",
+      get message() { return uiText("video-editor.select.a.keyframe.that.has.an.outgoing.segment"); },
     };
   }
 
@@ -406,14 +407,14 @@ function resolveSegmentForOption({
   ) {
     return {
       reason: "selected-keyframes-are-not-adjacent",
-      message: "Selected keyframes must be adjacent on each property.",
+      get message() { return uiText("video-editor.selected.keyframes.must.be.adjacent.on.each.property"); },
     };
   }
 
   if (option.context.keyframe.segmentToNext === "step") {
     return {
       reason: "selected-segment-is-hold",
-      message: "Hold segments have a fixed value - easing has no effect here.",
+      get message() { return uiText("video-editor.hold.segments.have.a.fixed.value.easing.has.no.effect.here"); },
     };
   }
 
@@ -429,8 +430,7 @@ function resolveSegmentForOption({
   if (!cubicBezier) {
     return {
       reason: "selected-segment-is-flat",
-      message:
-        "Cannot edit a segment where both keyframes are at the same time.",
+      get message() { return uiText("video-editor.cannot.edit.a.segment.where.both.keyframes.are.at.the.same.time"); },
     };
   }
 
@@ -458,7 +458,7 @@ export function resolveGraphEditorSelectionState({
   if (selectedKeyframes.length === 0) {
     return createUnavailableState({
       reason: "no-keyframe-selected",
-      message: "Select a keyframe to edit its curve.",
+      get message() { return uiText("common.select.a.keyframe.to.edit.its.curve"); },
     });
   }
 
@@ -469,7 +469,7 @@ export function resolveGraphEditorSelectionState({
   if (!primaryKeyframe) {
     return createUnavailableState({
       reason: "no-keyframe-selected",
-      message: "Select a keyframe to edit its curve.",
+      get message() { return uiText("common.select.a.keyframe.to.edit.its.curve"); },
     });
   }
 
@@ -480,7 +480,7 @@ export function resolveGraphEditorSelectionState({
   if (!selectedElement) {
     return createUnavailableState({
       reason: "selected-element-missing",
-      message: "The selected keyframe could not be resolved.",
+      get message() { return uiText("video-editor.the.selected.keyframe.could.not.be.resolved"); },
     });
   }
 
@@ -492,7 +492,7 @@ export function resolveGraphEditorSelectionState({
   if (spansMultipleElements) {
     return createUnavailableState({
       reason: "selected-keyframes-span-multiple-elements",
-      message: "Selected keyframes must be on the same element.",
+      get message() { return uiText("video-editor.selected.keyframes.must.be.on.the.same.element"); },
     });
   }
 
@@ -534,7 +534,7 @@ export function resolveGraphEditorSelectionState({
   if (componentOptions.length === 0) {
     return createUnavailableState({
       reason: "selected-properties-have-no-shared-component",
-      message: "Selected properties do not share a graph-editable channel.",
+      get message() { return uiText("common.selected.properties.do.not.share.a.graph.editable.channel"); },
     });
   }
 
@@ -587,7 +587,7 @@ export function resolveGraphEditorSelectionState({
   if (!primarySegment) {
     return createUnavailableState({
       reason: "selected-keyframe-missing-on-channel",
-      message: "The selected keyframe is not editable as a graph segment.",
+      get message() { return uiText("common.the.selected.keyframe.is.not.editable.as.a.graph.segment"); },
       componentOptions,
       activeComponentKey,
     });
@@ -597,7 +597,7 @@ export function resolveGraphEditorSelectionState({
     status: "ready",
     message:
       segments.length === 1
-        ? "Edit graph"
+        ? uiText("desktop.edit.graph")
         : `Edit graph for ${segments.length} properties`,
     componentOptions,
     activeComponentKey,

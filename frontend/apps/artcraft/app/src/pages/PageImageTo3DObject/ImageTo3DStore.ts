@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { create } from "zustand";
 import { listen } from "@tauri-apps/api/event";
 import { MediaFilesApi, MediaUploadApi } from "@storyteller/api";
@@ -118,7 +119,7 @@ export const useImageTo3DStore = create<ImageTo3DState>((set, get) => ({
           subscriberId: generatedId,
           mode: "image",
           timestamp: Date.now(),
-          note: "Generated Model",
+          note: uiText("experiences.generated.model"),
           status: "completed",
           modelUrl,
           mediaToken,

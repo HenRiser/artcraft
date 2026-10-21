@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import type {
@@ -42,6 +43,7 @@ export function PropertyParamField({
     onToggle: () => void;
   };
 }) {
+  useUiLocale();
   return (
     <SectionField
       label={param.label}
@@ -50,7 +52,7 @@ export function PropertyParamField({
           <KeyframeToggle
             isActive={keyframe.isActive}
             isDisabled={keyframe.isDisabled}
-            title={`Toggle ${param.label.toLowerCase()} keyframe`}
+            title={uiText("video-editor.toggle.value.keyframe", { value0: param.label.toLowerCase() })}
             onToggle={keyframe.onToggle}
           />
         ) : undefined
@@ -77,6 +79,7 @@ function ParamInput({
   onPreview: (value: ParamValue) => void;
   onCommit: () => void;
 }) {
+  useUiLocale();
   if (param.type === "number") {
     return (
       <NumberParamField
@@ -171,6 +174,7 @@ function NumberParamField({
   onPreview: (value: number) => void;
   onCommit: () => void;
 }) {
+  useUiLocale();
   const { min, max, step, displayMultiplier = 1 } = param;
   const displayValue = value * displayMultiplier;
   const clampDisplayValue = (nextDisplayValue: number) =>

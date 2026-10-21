@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
@@ -27,6 +28,7 @@ export function TextEditOverlay({
   element: TextElement;
   onCommit: () => void;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const viewport = usePreviewViewport();
   const divRef = useRef<HTMLDivElement>(null);
@@ -122,7 +124,7 @@ export function TextEditOverlay({
         suppressContentEditableWarning
         tabIndex={0}
         role="textbox"
-        aria-label="Edit text"
+        aria-label={uiText("video-editor.edit.text")}
         className="cursor-text select-text outline-none whitespace-pre"
         style={{
           fontSize: resolvedTextLayout.scaledFontSize,

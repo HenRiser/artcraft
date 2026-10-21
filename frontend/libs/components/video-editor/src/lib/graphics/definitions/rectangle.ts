@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ParamDefinition } from "../../params";
 import { applyAlignedStroke } from "../stroke";
 import { STROKE_ALIGN_PARAM, type GraphicStrokeAlign } from "./shared";
@@ -14,20 +15,20 @@ interface RectangleParams {
 const RECTANGLE_PARAMS: ParamDefinition<keyof RectangleParams & string>[] = [
   {
     key: "fill",
-    label: "Fill",
+    get label() { return uiText("common.fill"); },
     type: "color",
     default: "#ffffff",
   },
   {
     key: "stroke",
-    label: "Color",
+    get label() { return uiText("common.color"); },
     type: "color",
     default: "#000000",
     group: "stroke",
   },
   {
     key: "strokeWidth",
-    label: "Width",
+    get label() { return uiText("common.width"); },
     type: "number",
     default: 0,
     min: 0,
@@ -39,7 +40,7 @@ const RECTANGLE_PARAMS: ParamDefinition<keyof RectangleParams & string>[] = [
   STROKE_ALIGN_PARAM,
   {
     key: "cornerRadius",
-    label: "Corner radius",
+    get label() { return uiText("common.corner.radius"); },
     type: "number",
     default: 0,
     min: 0,

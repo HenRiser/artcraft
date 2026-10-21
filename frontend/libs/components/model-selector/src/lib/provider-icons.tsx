@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { getCreatorIcon, ModelCreator } from "@storyteller/model-list";
 import { IsDesktopApp } from "@storyteller/tauri-utils";
 import { GenerationProvider } from "@storyteller/api-enums";
@@ -29,7 +30,7 @@ export const getProviderIcon = (
           ? "/resources/images/services/generic.svg"
           : "/images/services/generic.svg"
       }
-      alt="generic logo"
+      alt={uiText("common.generic.logo")}
       className={className}
     />
   );
@@ -66,6 +67,6 @@ export const getProviderDisplayName = (provider: GenerationProvider): string => 
     case GenerationProvider.Runway:
       return "Runway";
     default:
-      return "Unknown Provider";
+      return uiText("desktop.unknown.provider");
   }
 };

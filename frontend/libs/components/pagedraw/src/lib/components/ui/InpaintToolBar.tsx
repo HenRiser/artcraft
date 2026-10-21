@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { SliderV2 } from "@storyteller/ui-sliderv2";
 
 interface InpaintToolBarProps {
@@ -13,6 +14,7 @@ const InpaintToolBar = ({
   onOperationChange,
   onBrushSizeChange,
 }: InpaintToolBarProps) => {
+  useUiLocale();
   return (
     <div className="fixed left-1/2 top-20 z-20 flex -translate-x-1/2 flex-col gap-3">
       <div className="glass flex w-[400px] items-center gap-2 rounded-xl p-2">
@@ -24,9 +26,7 @@ const InpaintToolBar = ({
                 : "text-white/60 hover:bg-white/10 hover:text-white"
             }`}
             onClick={() => onOperationChange("add")}
-          >
-            Add
-          </button>
+          >{uiText("common.add")}{" "}</button>
           <button
             className={`rounded-r-lg px-4 py-2 text-sm font-medium transition-colors ${
               operation === "minus"
@@ -34,9 +34,7 @@ const InpaintToolBar = ({
                 : "text-white/60 hover:bg-white/10 hover:text-white"
             }`}
             onClick={() => onOperationChange("minus")}
-          >
-            Erase
-          </button>
+          >{uiText("pagedraw.erase")}{" "}</button>
         </div>
 
         <SliderV2

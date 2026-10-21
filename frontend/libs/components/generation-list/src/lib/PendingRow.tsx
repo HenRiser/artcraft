@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { memo, type ReactNode } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import { getCreatorIconPathForModelId } from "@storyteller/model-list";
@@ -31,6 +32,7 @@ export const PendingRow = memo(function PendingRow({
   recreateSlot,
   onCopyPromptResult,
 }: PendingRowProps) {
+  useUiLocale();
   const { progressPercent, timeLabel } = derivePendingStatus(
     progress,
     estimatedTimeLeftMs,
@@ -59,9 +61,7 @@ export const PendingRow = memo(function PendingRow({
           ) : (
             // A just-enqueued job's prompt may not be resolved yet — show a
             // placeholder rather than an empty line with a stray copy button.
-            <p className="min-w-0 flex-1 text-sm italic text-white/40">
-              Generating…
-            </p>
+            <p className="min-w-0 flex-1 text-sm italic text-white/40">{uiText("common.generating")}{" "}</p>
           )}
           {prompt.trim() && (
             <CopyPromptButton text={prompt} onCopyResult={onCopyPromptResult} />

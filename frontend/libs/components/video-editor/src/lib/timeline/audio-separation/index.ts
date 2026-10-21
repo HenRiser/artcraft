@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { cloneAnimations } from "../../animation";
 import type { ElementAnimations } from "../../animation/types";
 import type { MediaAsset } from "../../media/types";
@@ -119,10 +120,10 @@ export function getSourceAudioActionLabel({
   element,
 }: {
   element: VideoElement;
-}): "Extract audio" | "Recover audio" {
+}): string {
   return isSourceAudioSeparated({ element })
-    ? "Recover audio"
-    : "Extract audio";
+    ? uiText("desktop.recover.audio")
+    : uiText("desktop.extract.audio");
 }
 
 function cloneVolumeAnimations({

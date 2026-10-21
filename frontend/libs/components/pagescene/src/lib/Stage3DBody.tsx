@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 // 3D editor body — the visual composition of canvas, controls,
 // outliner, prompt box, model selector, etc. Mounted by <Stage3D />
 // inside an EngineProvider; consumes the active editor via context
@@ -116,6 +117,7 @@ export const Stage3DBody = ({
   topBarStartSlot,
   topBarEndSlot,
 }: Stage3DBodyProps = {}) => {
+  useUiLocale();
   const stage3dModelList = useStage3dPageModelList();
   const camAspect = usePageSceneStore((s) => s.cameraAspectRatio);
   const outlinerShowing = usePageSceneStore((s) => s.outlinerShowing);
@@ -155,7 +157,7 @@ export const Stage3DBody = ({
 
   useEffect(() => {
     window.onbeforeunload = () => {
-      return "You may have unsaved changes.";
+      return uiText("desktop.you.may.have.unsaved.changes");
     };
   }, []);
 
@@ -214,12 +216,12 @@ export const Stage3DBody = ({
   );
   const inlineModelSelector =
     modelSelectorPlacement === "prompt-box" ? (
-      <Tooltip content="Model" position="top" className="z-50" closeOnClick>
+      <Tooltip content={uiText("common.model")} position="top" className="z-50" closeOnClick>
         <PopoverMenu
           items={inlineModelItems}
           onSelect={handleInlineModelSelect}
           mode="toggle"
-          panelTitle="Select Model"
+          panelTitle={uiText("desktop.select.model")}
           panelClassName="min-w-[260px]"
           showIconsInList
           triggerIcon={selectedModelIcon}
@@ -350,7 +352,7 @@ export const Stage3DBody = ({
 
     addCamera({
       id: newId,
-      label: `Camera ${newIndex}`,
+      get label() { return uiText("pagescene.camera.value", { value0: newIndex }); },
       focalLength: 24,
       position: { x: randomX, y: randomY, z: randomZ },
       rotation: { x: 0, y: 0, z: 0 },
@@ -422,7 +424,7 @@ export const Stage3DBody = ({
                 name:
                   item.label ||
                   (isCharacter
-                    ? "Character"
+                    ? uiText("promptbox.character")
                     : isSplat
                       ? "3D World"
                       : "3D Object"),
@@ -440,12 +442,12 @@ export const Stage3DBody = ({
                 version: 1,
                 type: AssetType.OBJECT,
                 media_id: item.id || uuidv4(),
-                name: item.label || "Image Plane",
+                name: item.label || uiText("desktop.image.plane"),
               };
               await addObject(editor, mediaItem, worldPosition);
 
               await editor.adapter.uploadPlaneFromMediaToken({
-                title: item.label || "Image Plane",
+                title: item.label || uiText("desktop.image.plane"),
                 mediaToken: item.id,
                 progressCallback: (state) => {
                   if (state.status) console.log("Upload status:", state.status);
@@ -574,11 +576,11 @@ export const Stage3DBody = ({
                 <ClassyModelSelector
                   items={stage3dModelList}
                   page={PAGE_ID}
-                  panelTitle="Select Model"
+                  panelTitle={uiText("desktop.select.model")}
                   panelClassName="min-w-[300px]"
                   buttonClassName="bg-transparent p-0 text-lg hover:bg-transparent text-white/80 hover:text-white"
                   showIconsInList
-                  triggerLabel="Model"
+                  triggerLabel={uiText("common.model")}
                 />
               </div>
             )}

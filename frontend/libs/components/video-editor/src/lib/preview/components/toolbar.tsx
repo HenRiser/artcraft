@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useState, useEffect } from "react";
@@ -29,6 +30,7 @@ export function PreviewToolbar({
 }: {
   onToggleFullscreen: () => void;
 }) {
+  useUiLocale();
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-center pb-3 pt-5 px-5">
       <TimecodeDisplay />
@@ -58,6 +60,7 @@ export function PreviewToolbar({
 }
 
 function TimecodeDisplay() {
+  useUiLocale();
   const editor = useEditor();
   const totalDuration = useEditor((e) => e.timeline.getTotalDuration());
   const fps = useEditor((e) => e.project.getActive().settings.fps);
@@ -95,10 +98,11 @@ function TimecodeDisplay() {
 }
 
 function ZoomSelect() {
+  useUiLocale();
   const { isAtFit, zoomPercent, fitToScreen, setViewportPercent } =
     usePreviewViewport();
 
-  const displayLabel = isAtFit ? "Fit" : `${zoomPercent}%`;
+  const displayLabel = isAtFit ? uiText("common.fit") : `${zoomPercent}%`;
 
   const onValueChange = (value: string) => {
     if (value === "fit") {
@@ -115,7 +119,7 @@ function ZoomSelect() {
     >
       <SelectTrigger className="tabular-nums">{displayLabel}</SelectTrigger>
       <SelectContent>
-        <SelectItem value="fit">Fit</SelectItem>
+        <SelectItem value="fit">{uiText("common.fit")}</SelectItem>
         <SelectSeparator />
         {PREVIEW_ZOOM_PRESETS.map((preset) => (
           <SelectItem key={preset} value={String(preset)}>
@@ -128,6 +132,7 @@ function ZoomSelect() {
 }
 
 function PlayPauseButton() {
+  useUiLocale();
   const isPlaying = useEditor((e) => e.playback.getIsPlaying());
 
   return (

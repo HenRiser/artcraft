@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { VFXResolution } from "./types";
 
 export type VFXShowcaseEntry = {
@@ -16,8 +17,8 @@ export type VFXShowcaseEntry = {
 export const VFX_SHOWCASE: VFXShowcaseEntry[] = [
   {
     id: "showcase-change-location",
-    title: "Change Location",
-    description: "Transport your subject to any location imaginable.",
+    get title() { return uiText("vfx.change.location"); },
+    get description() { return uiText("vfx.transport.your.subject.to.any.location.imaginable"); },
     prompt:
       "A man with curly hair wearing a grey leather jacket sitting in a luxurious private jet cabin, warm afternoon light streaming through the window.",
     resolution: "720p",
@@ -38,8 +39,8 @@ export const VFX_SHOWCASE: VFXShowcaseEntry[] = [
   },
   {
     id: "showcase-relight",
-    title: "Relight",
-    description: "Match your subject's lighting to any reference.",
+    get title() { return uiText("vfx.relight"); },
+    get description() { return uiText("vfx.match.your.subject.s.lighting.to.any.reference"); },
     prompt:
       "Cinematic golden-hour rim light, soft warm fill, shallow depth of field.",
     resolution: "720p",
@@ -56,8 +57,8 @@ export const VFX_SHOWCASE: VFXShowcaseEntry[] = [
   },
   {
     id: "showcase-time-shift",
-    title: "Time Shift",
-    description: "Move the same shot from day to night, or season to season.",
+    get title() { return uiText("vfx.time.shift"); },
+    get description() { return uiText("vfx.move.the.same.shot.from.day.to.night.or.season.to.season"); },
     prompt:
       "Same composition, shifted to twilight blue hour with city lights coming on in the background.",
     resolution: "720p",
@@ -74,8 +75,8 @@ export const VFX_SHOWCASE: VFXShowcaseEntry[] = [
   },
   {
     id: "showcase-object-swap",
-    title: "Object Swap",
-    description: "Swap props and wardrobe while preserving motion.",
+    get title() { return uiText("vfx.object.swap"); },
+    get description() { return uiText("vfx.swap.props.and.wardrobe.while.preserving.motion"); },
     prompt:
       "Replace the coffee cup with a glass of red wine, keep the hand pose and motion identical.",
     resolution: "720p",

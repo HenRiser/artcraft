@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { BoxIcon, WandSparklesIcon } from "lucide-react";
 import { Button } from "@storyteller/ui-button";
@@ -6,6 +7,7 @@ import { AssetModal } from "./AssetModal";
 import { usePageSceneStore } from "../../PageSceneStore";
 
 export const AssetMenu = () => {
+  useUiLocale();
   const [, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -21,7 +23,7 @@ export const AssetMenu = () => {
   return (
     <>
       <div className="glass absolute left-2 top-1/2 flex -translate-y-1/2 flex-col gap-1 rounded-lg p-1">
-        <Tooltip content="Add 3D object to scene" position="right" delay={100}>
+        <Tooltip content={uiText("pagescene.add.3d.object.to.scene")} position="right" delay={100}>
           <Button
             icon={BoxIcon}
             className="h-12 w-12 text-lg"
@@ -29,7 +31,7 @@ export const AssetMenu = () => {
           />
         </Tooltip>
         <Tooltip
-          content="Create 3D model from image"
+          content={uiText("common.create.3d.model.from.image")}
           position="right"
           delay={100}
         >

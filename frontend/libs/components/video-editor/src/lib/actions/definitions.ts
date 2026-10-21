@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ShortcutKey } from "./keybinding";
 import type { TActionWithOptionalArgs } from "./types";
 
@@ -23,128 +24,128 @@ export interface TActionDefinition extends TActionBaseDefinition {
 
 export const ACTIONS = {
   "toggle-play": {
-    description: "Play/Pause",
+    get description() { return uiText("video-editor.play.pause"); },
     category: "playback",
   },
   "stop-playback": {
-    description: "Stop playback",
+    get description() { return uiText("video-editor.stop.playback"); },
     category: "playback",
   },
   "seek-forward": {
-    description: "Seek forward 1 second",
+    get description() { return uiText("video-editor.seek.forward.1.second"); },
     category: "playback",
     args: { seconds: "number" },
   },
   "seek-backward": {
-    description: "Seek backward 1 second",
+    get description() { return uiText("video-editor.seek.backward.1.second"); },
     category: "playback",
     args: { seconds: "number" },
   },
   "frame-step-forward": {
-    description: "Frame step forward",
+    get description() { return uiText("video-editor.frame.step.forward"); },
     category: "navigation",
   },
   "frame-step-backward": {
-    description: "Frame step backward",
+    get description() { return uiText("video-editor.frame.step.backward"); },
     category: "navigation",
   },
   "jump-forward": {
-    description: "Jump forward 5 seconds",
+    get description() { return uiText("video-editor.jump.forward.5.seconds"); },
     category: "navigation",
     args: { seconds: "number" },
   },
   "jump-backward": {
-    description: "Jump backward 5 seconds",
+    get description() { return uiText("video-editor.jump.backward.5.seconds"); },
     category: "navigation",
     args: { seconds: "number" },
   },
   "goto-start": {
-    description: "Go to timeline start",
+    get description() { return uiText("video-editor.go.to.timeline.start"); },
     category: "navigation",
   },
   "goto-end": {
-    description: "Go to timeline end",
+    get description() { return uiText("video-editor.go.to.timeline.end"); },
     category: "navigation",
   },
   split: {
-    description: "Split elements at playhead",
+    get description() { return uiText("video-editor.split.elements.at.playhead"); },
     category: "editing",
   },
   "split-left": {
-    description: "Split and remove left",
+    get description() { return uiText("video-editor.split.and.remove.left"); },
     category: "editing",
   },
   "split-right": {
-    description: "Split and remove right",
+    get description() { return uiText("video-editor.split.and.remove.right"); },
     category: "editing",
   },
   "delete-selected": {
-    description: "Delete current selection",
+    get description() { return uiText("video-editor.delete.current.selection"); },
     category: "editing",
   },
   "copy-selected": {
-    description: "Copy selected elements",
+    get description() { return uiText("video-editor.copy.selected.elements"); },
     category: "editing",
   },
   "paste-copied": {
-    description: "Paste elements at playhead",
+    get description() { return uiText("video-editor.paste.elements.at.playhead"); },
     category: "editing",
   },
   "toggle-snapping": {
-    description: "Toggle snapping",
+    get description() { return uiText("video-editor.toggle.snapping"); },
     category: "editing",
   },
   "toggle-ripple-editing": {
-    description: "Toggle ripple editing",
+    get description() { return uiText("video-editor.toggle.ripple.editing"); },
     category: "editing",
   },
   "toggle-source-audio": {
-    description: "Extract or recover source audio",
+    get description() { return uiText("video-editor.extract.or.recover.source.audio"); },
     category: "editing",
   },
   "select-all": {
-    description: "Select all elements",
+    get description() { return uiText("video-editor.select.all.elements"); },
     category: "selection",
   },
   "cancel-interaction": {
-    description: "Cancel current interaction",
+    get description() { return uiText("video-editor.cancel.current.interaction"); },
     category: "controls",
   },
   "deselect-all": {
-    description: "Deselect all elements",
+    get description() { return uiText("video-editor.deselect.all.elements"); },
     category: "selection",
   },
   "duplicate-selected": {
-    description: "Duplicate selected element",
+    get description() { return uiText("video-editor.duplicate.selected.element"); },
     category: "selection",
   },
   "toggle-elements-muted-selected": {
-    description: "Mute/unmute selected elements",
+    get description() { return uiText("video-editor.mute.unmute.selected.elements"); },
     category: "selection",
   },
   "toggle-elements-visibility-selected": {
-    description: "Show/hide selected elements",
+    get description() { return uiText("video-editor.show.hide.selected.elements"); },
     category: "selection",
   },
   "toggle-bookmark": {
-    description: "Toggle bookmark at playhead",
+    get description() { return uiText("video-editor.toggle.bookmark.at.playhead"); },
     category: "timeline",
   },
   undo: {
-    description: "Undo",
+    get description() { return uiText("common.undo"); },
     category: "history",
   },
   redo: {
-    description: "Redo",
+    get description() { return uiText("common.redo"); },
     category: "history",
   },
   "remove-media-asset": {
-    description: "Remove media asset",
+    get description() { return uiText("video-editor.remove.media.asset"); },
     category: "assets",
     args: { projectId: "string", assetId: "string" },
   },
   "remove-media-assets": {
-    description: "Remove media assets",
+    get description() { return uiText("video-editor.remove.media.assets"); },
     category: "assets",
     args: { projectId: "string", assetIds: "string[]" },
   },

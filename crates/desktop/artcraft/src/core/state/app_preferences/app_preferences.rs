@@ -2,9 +2,11 @@ use crate::core::state::app_preferences::app_preferences_serializable::AppPrefer
 use crate::core::state::app_preferences::preferred_download_directory::{PreferredDownloadDirectory, SystemDownloadDirectory};
 use crate::core::state::app_preferences::preferred_download_filename::PreferredDownloadFilename;
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
+use crate::core::state::app_preferences::ui_language::UiLanguage;
 
 #[derive(Clone)]
 pub struct AppPreferences {
+  pub ui_language: UiLanguage,
   /// The downloads directory to use when a user downloads a file.
   pub preferred_download_directory: PreferredDownloadDirectory,
 
@@ -41,6 +43,7 @@ pub struct AppPreferences {
 impl Default for AppPreferences {
   fn default() -> Self {
     Self {
+      ui_language: UiLanguage::default(),
       preferred_download_directory: PreferredDownloadDirectory::System(SystemDownloadDirectory::Downloads),
       preferred_download_filename: PreferredDownloadFilename::default(),
       auto_download: false,

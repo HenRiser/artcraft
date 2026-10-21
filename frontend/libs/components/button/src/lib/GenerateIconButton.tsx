@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { ArrowUpIcon, CoinsIcon, LoaderCircleIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
 import { ButtonHTMLAttributes } from "react";
@@ -24,13 +25,14 @@ export const GenerateIconButton = ({
   disabled,
   ...rest
 }: GenerateIconButtonProps) => {
+  useUiLocale();
   const isDisabled = disabled || loading;
 
   return (
     <div className={twMerge("flex shrink-0 items-center gap-2.5", className)}>
       {credits != null && (
         <Tooltip
-          content={`${credits} credit${credits !== 1 ? "s" : ""} cost`}
+          content={uiText("common.value.credit.value.cost", { value0: credits, value1: getUiLocale() === "en" ? (credits !== 1 ? "s" : "") : "" })}
           position="top"
           className="z-50"
         >

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { Separator } from "../../components/ui/separator";
@@ -13,12 +14,14 @@ import { EffectsView } from "../../effects/components/assets-view";
 // Captions tab renders a placeholder; depends on the transcription
 // subsystem which is deferred per port scope.
 function ComingSoon({ label }: { label: string }) {
+  useUiLocale();
   return (
-    <div className="text-muted-foreground p-4">{label} view coming soon...</div>
+    <div className="text-muted-foreground p-4">{label}{" "}{uiText("video-editor.view.coming.soon")}</div>
   );
 }
 
 export function AssetsPanel() {
+  useUiLocale();
   const { activeTab } = useAssetsPanelStore();
 
   const viewMap: Record<Tab, React.ReactNode> = {
@@ -27,7 +30,7 @@ export function AssetsPanel() {
     text: <TextView />,
     stickers: <StickersView />,
     effects: <EffectsView />,
-    captions: <ComingSoon label="Captions" />,
+    captions: <ComingSoon label={uiText("common.captions")} />,
     settings: <SettingsView />,
   };
 

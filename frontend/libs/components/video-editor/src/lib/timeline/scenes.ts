@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { TScene } from "./types";
 import { generateUUID } from "../utils/id";
 import { calculateTotalDuration } from "./calculate-duration";
@@ -17,7 +18,7 @@ export function getMainScene({ scenes }: { scenes: TScene[] }): TScene | null {
 export function ensureMainScene({ scenes }: { scenes: TScene[] }): TScene[] {
   const hasMain = scenes.some((scene) => scene.isMain);
   if (!hasMain) {
-    const mainScene = buildDefaultScene({ name: "Main scene", isMain: true });
+    const mainScene = buildDefaultScene({ name: uiText("desktop.main.scene"), isMain: true });
     return [mainScene, ...scenes];
   }
   return scenes;
@@ -57,7 +58,7 @@ export function canDeleteScene({ scene }: { scene: TScene }): {
   reason?: string;
 } {
   if (scene.isMain) {
-    return { canDelete: false, reason: "Cannot delete main scene" };
+    return { canDelete: false, reason: uiText("desktop.cannot.delete.main.scene") };
   }
   return { canDelete: true };
 }

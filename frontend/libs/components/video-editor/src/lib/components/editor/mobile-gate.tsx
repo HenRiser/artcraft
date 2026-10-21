@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ interface MobileGateProps {
 }
 
 export function MobileGate({ children }: MobileGateProps) {
+  useUiLocale();
   const navigate = useNavigate();
   const [show, setShow] = useState<boolean | null>(null);
 
@@ -42,26 +44,18 @@ export function MobileGate({ children }: MobileGateProps) {
         onClick={handleGoBack}
       >
         <HugeiconsIcon icon={ArrowLeft01Icon} className="size-4" />
-        <span className=" text-sm">Go back</span>
+        <span className=" text-sm">{uiText("video-editor.go.back")}</span>
       </Button>
 
       <div className="flex flex-1 flex-col justify-center gap-5 px-7">
         <div className="flex flex-col gap-3">
-          <h1 className="text-foreground text-3xl font-bold tracking-tight">
-            Desktop only (for now)
-          </h1>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            This editor isn't optimized for mobile or iPad yet. Things will
-            break and the layout will be a mess. Come back on a desktop for the
-            real experience.
-          </p>
+          <h1 className="text-foreground text-3xl font-bold tracking-tight">{uiText("video-editor.desktop.only.for.now")}{" "}</h1>
+          <p className="text-muted-foreground text-sm leading-relaxed">{uiText("video-editor.this.editor.isn.t.optimized.for.mobile.or.ipad.yet.things.will.break.and.the.layout.w")}{" "}</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button onClick={handleContinue}>Take a look anyway</Button>
+          <Button onClick={handleContinue}>{uiText("video-editor.take.a.look.anyway")}</Button>
           <Button variant="ghost" asChild>
-            <Link to="/roadmap" className="flex items-center gap-1">
-              Roadmap
-              <HugeiconsIcon icon={ArrowRight01Icon} size={14} />
+            <Link to="/roadmap" className="flex items-center gap-1">{uiText("video-editor.roadmap")}{" "}<HugeiconsIcon icon={ArrowRight01Icon} size={14} />
             </Link>
           </Button>
         </div>

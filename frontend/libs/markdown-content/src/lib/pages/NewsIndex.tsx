@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Link } from "react-router-dom";
 import { getNewsPosts } from "../data/content";
 import { ArrowRightIcon } from "lucide-react";
@@ -7,10 +8,11 @@ interface NewsIndexProps {
 }
 
 export const NewsIndex = ({ basePath }: NewsIndexProps) => {
+  useUiLocale();
   const items = getNewsPosts();
-  const title = "News & Updates";
+  const title = uiText("help-menu.news.updates");
   const description =
-    "Latest updates, features, and announcements from the ArtCraft team.";
+    uiText("desktop.latest.updates.features.and.announcements.from.the.artcraft.team");
 
   // Note: SEO/Head handling should be done by the consumer app if needed (e.g. Helmet)
   // But we can check if we want to include it here or let the parent handle it.
@@ -52,9 +54,7 @@ export const NewsIndex = ({ basePath }: NewsIndexProps) => {
             </Link>
           ))}
           {items.length === 0 && (
-            <div className="text-center py-10 opacity-50">
-                No updates yet. Check back soon!
-            </div>
+            <div className="text-center py-10 opacity-50">{uiText("newsindex.tsx.no.updates.yet.check.back.soon")}{" "}</div>
           )}
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   useCallback,
   useEffect,
@@ -85,6 +86,7 @@ const AudioRefTile = ({
   index: number;
   onRemove: (id: string) => void;
 }) => {
+  useUiLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -182,6 +184,7 @@ export const ImagePromptRow = ({
   maxAudioRefDuration = 15,
   uploadAudio,
 }: ImagePromptRowProps) => {
+  useUiLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoFileInputRef = useRef<HTMLInputElement>(null);
   const audioFileInputRef = useRef<HTMLInputElement>(null);
@@ -283,7 +286,7 @@ export const ImagePromptRow = ({
       >
         <img
           src={image.url}
-          alt="Reference"
+          alt={uiText("common.reference")}
           className="h-full w-full object-cover"
         />
         {isReferenceMode && (
@@ -426,7 +429,7 @@ export const ImagePromptRow = ({
     const availableSlots = Math.max(0, maxVideoCount - baseVideos.length);
     if (availableSlots <= 0) {
       toast.error(
-        `Max ${maxVideoCount} videos / ${maxVideoRefDuration}s total`,
+        uiText("common.max.value.videos.value.s.total", { value0: maxVideoCount, value1: maxVideoRefDuration }),
         { id: "video-ref-limit" },
       );
       if (videoFileInputRef.current) videoFileInputRef.current.value = "";
@@ -442,7 +445,7 @@ export const ImagePromptRow = ({
 
       if (currentTotal + duration > maxVideoRefDuration) {
         toast.error(
-          `Total video duration cannot exceed ${maxVideoRefDuration}s`,
+          uiText("common.total.video.duration.cannot.exceed.value.s", { value0: maxVideoRefDuration }),
           { id: "video-ref-limit" },
         );
         break;
@@ -474,7 +477,7 @@ export const ImagePromptRow = ({
               newState.status === UploaderStates.imageCreateError
             ) {
               setUploadingVideo(null);
-              toast.error("Failed to upload video. Please upload an MP4 file.");
+              toast.error(uiText("common.failed.to.upload.video.please.upload.an.mp4.file"));
             }
           },
         });
@@ -557,7 +560,7 @@ export const ImagePromptRow = ({
 
       if (currentTotal + duration > maxAudioRefDuration) {
         toast.error(
-          `Total audio duration cannot exceed ${maxAudioRefDuration}s`,
+          uiText("common.total.audio.duration.cannot.exceed.value.s", { value0: maxAudioRefDuration }),
         );
         break;
       }
@@ -734,7 +737,7 @@ export const ImagePromptRow = ({
       const availableSlots = Math.max(0, maxVideoCount - baseVideos.length);
       if (availableSlots <= 0) {
         toast.error(
-          `Max ${maxVideoCount} videos / ${maxVideoRefDuration}s total`,
+          uiText("common.max.value.videos.value.s.total", { value0: maxVideoCount, value1: maxVideoRefDuration }),
           { id: "video-ref-limit" },
         );
         setIsGalleryModalOpen(false);
@@ -776,7 +779,7 @@ export const ImagePromptRow = ({
         }
         if (exceeded) {
           toast.error(
-            `Total video duration cannot exceed ${maxVideoRefDuration}s`,
+            uiText("common.total.video.duration.cannot.exceed.value.s", { value0: maxVideoRefDuration }),
             { id: "video-ref-limit" },
           );
         }
@@ -887,9 +890,9 @@ export const ImagePromptRow = ({
                   <span className="text-sm font-medium flex items-center gap-1.5">
                     {isVideo
                       ? isReferenceMode
-                        ? "Image Ref"
-                        : "Start Frame"
-                      : "Image Prompts"}
+                        ? uiText("promptbox.image.ref")
+                        : uiText("promptbox.start.frame")
+                      : uiText("promptbox.image.prompts")}
                     {(!isVideo || isReferenceMode) && (
                       <span className="text-base-fg/60 font-semibold">
                         ({usedSlotsRender}/{maxImagePromptCount})
@@ -900,9 +903,9 @@ export const ImagePromptRow = ({
                 <span className="text-[13px] text-base-fg/60">
                   {isVideo
                     ? isReferenceMode
-                      ? "Upload images"
-                      : "Animate an image"
-                    : "Use the elements of an image"}
+                      ? uiText("common.upload.images")
+                      : uiText("promptbox.animate.an.image")
+                    : uiText("promptbox.use.the.elements.of.an.image")}
                 </span>
               </div>
 
@@ -941,7 +944,7 @@ export const ImagePromptRow = ({
                       >
                         <img
                           src={image.url}
-                          alt="Reference"
+                          alt={uiText("common.reference")}
                           className="h-full w-full object-cover"
                         />
                         {isReferenceMode && (
@@ -977,7 +980,7 @@ export const ImagePromptRow = ({
                         <div className="absolute inset-0">
                           <img
                             src={previewUrl}
-                            alt="Uploading preview"
+                            alt={uiText("common.uploading.preview")}
                             className="h-full w-full object-cover blur-sm"
                           />
                         </div>
@@ -1005,9 +1008,7 @@ export const ImagePromptRow = ({
                             onClick={handleUploadClickStart}
                             icon={PlusIcon}
                             className="w-full"
-                          >
-                            Upload
-                          </Button>
+                          >{uiText("common.upload")}{" "}</Button>
                         )}
                         <Button
                           variant="action"
@@ -1017,9 +1018,7 @@ export const ImagePromptRow = ({
                           }}
                           icon={ImagesIcon}
                           className="w-full bg-base-fg/10 hover:bg-base-fg/20"
-                        >
-                          Pick from library
-                        </Button>
+                        >{uiText("common.pick.from.library")}{" "}</Button>
                       </div>
                     }
                   >
@@ -1049,16 +1048,11 @@ export const ImagePromptRow = ({
                   <div className="flex flex-col grow gap-1 p-2">
                     <div className="flex items-center gap-2 opacity-90 text-base-fg">
                       <ImageIcon  className="h-3.5 w-3.5" />
-                      <span className="text-sm font-medium flex items-center gap-1.5">
-                        End Frame{" "}
-                        <span className="text-base-fg/60 text-xs">
-                          (optional)
-                        </span>
+                      <span className="text-sm font-medium flex items-center gap-1.5">{uiText("promptbox.end.frame")}{" "}
+                        <span className="text-base-fg/60 text-xs">{uiText("common.optional")}{" "}</span>
                       </span>
                     </div>
-                    <span className="text-[13px] text-base-fg/60">
-                      How video ends
-                    </span>
+                    <span className="text-[13px] text-base-fg/60">{uiText("promptbox.how.video.ends")}{" "}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 items-center">
@@ -1069,7 +1063,7 @@ export const ImagePromptRow = ({
                     >
                       <img
                         src={endFrameImage.url}
-                        alt="Ending Frame"
+                        alt={uiText("promptbox.ending.frame")}
                         className="h-full w-full object-cover"
                       />
                       <button
@@ -1090,7 +1084,7 @@ export const ImagePromptRow = ({
                         <div className="absolute inset-0">
                           <img
                             src={uploadingEnd.previewUrl}
-                            alt="Uploading preview"
+                            alt={uiText("common.uploading.preview")}
                             className="h-full w-full object-cover blur-sm"
                           />
                         </div>
@@ -1116,9 +1110,7 @@ export const ImagePromptRow = ({
                               onClick={handleUploadClickEnd}
                               icon={PlusIcon}
                               className="w-full"
-                            >
-                              Upload
-                            </Button>
+                            >{uiText("common.upload")}{" "}</Button>
                           )}
                           <Button
                             variant="action"
@@ -1128,9 +1120,7 @@ export const ImagePromptRow = ({
                             }}
                             icon={ImagesIcon}
                             className="w-full bg-base-fg/10 hover:bg-base-fg/20"
-                          >
-                            Pick from library
-                          </Button>
+                          >{uiText("common.pick.from.library")}{" "}</Button>
                         </div>
                       }
                     >
@@ -1162,16 +1152,14 @@ export const ImagePromptRow = ({
                 <div className="flex flex-col grow gap-1">
                   <div className="flex items-center gap-2 opacity-90 text-base-fg">
                     <VideoIcon  className="h-3.5 w-3.5" />
-                    <span className="text-sm font-medium flex items-center gap-1.5">
-                      Video Ref{" "}
+                    <span className="text-sm font-medium flex items-center gap-1.5">{uiText("promptbox.video.ref")}{" "}
                       <span className="text-base-fg/60 font-semibold">
                         ({referenceVideos.length}/{maxVideoCount})
                       </span>
                     </span>
                   </div>
                   <span className="text-[13px] text-base-fg/60">
-                    {totalVideoDuration}s / {maxVideoRefDuration}s max
-                  </span>
+                    {totalVideoDuration}s / {maxVideoRefDuration}{uiText("common.s.max")}{" "}</span>
                 </div>
                 <div className="flex gap-2 items-center">
                   {referenceVideos.map((video) => (
@@ -1233,9 +1221,7 @@ export const ImagePromptRow = ({
                               onClick={handleUploadClickVideo}
                               icon={PlusIcon}
                               className="w-full"
-                            >
-                              Upload
-                            </Button>
+                            >{uiText("common.upload")}{" "}</Button>
                             <Button
                               variant="action"
                               onClick={() => {
@@ -1244,9 +1230,7 @@ export const ImagePromptRow = ({
                               }}
                               icon={ImagesIcon}
                               className="w-full bg-base-fg/10 hover:bg-base-fg/20"
-                            >
-                              Pick from library
-                            </Button>
+                            >{uiText("common.pick.from.library")}{" "}</Button>
                           </div>
                         }
                       >
@@ -1270,16 +1254,14 @@ export const ImagePromptRow = ({
                   <div className="flex flex-col grow gap-1 p-2">
                     <div className="flex items-center gap-2 opacity-90 text-base-fg">
                       <MusicIcon  className="h-3.5 w-3.5" />
-                      <span className="text-sm font-medium flex items-center gap-1.5">
-                        Audio Ref{" "}
+                      <span className="text-sm font-medium flex items-center gap-1.5">{uiText("promptbox.audio.ref")}{" "}
                         <span className="text-base-fg/60 font-semibold">
                           ({referenceAudios.length}/{maxAudioCount})
                         </span>
                       </span>
                     </div>
                     <span className="text-[13px] text-base-fg/60">
-                      {totalAudioDuration}s / {maxAudioRefDuration}s max
-                    </span>
+                      {totalAudioDuration}s / {maxAudioRefDuration}{uiText("common.s.max")}{" "}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 items-center">

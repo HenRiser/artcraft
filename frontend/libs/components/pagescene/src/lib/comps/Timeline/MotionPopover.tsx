@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ReactNode, useRef, useState } from "react";
 import {
   EASING_PRESETS,
@@ -20,10 +21,10 @@ const sx = (x: number) => PAD + x * SPAN;
 const sy = (y: number) => PAD + (1 - y) * SPAN;
 
 const PRESETS: { name: EasingPresetName; label: string }[] = [
-  { name: "linear", label: "Linear" },
-  { name: "easeIn", label: "In" },
-  { name: "easeOut", label: "Out" },
-  { name: "easeInOut", label: "In-Out" },
+  { name: "linear", get label() { return uiText("common.linear"); } },
+  { name: "easeIn", get label() { return uiText("pagescene.in"); } },
+  { name: "easeOut", get label() { return uiText("pagescene.out"); } },
+  { name: "easeInOut", get label() { return uiText("pagescene.in.out"); } },
 ];
 
 interface MotionPopoverProps {
@@ -43,6 +44,7 @@ export const MotionPopover = ({
   title = "Motion",
   footer,
 }: MotionPopoverProps) => {
+  useUiLocale();
   const svgRef = useRef<SVGSVGElement>(null);
   const [dragging, setDragging] = useState<null | "p1" | "p2">(null);
 

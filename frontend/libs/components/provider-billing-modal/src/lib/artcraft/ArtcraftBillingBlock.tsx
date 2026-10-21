@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { PricingContent } from "@storyteller/ui-pricing-modal";
 
 interface ArtcraftBillingBlockProps {
@@ -8,8 +9,8 @@ export function ArtcraftBillingBlock({
   isVideoPage = false,
 }: ArtcraftBillingBlockProps) {
   const title = isVideoPage
-    ? "Video Generation is Resource Intensive"
-    : "Subscribe for Credits to Generate";
+    ? uiText("desktop.video.generation.is.resource.intensive")
+    : uiText("desktop.subscribe.for.credits.to.generate");
 
   const subtitle = isVideoPage
     ? `Creating high-quality videos requires significant computing power. 

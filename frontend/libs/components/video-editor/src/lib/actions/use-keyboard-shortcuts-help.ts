@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLocale } from "@storyteller/common";
 import { useKeybindingsStore } from "./keybindings-store";
 import { ACTIONS, type TActionWithOptionalArgs } from ".";
 import {
@@ -36,6 +37,7 @@ function formatKey({ key }: { key: string }): string {
 }
 
 export function useKeyboardShortcutsHelp() {
+  const language = useLocale();
   const { keybindings } = useKeybindingsStore();
 
   const shortcuts = useMemo(() => {
@@ -69,7 +71,7 @@ export function useKeyboardShortcutsHelp() {
       }
       return a.description.localeCompare(b.description);
     });
-  }, [keybindings]);
+  }, [keybindings, language]);
 
   return {
     shortcuts,

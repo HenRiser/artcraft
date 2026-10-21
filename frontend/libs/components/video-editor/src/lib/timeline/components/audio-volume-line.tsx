@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useCallback, useRef, useState } from "react";
@@ -56,6 +57,7 @@ export function AudioVolumeLine({
   element: AudioElement;
   trackId: string;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const surfaceRef = useRef<HTMLDivElement>(null);
   const activePointerIdRef = useRef<number | null>(null);
@@ -250,7 +252,7 @@ export function AudioVolumeLine({
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerCancel}
           onLostPointerCapture={handleLostPointerCapture}
-          title="Drag to adjust clip volume"
+          title={uiText("video-editor.drag.to.adjust.clip.volume")}
         />
         {isDragging &&
           tooltipClientPos &&

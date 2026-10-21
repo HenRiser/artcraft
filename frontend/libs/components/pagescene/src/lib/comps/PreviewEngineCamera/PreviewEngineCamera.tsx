@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { twMerge } from "tailwind-merge";
 import { BlindsIcon, FocusIcon, LoaderCircleIcon, PanelTopOpenIcon } from "lucide-react";
 import { useShallow } from "zustand/shallow";
@@ -10,6 +11,7 @@ import { Button } from "@storyteller/ui-button";
 import { Tooltip } from "@storyteller/ui-tooltip";
 
 export const PreviewEngineCamera = () => {
+  useUiLocale();
   const viewport = useViewportSize();
   const {
     camAspect,
@@ -99,12 +101,12 @@ export const PreviewEngineCamera = () => {
             )}
           >
             <FocusIcon  className="text-sm" />
-            <p className="mt-[2px] text-sm font-medium">Camera View</p>
+            <p className="mt-[2px] text-sm font-medium">{uiText("pagescene.camera.view")}</p>
           </div>
 
           <div className="flex gap-1.5">
             {editorState === EditorStates.CAMERA_VIEW && (
-              <Tooltip content="Toggle Letterbox" position={"top"}>
+              <Tooltip content={uiText("pagescene.toggle.letterbox")} position={"top"}>
                 <ButtonIcon
                   icon={editorLetterBox ? BlindsIcon : PanelTopOpenIcon}
                   onClick={() => toggleEditorLetterBox()}
@@ -118,7 +120,7 @@ export const PreviewEngineCamera = () => {
               onClick={handleButtonCameraView}
               className="rounded-md px-2 py-1 text-sm"
             >
-              {editorState === EditorStates.EDIT ? "Enter View" : "Exit View"}
+              {editorState === EditorStates.EDIT ? uiText("pagescene.enter.view") : uiText("pagescene.exit.view")}
             </Button>
           </div>
         </div>

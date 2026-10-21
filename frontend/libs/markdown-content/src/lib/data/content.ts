@@ -1,4 +1,18 @@
 import { parseFrontmatter, pathToFilename } from "../utils/markdown";
+import { getLocale } from "@storyteller/common";
+
+const chineseFiles = import.meta.glob("../content/zh-CN/*/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
+function localizedEntries(files: Record<string, unknown>) {
+  return Object.entries(files).map(([path, raw]) => [
+    path,
+    getLocale() === "zh-CN" ? chineseFiles[path.replace("/content/", "/content/zh-CN/")] ?? raw : raw,
+  ] as const);
+}
 
 // NEWS
 const newsFiles = import.meta.glob("../content/news/*.md", {
@@ -17,7 +31,7 @@ export interface NewsPostData {
 }
 
 export const getNewsPosts = (): NewsPostData[] => {
-  return Object.entries(newsFiles)
+  return localizedEntries(newsFiles)
     .map(([path, raw]) => {
       const { frontmatter, body } = parseFrontmatter(raw as string);
       const slug = pathToFilename(path);
@@ -59,7 +73,7 @@ export interface FaqItem {
 }
 
 export const getFaqItems = (): FaqItem[] => {
-  return Object.entries(faqFiles).map(([path, raw]) => {
+  return localizedEntries(faqFiles).map(([path, raw]) => {
     const { frontmatter, body } = parseFrontmatter(raw as string);
     const slug = pathToFilename(path);
     return {
@@ -100,7 +114,7 @@ export interface TutorialItem {
 }
 
 export const getTutorialItems = (): TutorialItem[] => {
-  return Object.entries(tutorialFiles).map(([path, raw]) => {
+  return localizedEntries(tutorialFiles).map(([path, raw]) => {
     const { frontmatter, body } = parseFrontmatter(raw as string);
     const slug = pathToFilename(path);
     return {

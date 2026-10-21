@@ -27,6 +27,7 @@ fn grok_error(
   match error {
     GrokError::ApiSpecific(GrokSpecificApiError::TooManyVideos) => {
       let event = GenerationEnqueueFailureEvent {
+        reason_code: None,
         action: GenerationAction::GenerateVideo,
         service: GenerationServiceProvider::Grok,
         model: None,

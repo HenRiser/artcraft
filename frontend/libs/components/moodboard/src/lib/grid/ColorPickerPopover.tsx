@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { PaletteIcon } from "lucide-react";
@@ -14,19 +15,19 @@ interface Props {
 // "Add color" entry. Picking only updates a local preview; nothing lands on the
 // board until the explicit "Add color" button — so dragging through the spectrum
 // no longer spams the board with a swatch on every tick.
-export const ColorPickerPopover = ({ onAdd }: Props) => (
+export const ColorPickerPopover = ({ onAdd }: Props) => { useUiLocale(); return (
   // Tooltip matches the sibling ToolbarIconButtons (bottom, 300ms, close on click).
-  <Tooltip content="Add color" position="bottom" delay={300} closeOnClick>
+  <Tooltip content={uiText("common.add.color")} position="bottom" delay={300} closeOnClick>
     <PopoverMenu
       mode="default"
       position="bottom"
-      panelTitle="Add a color"
+      panelTitle={uiText("desktop.add.a.color")}
       panelClassName="w-60"
       triggerIcon={
         <PaletteIcon
           
           className="h-4 w-4"
-          aria-label="Add color" />
+          aria-label={uiText("common.add.color")} />
       }
       buttonClassName="h-9 w-9 rounded-[10px] border-transparent bg-transparent p-0 text-base-fg/80 shadow-none hover:bg-base-fg/10 hover:text-base-fg"
     >
@@ -40,9 +41,10 @@ export const ColorPickerPopover = ({ onAdd }: Props) => (
       )}
     </PopoverMenu>
   </Tooltip>
-);
+); };
 
 const ColorPickerPanel = ({ onAdd }: Props) => {
+  useUiLocale();
   const [color, setColor] = useState(DEFAULT_COLOR);
   const normalized = color.toUpperCase();
   return (
@@ -62,7 +64,7 @@ const ColorPickerPanel = ({ onAdd }: Props) => {
           color={color}
           onChange={setColor}
           prefixed
-          aria-label="Hex color"
+          aria-label={uiText("moodboard.hex.color")}
           className="h-9 w-full rounded-lg border border-ui-controls-border bg-ui-controls px-2.5 text-sm uppercase text-base-fg outline-none focus:border-primary"
         />
       </div>
@@ -70,9 +72,7 @@ const ColorPickerPanel = ({ onAdd }: Props) => {
         variant="primary"
         onClick={() => onAdd(normalized)}
         className="w-full justify-center"
-      >
-        Add color
-      </Button>
+      >{uiText("common.add.color")}{" "}</Button>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
@@ -25,10 +26,10 @@ const MENU_ROW =
 // Header subtitle and empty-replace-list copy per chip type.
 const TYPE_COPY: Record<MentionItem["type"], { title: string; empty: string }> =
   {
-    character: { title: "Character", empty: "No other characters" },
-    image: { title: "Image reference", empty: "No other images" },
-    video: { title: "Video reference", empty: "No other videos" },
-    audio: { title: "Audio reference", empty: "No other audio" },
+    character: { get title() { return uiText("promptbox.character"); }, empty: "No other characters" },
+    image: { get title() { return uiText("promptbox.image.reference"); }, empty: "No other images" },
+    video: { get title() { return uiText("promptbox.video.reference"); }, empty: "No other videos" },
+    audio: { get title() { return uiText("promptbox.audio.reference"); }, empty: "No other audio" },
   };
 
 export interface MentionChipMenuProps {
@@ -75,6 +76,7 @@ export function MentionChipMenu({
   onRemove,
   onClose,
 }: MentionChipMenuProps) {
+  useUiLocale();
   const panelRef = useRef<HTMLDivElement>(null);
   const openedAt = useRef(performance.now());
   // Anchor rect the placement actually uses — re-measured from anchorNode
@@ -208,8 +210,8 @@ export function MentionChipMenu({
             <button
               type="button"
               onClick={onPreview}
-              title="View full size"
-              aria-label={`View ${currentName}`}
+              title={uiText("common.view.full.size")}
+              aria-label={uiText("promptbox.view.value", { value0: currentName })}
               className="group/avatar relative shrink-0 cursor-pointer overflow-hidden rounded-[3px]"
             >
               <ChipAvatar
@@ -233,12 +235,12 @@ export function MentionChipMenu({
           <div className="my-1 border-t border-ui-panel-border" />
           <button type="button" className={MENU_ROW} onClick={() => setView("replace")}>
             <RefreshCwIcon  className="h-3.5 w-3.5 opacity-60" />
-            <span className="flex-1 text-left">Replace</span>
+            <span className="flex-1 text-left">{uiText("common.replace")}</span>
             <span className="text-xs text-base-fg/40">{replaceItems.length}</span>
           </button>
           <button type="button" className={MENU_ROW} onClick={onPreview}>
             <EyeIcon  className="h-3.5 w-3.5 opacity-60" />
-            <span className="flex-1 text-left">Preview</span>
+            <span className="flex-1 text-left">{uiText("common.preview")}</span>
           </button>
           <div className="my-1 border-t border-ui-panel-border" />
           <button
@@ -247,7 +249,7 @@ export function MentionChipMenu({
             onClick={onRemove}
           >
             <Trash2Icon  className="h-3.5 w-3.5 opacity-60" />
-            <span className="flex-1 text-left">Remove</span>
+            <span className="flex-1 text-left">{uiText("common.remove")}</span>
           </button>
         </>
       ) : (
@@ -257,14 +259,13 @@ export function MentionChipMenu({
               type="button"
               className="flex h-6 w-6 items-center justify-center rounded-[3px] text-base-fg/60 transition-colors hover:bg-ui-controls/60 hover:text-base-fg"
               onClick={() => setView("menu")}
-              aria-label="Back"
+              aria-label={uiText("common.back")}
             >
               <ChevronLeftIcon  className="h-3 w-3" />
             </button>
             <div className="min-w-0">
-              <div className="text-sm font-medium text-base-fg">Replace</div>
-              <div className="truncate text-[11px] text-base-fg/50">
-                Currently {currentName}
+              <div className="text-sm font-medium text-base-fg">{uiText("common.replace")}</div>
+              <div className="truncate text-[11px] text-base-fg/50">{uiText("promptbox.currently")}{" "}{currentName}
               </div>
             </div>
           </div>
@@ -310,6 +311,7 @@ function ChipAvatar({
   name: string;
   type?: MentionItem["type"];
 }) {
+  useUiLocale();
   const FallbackIcon = type === "character" ? UserIcon : ImageIcon;
   return (
     <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden border border-white/10 bg-black/20">

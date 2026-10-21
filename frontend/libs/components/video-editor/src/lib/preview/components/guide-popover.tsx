@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,6 +14,7 @@ import { Separator } from "../../components/ui/separator";
 import { cn } from "../../utils/ui";
 
 export function GridPopover({ children }: { children: React.ReactNode }) {
+  useUiLocale();
   const activeGuide = usePreviewStore((state) => state.activeGuide);
   const toggleGuide = usePreviewStore((state) => state.toggleGuide);
   const activeGuideDef = getGuideById(activeGuide);
@@ -23,7 +25,7 @@ export function GridPopover({ children }: { children: React.ReactNode }) {
       <PopoverTrigger>{children}</PopoverTrigger>
       <PopoverContent sideOffset={8} className="w-60 px-0">
         <div className="flex flex-col gap-2 px-4">
-          <Label>Guides</Label>
+          <Label>{uiText("video-editor.guides")}</Label>
           <div className="grid grid-cols-3 gap-1">
             {GUIDE_REGISTRY.map((guide) => (
               <GridItem
@@ -69,6 +71,7 @@ function GridItem({
   isSelected?: boolean;
   onClick: () => void;
 }) {
+  useUiLocale();
   return (
     <button
       type="button"

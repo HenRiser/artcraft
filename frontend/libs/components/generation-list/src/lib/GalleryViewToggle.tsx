@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { LayoutGridIcon, ListIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -12,20 +13,21 @@ const OPTIONS: {
   icon: LucideIcon;
   label: string;
 }[] = [
-  { mode: "grid", icon: LayoutGridIcon, label: "Grid view" },
-  { mode: "list", icon: ListIcon, label: "List view" },
+  { mode: "grid", icon: LayoutGridIcon, get label() { return uiText("generation-list.grid.view"); } },
+  { mode: "list", icon: ListIcon, get label() { return uiText("generation-list.list.view"); } },
 ];
 
 // Segmented grid/list switch for the create-page galleries. Lives in the
 // TopBar; the selection is shared with the gallery via useGalleryViewStore.
 export function GalleryViewToggle() {
+  useUiLocale();
   const viewMode = useGalleryViewStore((s) => s.viewMode);
   const setViewMode = useGalleryViewStore((s) => s.setViewMode);
 
   return (
     <div
       role="group"
-      aria-label="Gallery layout"
+      aria-label={uiText("generation-list.gallery.layout")}
       className="flex items-center gap-0.5 rounded-[3px] border border-white/[0.08] bg-white/[0.04] p-0.5"
     >
       {OPTIONS.map(({ mode, icon, label }) => {

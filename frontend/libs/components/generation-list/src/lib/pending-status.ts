@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 // Progress + time-left derivation shared by the pending card and pending row.
 
 export interface PendingStatus {
@@ -13,7 +14,7 @@ export function derivePendingStatus(
     progress != null ? Math.max(0, Math.min(100, Math.round(progress))) : null;
   const isAlmostDone = progress != null && progress >= 95;
   const timeLabel = isAlmostDone
-    ? "Almost done..."
+    ? uiText("desktop.almost.done")
     : estimatedTimeLeftMs != null && estimatedTimeLeftMs > 0
       ? formatTimeLeft(estimatedTimeLeftMs)
       : null;

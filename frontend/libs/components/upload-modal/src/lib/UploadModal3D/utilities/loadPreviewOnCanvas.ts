@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { FontLoader } from "three/addons/loaders/FontLoader.js";
@@ -234,7 +235,7 @@ export const loadPreviewOnCanvas = ({
   } else if (file.name.endsWith(".vmd")) {
     statusCallback({
       type: "Preview Error",
-      message: "Sorry, Preview is not available to VMD files yet",
+      get message() { return uiText("upload-modal.sorry.preview.is.not.available.to.vmd.files.yet"); },
     });
   } else {
     statusCallback({
@@ -366,7 +367,7 @@ const glbLoader = ({
       renderer.render(scene, camera);
       statusCallback({
         type: "OK",
-        message: "Preview should be available",
+        get message() { return uiText("common.preview.should.be.available"); },
       });
     },
     undefined,
@@ -415,7 +416,7 @@ const pmdLoader = ({
       renderer.render(scene, camera);
       statusCallback({
         type: "OK",
-        message: "Preview should be available",
+        get message() { return uiText("common.preview.should.be.available"); },
       });
     },
     undefined,
@@ -460,6 +461,6 @@ const imagePlaneLoader = ({
   scene.add(obj);
   statusCallback({
     type: "OK",
-    message: "Preview should be available",
+    get message() { return uiText("common.preview.should.be.available"); },
   });
 };

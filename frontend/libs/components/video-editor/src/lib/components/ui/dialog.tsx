@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import * as React from "react";
@@ -11,6 +12,7 @@ function Dialog({
   onOpenChange,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  useUiLocale();
   const handleOpenChange = useOverlayOpenChange({
     open,
     onOpenChange,
@@ -33,7 +35,7 @@ const DialogClose = DialogPrimitive.Close;
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => { useUiLocale(); return (
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
@@ -42,13 +44,13 @@ const DialogOverlay = React.forwardRef<
     )}
     {...props}
   />
-));
+); });
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => { useUiLocale(); return (
   <DialogPortal>
     <DialogOverlay />
     <DialogPrimitive.Content
@@ -66,17 +68,17 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-6 right-6 cursor-pointer opacity-70 hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
         <X className="size-5 text-muted-foreground" />
-        <span className="sr-only">Close</span>
+        <span className="sr-only">{uiText("common.close")}</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
-));
+); });
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement>) => { useUiLocale(); return (
   <div
     className={cn(
       "flex flex-col space-y-2 text-left border-b border-ui-panel-border p-6",
@@ -84,21 +86,21 @@ const DialogHeader = ({
     )}
     {...props}
   />
-);
+); };
 DialogHeader.displayName = "DialogHeader";
 
 const DialogBody = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement>) => { useUiLocale(); return (
   <div className={cn("p-6 flex flex-col gap-4", className)} {...props} />
-);
+); };
 DialogBody.displayName = "DialogBody";
 
 const DialogFooter = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+}: React.HTMLAttributes<HTMLDivElement>) => { useUiLocale(); return (
   <div
     className={cn(
       "flex gap-3 flex-col-reverse sm:flex-row sm:justify-end p-6 py-5 border-t border-ui-panel-border",
@@ -106,13 +108,13 @@ const DialogFooter = ({
     )}
     {...props}
   />
-);
+); };
 DialogFooter.displayName = "DialogFooter";
 
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => { useUiLocale(); return (
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
@@ -121,19 +123,19 @@ const DialogTitle = React.forwardRef<
     )}
     {...props}
   />
-));
+); });
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
+>(({ className, ...props }, ref) => { useUiLocale(); return (
   <DialogPrimitive.Description
     ref={ref}
     className={cn("text-muted-foreground text-sm", className)}
     {...props}
   />
-));
+); });
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
 export {

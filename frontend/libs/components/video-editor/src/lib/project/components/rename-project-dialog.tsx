@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Button } from "../../components/ui/button";
 import {
   Dialog,
@@ -22,6 +23,7 @@ export function RenameProjectDialog({
   onConfirm: (newName: string) => void;
   projectName: string;
 }) {
+  useUiLocale();
   const [name, setName] = useState(projectName);
 
   const handleOpenChange = (open: boolean) => {
@@ -35,11 +37,11 @@ export function RenameProjectDialog({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Rename project</DialogTitle>
+          <DialogTitle>{uiText("video-editor.rename.project")}</DialogTitle>
         </DialogHeader>
 
         <DialogBody className="gap-3">
-          <Label>New name</Label>
+          <Label>{uiText("video-editor.new.name")}</Label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -49,7 +51,7 @@ export function RenameProjectDialog({
                 onConfirm(name);
               }
             }}
-            placeholder="Enter a new name"
+            placeholder={uiText("video-editor.enter.a.new.name")}
           />
         </DialogBody>
 
@@ -61,10 +63,8 @@ export function RenameProjectDialog({
               e.stopPropagation();
               onOpenChange(false);
             }}
-          >
-            Cancel
-          </Button>
-          <Button onClick={() => onConfirm(name)}>Rename</Button>
+          >{uiText("common.cancel")}{" "}</Button>
+          <Button onClick={() => onConfirm(name)}>{uiText("common.rename")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

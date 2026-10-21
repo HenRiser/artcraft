@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ReactNode } from "react";
 import type {
   EffectElement,
@@ -82,7 +83,7 @@ function buildTransformTab({
 }): PropertiesTabDef {
   return {
     id: "transform",
-    label: "Transform",
+    get label() { return uiText("video-editor.transform"); },
     icon: <HugeiconsIcon icon={ArrowExpandIcon} size={16} />,
     content: ({ trackId }) => (
       <ElementParamsTab
@@ -102,7 +103,7 @@ function buildBlendingTab({
 }): PropertiesTabDef {
   return {
     id: "blending",
-    label: "Blending",
+    get label() { return uiText("video-editor.blending"); },
     icon: <HugeiconsIcon icon={RainDropIcon} size={16} />,
     content: ({ trackId }) => (
       <ElementParamsTab
@@ -122,7 +123,7 @@ function buildAudioTab({
 }): PropertiesTabDef {
   return {
     id: "audio",
-    label: "Audio",
+    get label() { return uiText("common.audio"); },
     icon: <HugeiconsIcon icon={MusicNote03Icon} size={16} />,
     content: ({ trackId }) => (
       <ElementParamsTab
@@ -142,7 +143,7 @@ function buildSpeedTab({
 }): PropertiesTabDef {
   return {
     id: "speed",
-    label: "Speed",
+    get label() { return uiText("common.speed"); },
     icon: <HugeiconsIcon icon={DashboardSpeed02Icon} size={16} />,
     content: ({ trackId }) => (
       <SpeedTab element={element} trackId={trackId} />
@@ -157,7 +158,7 @@ function buildMasksTab({
 }): PropertiesTabDef {
   return {
     id: "masks",
-    label: "Masks",
+    get label() { return uiText("common.masks"); },
     icon: <OcShapesIcon size={16} />,
     content: ({ trackId }) => (
       <MasksTab element={element} trackId={trackId} />
@@ -172,7 +173,7 @@ function buildClipEffectsTab({
 }): PropertiesTabDef {
   return {
     id: "effects",
-    label: "Effects",
+    get label() { return uiText("common.effects"); },
     icon: <HugeiconsIcon icon={MagicWand05Icon} size={16} />,
     content: ({ trackId }) => (
       <ClipEffectsTab element={element} trackId={trackId} />
@@ -183,7 +184,7 @@ function buildClipEffectsTab({
 function buildTextTab({ element }: { element: TextElement }): PropertiesTabDef {
   return {
     id: "text",
-    label: "Text",
+    get label() { return uiText("common.text"); },
     icon: <HugeiconsIcon icon={TextFontIcon} size={16} />,
     content: ({ trackId }) => (
       <ElementParamsTab
@@ -203,7 +204,7 @@ function buildGraphicTab({
 }): PropertiesTabDef {
   return {
     id: "graphic",
-    label: "Graphic",
+    get label() { return uiText("video-editor.graphic"); },
     icon: <OcShapesIcon size={16} />,
     content: ({ trackId }) => (
       <GraphicTab element={element} trackId={trackId} />
@@ -218,7 +219,7 @@ function buildStandaloneEffectTab({
 }): PropertiesTabDef {
   return {
     id: "effects",
-    label: "Effects",
+    get label() { return uiText("common.effects"); },
     icon: <HugeiconsIcon icon={MagicWand05Icon} size={16} />,
     content: ({ trackId }) => (
       <StandaloneEffectTab element={element} trackId={trackId} />

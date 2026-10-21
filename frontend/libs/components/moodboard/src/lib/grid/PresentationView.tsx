@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, XIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -13,6 +14,7 @@ interface Props {
 // via the "moodboard-grid" keybinds surface (by default ←/→ or Space navigate,
 // Esc exits). For client/team review and sharing-by-screen.
 export const PresentationView = ({ items, onClose }: Props) => {
+  useUiLocale();
   const [index, setIndex] = useState(0);
   const count = items.length;
   const { matchAction } = useResolvedKeybinds();
@@ -38,7 +40,7 @@ export const PresentationView = ({ items, onClose }: Props) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
       <button
         type="button"
-        aria-label="Exit presentation"
+        aria-label={uiText("moodboard.exit.presentation")}
         onClick={onClose}
         className="absolute right-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/80 backdrop-blur-md transition-colors hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
       >
@@ -46,7 +48,7 @@ export const PresentationView = ({ items, onClose }: Props) => {
       </button>
 
       {count === 0 ? (
-        <p className="text-sm text-white/50">This board is empty.</p>
+        <p className="text-sm text-white/50">{uiText("moodboard.this.board.is.empty")}</p>
       ) : (
         <>
           <div className="flex h-full w-full items-center justify-center p-12">
@@ -77,6 +79,7 @@ export const PresentationView = ({ items, onClose }: Props) => {
 };
 
 const Stage = ({ item }: { item: BoardItem }) => {
+  useUiLocale();
   switch (item.kind) {
     case "image":
       return (
@@ -112,7 +115,7 @@ const Stage = ({ item }: { item: BoardItem }) => {
     case "text":
       return (
         <p className="max-w-3xl whitespace-pre-wrap text-center text-3xl font-medium leading-relaxed text-white">
-          {item.text || "Note"}
+          {item.text || uiText("common.note")}
         </p>
       );
     case "link":
@@ -146,10 +149,10 @@ const Arrow = ({
 }: {
   side: "left" | "right";
   onClick: () => void;
-}) => (
+}) => { useUiLocale(); return (
   <button
     type="button"
-    aria-label={side === "left" ? "Previous" : "Next"}
+    aria-label={side === "left" ? uiText("common.previous") : uiText("common.next")}
     onClick={onClick}
     className={[
       "absolute top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full",
@@ -162,4 +165,4 @@ const Arrow = ({
       className="h-5 w-5"
     />
   </button>
-);
+); };

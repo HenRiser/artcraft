@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { CORNER_RADIUS_MIN } from "./background";
 import { DEFAULTS } from "../timeline/defaults";
 import type { TextElement } from "../timeline/types";
@@ -147,7 +148,7 @@ export function buildTextLayoutParamsFromElement({
     content: readStringParam({
       params: element.params,
       key: "content",
-      fallback: "Default text",
+      fallback: uiText("common.default.text"),
     }),
     fontSize: readNumberParam({
       params: element.params,

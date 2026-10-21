@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { TriangleAlertIcon } from "lucide-react";
 import { useShallow } from "zustand/shallow";
 
@@ -6,6 +7,7 @@ import { Button } from "@storyteller/ui-button";
 import { usePageSceneStore } from "@storyteller/ui-pagescene";
 
 export function ErrorDialog() {
+  useUiLocale();
   const { showErrorDialog, errorDialogTitle, errorDialogMessage, setShowErrorDialog } =
     usePageSceneStore(
       useShallow((s) => ({
@@ -32,9 +34,7 @@ export function ErrorDialog() {
             type="button"
             onClick={() => setShowErrorDialog(false)}
             variant="secondary"
-          >
-            Close
-          </Button>
+          >{uiText("common.close")}{" "}</Button>
         </div>
       </div>
     </Modal>

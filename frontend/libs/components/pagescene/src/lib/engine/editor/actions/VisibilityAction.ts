@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type Editor from "../../editor";
 import type { UndoableAction } from "../HistoryManager";
 
@@ -13,7 +14,7 @@ export class VisibilityAction implements UndoableAction {
     private readonly before: boolean,
     private readonly after: boolean,
   ) {
-    this.label = after ? "Show" : "Hide";
+    this.label = after ? uiText("common.show") : uiText("common.hide");
   }
 
   apply(): void {

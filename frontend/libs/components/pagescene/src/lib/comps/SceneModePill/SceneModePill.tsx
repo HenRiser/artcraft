@@ -1,13 +1,15 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useShallow } from "zustand/shallow";
 import { TabSelector, type TabItem } from "@storyteller/ui-tab-selector";
 import { usePageSceneStore, type SceneMode } from "../../PageSceneStore";
 
 const TABS: TabItem[] = [
-  { id: "build", label: "Build" },
-  { id: "record", label: "Record" },
+  { id: "build", get label() { return uiText("pagescene.build"); } },
+  { id: "record", get label() { return uiText("common.record"); } },
 ];
 
 export const SceneModePill = () => {
+  useUiLocale();
   const { sceneMode, setSceneMode } = usePageSceneStore(
     useShallow((s) => ({
       sceneMode: s.sceneMode,

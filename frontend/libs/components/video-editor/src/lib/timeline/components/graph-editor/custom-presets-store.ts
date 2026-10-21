@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 "use client";
 
 import { useSyncExternalStore } from "react";
@@ -86,7 +87,7 @@ export function savePreset({ value }: { value: NormalizedCubicBezier }): void {
       ...current,
       {
         id: generateUUID(),
-        label: `Custom ${current.length + 1}`,
+        get label() { return uiText("video-editor.custom.value", { value0: current.length + 1 }); },
         value,
         isCustom: true,
       },

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useRef } from "react";
 import { useSignalEffect, useSignals } from "@preact/signals-react/runtime";
 import { PollUserGeneratedMovies, PollUserAudioItems } from "./utilities";
@@ -49,7 +50,7 @@ export const useBackgroundLoadingMedia = () => {
       if (ret) {
         addToast(
           ToastTypes.SUCCESS,
-          "New movie is completed! Please check My Movies",
+          uiText("desktop.new.movie.is.completed.please.check.my.movies"),
           false,
         );
       }
@@ -86,7 +87,7 @@ export const useBackgroundLoadingMedia = () => {
       if (ret) {
         addToast(
           ToastTypes.SUCCESS,
-          "New audio is generated! Please check your audio library",
+          uiText("desktop.new.audio.is.generated.please.check.your.audio.library"),
         );
       }
     });

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { Plus } from "lucide-react";
@@ -46,6 +47,7 @@ export function DraggableItem({
   variant = "card",
   isDraggable = true,
 }: DraggableItemProps) {
+  useUiLocale();
   const [isDragging, setIsDragging] = useState(false);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
   const dragRef = useRef<HTMLDivElement>(null);
@@ -187,7 +189,7 @@ export function DraggableItem({
                 {shouldShowPlusOnDrag && (
                   <PlusButton
                     onClick={handleAddToTimeline}
-                    tooltipText="Add to timeline or drag to position"
+                    tooltipText={uiText("video-editor.add.to.timeline.or.drag.to.position")}
                   />
                 )}
               </AspectRatio>
@@ -208,6 +210,7 @@ function PlusButton({
   onClick?: () => void;
   tooltipText?: string;
 }) {
+  useUiLocale();
   const button = (
     <Button
       size="icon"

@@ -1,3 +1,4 @@
+use crate::core::state::app_preferences::ui_language::localized_window_title;
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
 use crate::core::utils::clear_all_webview_cookies::clear_all_webview_cookies;
 use crate::services::midjourney::state::midjourney_credential_manager::MidjourneyCredentialManager;
@@ -40,7 +41,7 @@ pub async fn grok_login_window_open(
   let window = WebviewWindowBuilder::new(app, GROK_LOGIN_WINDOW_NAME, url)
       //.user_agent(openai_sora_client::credentials::USER_AGENT)
       .always_on_top(false)
-      .title("Login to Grok")
+      .title(localized_window_title(app, GROK_LOGIN_WINDOW_NAME, "Login to Grok"))
       .center()
       .resizable(true)
       .visible(true)

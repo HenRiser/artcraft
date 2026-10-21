@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { ArrowRightIcon } from "lucide-react";
@@ -65,6 +66,7 @@ function useLocalStorage<T>({
 }
 
 export function Onboarding() {
+  useUiLocale();
   const [step, setStep] = useState(0);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useLocalStorage({
     key: "hasSeenOnboarding",
@@ -84,13 +86,13 @@ export function Onboarding() {
   const getStepTitle = () => {
     switch (step) {
       case 0:
-        return "Welcome to the editor";
+        return uiText("video-editor.welcome.to.the.editor");
       case 1:
-        return "Early preview — expect rough edges";
+        return uiText("desktop.early.preview.expect.rough.edges");
       case 2:
-        return "Have fun creating!";
+        return uiText("desktop.have.fun.creating");
       default:
-        return "Editor Onboarding";
+        return uiText("desktop.editor.onboarding");
     }
   };
 
@@ -100,10 +102,10 @@ export function Onboarding() {
         return (
           <div className="space-y-5">
             <div className="space-y-3">
-              <Title title="Welcome to the editor" />
-              <Description description="Drop media onto the timeline, scrub the playhead to preview, and use the panels on the right to tune properties, animations, and effects." />
+              <Title title={uiText("video-editor.welcome.to.the.editor")} />
+              <Description description={uiText("video-editor.drop.media.onto.the.timeline.scrub.the.playhead.to.preview.and.use.the.panels.on.the")} />
             </div>
-            <NextButton onClick={handleNext}>Next</NextButton>
+            <NextButton onClick={handleNext}>{uiText("common.next")}</NextButton>
           </div>
         );
       case 1:
@@ -111,10 +113,10 @@ export function Onboarding() {
           <div className="space-y-5">
             <div className="space-y-3">
               <Title title={getStepTitle()} />
-              <Description description="This editor is in active development." />
-              <Description description="A lot of features are still being built out — if something looks off, it probably is. Save often." />
+              <Description description={uiText("video-editor.this.editor.is.in.active.development")} />
+              <Description description={uiText("video-editor.a.lot.of.features.are.still.being.built.out.if.something.looks.off.it.probably.is.sav")} />
             </div>
-            <NextButton onClick={handleNext}>Next</NextButton>
+            <NextButton onClick={handleNext}>{uiText("common.next")}</NextButton>
           </div>
         );
       case 2:
@@ -122,9 +124,9 @@ export function Onboarding() {
           <div className="space-y-5">
             <div className="space-y-3">
               <Title title={getStepTitle()} />
-              <Description description="Keyboard shortcuts are available under the project menu — press the Shortcuts entry to view or rebind them." />
+              <Description description={uiText("video-editor.keyboard.shortcuts.are.available.under.the.project.menu.press.the.shortcuts.entry.to")} />
             </div>
-            <NextButton onClick={handleClose}>Finish</NextButton>
+            <NextButton onClick={handleClose}>{uiText("video-editor.finish")}</NextButton>
           </div>
         );
       default:
@@ -145,10 +147,12 @@ export function Onboarding() {
 }
 
 function Title({ title }: { title: string }) {
+  useUiLocale();
   return <h2 className="text-lg font-bold md:text-xl">{title}</h2>;
 }
 
 function Description({ description }: { description: string }) {
+  useUiLocale();
   return (
     <div className="text-muted-foreground">
       <p className="mb-0">{description}</p>
@@ -163,6 +167,7 @@ function NextButton({
   children: React.ReactNode;
   onClick: () => void;
 }) {
+  useUiLocale();
   return (
     <Button onClick={onClick} variant="default" className="w-full">
       {children}

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ChangeEvent } from "react";
 import { TagsIcon, XIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
@@ -17,6 +18,7 @@ export function StylePromptRow({
   placeholder = "Style: e.g. dreamy synth-pop, female vocals",
   className = "",
 }: StylePromptRowProps) {
+  useUiLocale();
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };
@@ -41,7 +43,7 @@ export function StylePromptRow({
       {value.length > 0 && (
         <button
           type="button"
-          aria-label="Clear style"
+          aria-label={uiText("promptbox.clear.style")}
           onClick={() => onChange("")}
           className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[3px] text-base-fg/40 transition-colors hover:bg-white/10 hover:text-base-fg"
         >

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { EditorCore } from "../index";
 import type { RootNode } from "../../services/renderer/nodes/root-node";
 import type { ExportOptions, ExportResult } from "../../export";
@@ -53,7 +54,7 @@ export class RendererManager {
     if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) {
       return {
         success: false,
-        error: "Clipboard image copy is not supported in this browser",
+        error: uiText("desktop.clipboard.image.copy.is.not.supported.in.this.browser"),
       };
     }
 
@@ -73,7 +74,7 @@ export class RendererManager {
       console.error("Copy snapshot failed:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : uiText("desktop.unknown.error.2"),
       };
     }
   }
@@ -84,12 +85,12 @@ export class RendererManager {
       const activeProject = this.editor.project.getActive();
 
       if (!renderTree || !activeProject) {
-        return { success: false, error: "No project or scene to capture" };
+        return { success: false, error: uiText("desktop.no.project.or.scene.to.capture") };
       }
 
       const duration = this.editor.timeline.getTotalDuration();
       if (duration === 0) {
-        return { success: false, error: "Project is empty" };
+        return { success: false, error: uiText("desktop.project.is.empty") };
       }
 
       const { canvasSize, fps } = activeProject.settings;
@@ -119,7 +120,7 @@ export class RendererManager {
       });
 
       if (!blob) {
-        return { success: false, error: "Failed to create image" };
+        return { success: false, error: uiText("desktop.failed.to.create.image") };
       }
 
       const timecode = formatTimecode({ time: renderTime, rate: fps })!.replace(/:/g, "-");
@@ -133,7 +134,7 @@ export class RendererManager {
       console.error("Snapshot capture failed:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : uiText("desktop.unknown.error.2"),
       };
     }
   }
@@ -155,12 +156,12 @@ export class RendererManager {
       const activeProject = this.editor.project.getActive();
 
       if (!activeProject) {
-        return { success: false, error: "No active project" };
+        return { success: false, error: uiText("video-editor.no.active.project") };
       }
 
       const duration = this.editor.timeline.getTotalDuration();
       if (duration === 0) {
-        return { success: false, error: "Project is empty" };
+        return { success: false, error: uiText("desktop.project.is.empty") };
       }
 
       const exportFps = fps ?? activeProject.settings.fps;
@@ -234,7 +235,7 @@ export class RendererManager {
       console.error("Export failed:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown export error",
+        error: error instanceof Error ? error.message : uiText("desktop.unknown.export.error"),
       };
     }
   }

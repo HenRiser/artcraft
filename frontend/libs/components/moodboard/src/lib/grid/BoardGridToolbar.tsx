@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import { Grid2x2Icon, Grid3x3Icon, GripHorizontalIcon, ImagesIcon, LayersIcon, StarIcon, StickyNoteIcon, UploadIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -63,13 +64,14 @@ export const BoardGridToolbar = ({
   onAddColor,
   onNewSection,
 }: Props) => {
+  useUiLocale();
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center px-3 pt-3">
       <ToolbarShell className="max-w-full">
         <div className="flex min-w-0 flex-col pl-1 pr-2">
           <BoardTitle name={boardName} onRename={onRenameBoard} />
           <span className="pl-1.5 text-[11px] leading-tight text-base-fg/45">
-            {itemCount} {itemCount === 1 ? "item" : "items"}
+            {itemCount} {itemCount === 1 ? uiText("common.item") : uiText("moodboard.items")}
           </span>
         </div>
 
@@ -79,25 +81,25 @@ export const BoardGridToolbar = ({
         <div className="flex items-center gap-1">
           <ToolbarIconButton
             icon={UploadIcon}
-            label="Upload"
+            label={uiText("common.upload")}
             onClick={onUpload}
           />
           {canPickLibrary && (
             <ToolbarIconButton
               icon={ImagesIcon}
-              label="From library"
+              label={uiText("common.from.library")}
               onClick={onLibrary}
             />
           )}
           <ToolbarIconButton
             icon={StickyNoteIcon}
-            label="Add note"
+            label={uiText("moodboard.add.note")}
             onClick={onAddNote}
           />
           <ColorPickerPopover onAdd={onAddColor} />
           <ToolbarIconButton
             icon={LayersIcon}
-            label="New section"
+            label={uiText("common.new.section")}
             onClick={onNewSection}
           />
         </div>
@@ -113,7 +115,7 @@ export const BoardGridToolbar = ({
                 key={d}
                 type="button"
                 title={DENSITY_LABEL[d]}
-                aria-label={`${DENSITY_LABEL[d]} density`}
+                aria-label={uiText("moodboard.value.density", { value0: DENSITY_LABEL[d] })}
                 onClick={() => onDensityChange(d)}
                 className={[
                   "flex h-7 w-7 items-center justify-center rounded-full transition-colors duration-150",
@@ -139,10 +141,10 @@ export const BoardGridToolbar = ({
           type="button"
           title={
             ratingFilter > 0
-              ? `Showing ${ratingFilter}+ stars`
-              : "Filter by rating"
+              ? uiText("moodboard.showing.value.stars", { value0: ratingFilter })
+              : uiText("common.filter.by.rating")
           }
-          aria-label="Filter by rating"
+          aria-label={uiText("common.filter.by.rating")}
           onClick={onCycleRatingFilter}
           className={[
             "flex h-8 items-center gap-1 rounded-full px-2.5 transition-colors duration-150",
@@ -154,7 +156,7 @@ export const BoardGridToolbar = ({
         >
           <StarIcon  className="h-3.5 w-3.5" />
           <span className="text-xs font-semibold tabular-nums">
-            {ratingFilter > 0 ? `${ratingFilter}+` : "All"}
+            {ratingFilter > 0 ? `${ratingFilter}+` : uiText("common.all")}
           </span>
         </button>
 
@@ -181,6 +183,7 @@ const BoardTitle = ({
   name: string;
   onRename: (name: string) => void;
 }) => {
+  useUiLocale();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(name);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -217,7 +220,7 @@ const BoardTitle = ({
   return (
     <button
       type="button"
-      title="Rename board"
+      title={uiText("moodboard.rename.board")}
       onClick={() => {
         setDraft(name);
         setEditing(true);

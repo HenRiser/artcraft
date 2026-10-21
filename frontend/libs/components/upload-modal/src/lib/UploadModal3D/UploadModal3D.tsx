@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Checkbox } from "@storyteller/ui-checkbox";
 import { LoadingDots } from "@storyteller/ui-loading";
@@ -42,6 +43,7 @@ interface Props {
 const objectFileTypes = Object.values(OBJECT_FILE_TYPE);
 
 export function UploadModal3D(props: Props) {
+  useUiLocale();
   const {
     isOpen,
     onClose,
@@ -118,7 +120,7 @@ export function UploadModal3D(props: Props) {
                   setIsCharacter(e.target.checked);
                   if (e.target.checked) setIsAnimation(false);
                 }}
-                label="Upload as Character"
+                label={uiText("upload-modal.upload.as.character")}
               />
               <Checkbox
                 id="upload-as-animation"
@@ -128,7 +130,7 @@ export function UploadModal3D(props: Props) {
                   setIsAnimation(e.target.checked);
                   if (e.target.checked) setIsCharacter(false);
                 }}
-                label="Upload as Animation"
+                label={uiText("upload-modal.upload.as.animation")}
               />
             </div>
             <UploadFiles3D
@@ -162,8 +164,8 @@ export function UploadModal3D(props: Props) {
             <LoadingDots className="mb-1 bg-transparent" />
             <div className="w-100 text-center opacity-50">
               {p && p.total > 1
-                ? `Uploading ${p.current} / ${p.total}...`
-                : "Uploading..."}
+                ? uiText("common.uploading.value.value", { value0: p.current, value1: p.total })
+                : uiText("common.uploading")}
             </div>
           </>
         );
@@ -171,7 +173,7 @@ export function UploadModal3D(props: Props) {
       case UploaderStates.success: {
         return (
           <UploadSuccess
-            title={isAnimation ? "Animation" : "3D model"}
+            title={isAnimation ? uiText("common.animation") : uiText("upload-modal.3d.model")}
             onOk={() => {
               // Category-scoped opens come from a library panel that shows
               // the upload itself — don't pop My Library over it.

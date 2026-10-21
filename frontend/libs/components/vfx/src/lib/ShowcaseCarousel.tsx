@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -17,6 +18,7 @@ export const ShowcaseCarousel = ({
   onSelect,
   className,
 }: ShowcaseCarouselProps) => {
+  useUiLocale();
   const activeIndex = Math.max(
     0,
     entries.findIndex((e) => e.id === activeId),
@@ -82,12 +84,12 @@ interface ArrowButtonProps {
   onClick: () => void;
 }
 
-const ArrowButton = ({ direction, disabled, onClick }: ArrowButtonProps) => (
+const ArrowButton = ({ direction, disabled, onClick }: ArrowButtonProps) => { useUiLocale(); return (
   <button
     type="button"
     onClick={onClick}
     disabled={disabled}
-    aria-label={direction === "prev" ? "Previous showcase" : "Next showcase"}
+    aria-label={direction === "prev" ? uiText("vfx.previous.showcase") : uiText("vfx.next.showcase")}
     className={twMerge(
       "flex h-7 w-7 items-center justify-center rounded-full text-white/60 transition-colors",
       disabled
@@ -100,4 +102,4 @@ const ArrowButton = ({ direction, disabled, onClick }: ArrowButtonProps) => (
       className="h-3 w-3"
     />
   </button>
-);
+); };

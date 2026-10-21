@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 // Top-level shell for the artcraft app. Always-mounted chrome
 // (TopBar, login + pricing modals, toaster, Tauri event listeners,
 // background refresh hooks) lives here, and a single tab-driven
@@ -111,6 +112,7 @@ interface Props {
 }
 
 export const MainApp = ({ sceneToken }: Props) => {
+  useUiLocale();
   useSignals();
 
   // Background plumbing — should keep running regardless of which tab
@@ -140,13 +142,13 @@ export const MainApp = ({ sceneToken }: Props) => {
 
   useFlashFileDownloadErrorEvent(async (event) => {
     console.log("Flash file download error event received:", event);
-    toast.error(event.message || "File download failed");
+    toast.error(event.message || uiText("desktop.file.download.failed"));
   });
 
   useMediaFileDeletedEvent(async (event) => {
     console.log("Media file deleted event received:", event);
     await SoundManager.playFileDeleted();
-    toast.error("File deleted.");
+    toast.error(uiText("mainapp.tsx.file.deleted"));
   });
 
   // Session probe (runs once per shell mount).
@@ -197,9 +199,7 @@ export const MainApp = ({ sceneToken }: Props) => {
           <div
             role="status"
             className="flex h-[calc(100vh-56px)] items-center justify-center text-base-fg/60"
-          >
-            Loading…
-          </div>
+          >{uiText("mainapp.tsx.loading")}{" "}</div>
         }
       >
         <TabBody sceneToken={sceneToken} />
@@ -234,6 +234,7 @@ export const MainApp = ({ sceneToken }: Props) => {
 };
 
 const TabBody = ({ sceneToken }: { sceneToken?: string }) => {
+  useUiLocale();
   const activeTabId = useTabStore((s) => s.activeTabId);
   const storyboardPageEnabled = useStoryboardPageEnabled();
 
@@ -361,6 +362,7 @@ const TabBody = ({ sceneToken }: { sceneToken?: string }) => {
 // dep there. Mounted only when the 2D tab is active, so it doesn't
 // race the 3D-tab gallery handler.
 const PageDrawWithGalleryDrop = () => {
+  useUiLocale();
   useEffect(() => {
     const handler = onImageDrop(
       (item: GalleryItem, position: { x: number; y: number }) => {

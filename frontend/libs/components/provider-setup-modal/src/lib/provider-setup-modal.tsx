@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Modal } from "@storyteller/ui-modal";
 import { invoke } from "@tauri-apps/api/core";
 import { ArrowRightIcon, WandSparklesIcon } from "lucide-react";
@@ -11,6 +12,7 @@ interface ProviderSetupModalProps {
 
 export function ProviderSetupModal({
 }: ProviderSetupModalProps) {
+  useUiLocale();
   const [showModal, setShowModal] = useState(false);
   const [provider, setProvider] = useState<GenerationProvider>(GenerationProvider.Artcraft);
 
@@ -73,9 +75,7 @@ export function ProviderSetupModal({
       <div className="flex flex-col gap-6 text-base-fg">
         <div className="flex flex-col gap-3">
           <p className="hud-label flex items-center gap-2 text-base-fg/55">
-            <WandSparklesIcon aria-hidden className="h-3.5 w-3.5" />
-            Connect account
-          </p>
+            <WandSparklesIcon aria-hidden className="h-3.5 w-3.5" />{uiText("provider-setup-modal.connect.account")}{" "}</p>
           <h1 className="font-display text-3xl font-medium leading-[1.05] tracking-[-0.03em]">
             {modalTitle}
           </h1>

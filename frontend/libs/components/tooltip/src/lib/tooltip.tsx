@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useState, useRef, useEffect, useReducer } from "react";
 import { createPortal } from "react-dom";
 import { Transition } from "@headlessui/react";
@@ -54,6 +55,7 @@ export const Tooltip = ({
   strategy = "absolute",
   portal = false,
 }: TooltipProps) => {
+  useUiLocale();
   const [isShowing, setIsShowing] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -379,7 +381,7 @@ export const Tooltip = ({
             {imageSrc && (
               <img
                 src={imageSrc}
-                alt="tooltip"
+                alt={uiText("tooltip.tooltip")}
                 className="mb-1 aspect-square w-56 rounded-none"
               />
             )}

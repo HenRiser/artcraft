@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { DrumIcon } from "lucide-react";
 import { PopoverMenu } from "@storyteller/ui-popover";
 import { SliderV2 } from "@storyteller/ui-sliderv2";
@@ -14,19 +15,19 @@ export const MUSICAL_KEYS: Array<{
   label: string;
   shortLabel: string;
 }> = [
-  { value: "auto", label: "Auto", shortLabel: "Auto" },
-  { value: "c_major", label: "C Major", shortLabel: "C" },
-  { value: "c_minor", label: "C Minor", shortLabel: "Cm" },
-  { value: "d_major", label: "D Major", shortLabel: "D" },
-  { value: "d_minor", label: "D Minor", shortLabel: "Dm" },
-  { value: "f_major", label: "F Major", shortLabel: "F" },
-  { value: "f_minor", label: "F Minor", shortLabel: "Fm" },
-  { value: "g_major", label: "G Major", shortLabel: "G" },
-  { value: "g_minor", label: "G Minor", shortLabel: "Gm" },
-  { value: "a_major", label: "A Major", shortLabel: "A" },
-  { value: "a_minor", label: "A Minor", shortLabel: "Am" },
-  { value: "b_major", label: "B Major", shortLabel: "B" },
-  { value: "b_minor", label: "B Minor", shortLabel: "Bm" },
+  { value: "auto", get label() { return uiText("common.auto"); }, shortLabel: "Auto" },
+  { value: "c_major", get label() { return uiText("promptbox.c.major"); }, shortLabel: "C" },
+  { value: "c_minor", get label() { return uiText("promptbox.c.minor"); }, shortLabel: "Cm" },
+  { value: "d_major", get label() { return uiText("promptbox.d.major"); }, shortLabel: "D" },
+  { value: "d_minor", get label() { return uiText("promptbox.d.minor"); }, shortLabel: "Dm" },
+  { value: "f_major", get label() { return uiText("promptbox.f.major"); }, shortLabel: "F" },
+  { value: "f_minor", get label() { return uiText("promptbox.f.minor"); }, shortLabel: "Fm" },
+  { value: "g_major", get label() { return uiText("promptbox.g.major"); }, shortLabel: "G" },
+  { value: "g_minor", get label() { return uiText("promptbox.g.minor"); }, shortLabel: "Gm" },
+  { value: "a_major", get label() { return uiText("promptbox.a.major"); }, shortLabel: "A" },
+  { value: "a_minor", get label() { return uiText("promptbox.a.minor"); }, shortLabel: "Am" },
+  { value: "b_major", get label() { return uiText("promptbox.b.major"); }, shortLabel: "B" },
+  { value: "b_minor", get label() { return uiText("promptbox.b.minor"); }, shortLabel: "Bm" },
 ];
 
 export interface SoundsSettingsPopoverProps {
@@ -47,6 +48,7 @@ export function SoundsSettingsPopover({
   musicalKey = "auto",
   onMusicalKeyChange,
 }: SoundsSettingsPopoverProps) {
+  useUiLocale();
   const keyLabel =
     MUSICAL_KEYS.find((entry) => entry.value === musicalKey)?.shortLabel ??
     "Auto";
@@ -60,9 +62,9 @@ export function SoundsSettingsPopover({
   return (
     <PopoverMenu
       mode="default"
-      panelTitle="Beat & Key"
+      panelTitle={uiText("desktop.beat.key")}
       triggerIcon={<DrumIcon  className="h-3.5 w-3.5" />}
-      triggerLabel={triggerLabel || "Beat"}
+      triggerLabel={triggerLabel || uiText("desktop.beat")}
     >
       <div className="w-60 space-y-3.5 pb-0.5">
         {showBpm && (
@@ -71,16 +73,14 @@ export function SoundsSettingsPopover({
               <span className="text-xs font-medium text-base-fg/60">BPM</span>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-medium tabular-nums text-base-fg">
-                  {bpm === null ? "Auto" : bpm}
+                  {bpm === null ? uiText("common.auto") : bpm}
                 </span>
                 {bpm !== null && (
                   <button
                     type="button"
                     onClick={() => onBpmChange?.(null)}
                     className="rounded-[3px] bg-white/5 px-1.5 py-0.5 text-[10px] font-medium text-base-fg/60 transition-colors hover:bg-white/10 hover:text-base-fg"
-                  >
-                    Auto
-                  </button>
+                  >{uiText("common.auto")}{" "}</button>
                 )}
               </div>
             </div>
@@ -97,9 +97,7 @@ export function SoundsSettingsPopover({
 
         {showMusicalKey && (
           <div>
-            <div className="mb-1.5 text-xs font-medium text-base-fg/60">
-              Musical key
-            </div>
+            <div className="mb-1.5 text-xs font-medium text-base-fg/60">{uiText("promptbox.musical.key")}{" "}</div>
             <div className="grid grid-cols-4 gap-1">
               {MUSICAL_KEYS.map((entry) => (
                 <button

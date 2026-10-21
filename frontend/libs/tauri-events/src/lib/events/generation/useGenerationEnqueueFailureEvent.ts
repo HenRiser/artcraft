@@ -1,3 +1,5 @@
+import { t as uiText } from "@storyteller/common";
+import { t, localizeError } from "@storyteller/common";
 import { useEffect } from "react";
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { SoundManager } from "@storyteller/soundboard";
@@ -10,6 +12,7 @@ type GenerationEnqueueFailureEvent = {
   service: GenerationServiceProvider,
   model?: GenerationModel | string,
   reason?: string,
+  reason_code?: string,
 }; 
 
 export const useGenerationEnqueueFailureEvent = () => {
@@ -41,8 +44,10 @@ export const useGenerationEnqueueFailureEvent = () => {
 }
 
 const makeMessage = (event: GenerationEnqueueFailureEvent) => {
+  if (event.reason_code === "login_required") return t("errors.loginRequired");
+  if (event.reason_code === "fal_key_required") return t("errors.falKeyRequired");
   if (!!event.reason) {
-    return event.reason;
+    return localizeError(event.reason);
   }
   switch (event.action) {
     case GenerationAction.GenerateImage:
@@ -56,6 +61,6 @@ const makeMessage = (event: GenerationEnqueueFailureEvent) => {
     case GenerationAction.GenerateGaussian:
       return "Couldn't enqueue 3D world generation!";
     default:
-      return "Couldn't enqueue generation!";
+      return uiText("desktop.couldn.t.enqueue.generation");
   }
 }

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -42,13 +43,14 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 
 export function SoundsView() {
+  useUiLocale();
   return (
     <div className="flex h-full flex-col">
       <Tabs defaultValue="sound-effects" className="flex h-full flex-col">
         <div className="px-3 pt-4 pb-0">
           <TabsList>
-            <TabsTrigger value="sound-effects">Sound effects</TabsTrigger>
-            <TabsTrigger value="saved">Saved</TabsTrigger>
+            <TabsTrigger value="sound-effects">{uiText("video-editor.sound.effects")}</TabsTrigger>
+            <TabsTrigger value="saved">{uiText("common.saved")}</TabsTrigger>
           </TabsList>
         </div>
         <Separator className="my-4" />
@@ -70,6 +72,7 @@ export function SoundsView() {
 }
 
 function SoundEffectsView() {
+  useUiLocale();
   const {
     topSoundEffects,
     isLoading,
@@ -147,7 +150,7 @@ function SoundEffectsView() {
           console.error("Failed to fetch top sounds:", error);
           setError({
             error:
-              error instanceof Error ? error.message : "Failed to load sounds",
+              error instanceof Error ? error.message : uiText("desktop.failed.to.load.sounds"),
           });
         }
       } finally {
@@ -230,7 +233,7 @@ function SoundEffectsView() {
     <div className="mt-1 flex h-full flex-col gap-5">
       <div className="flex items-center gap-3">
         <Input
-          placeholder="Search sound effects"
+          placeholder={uiText("video-editor.search.sound.effects")}
           className="w-full"
           containerClassName="w-full"
           value={searchQuery}
@@ -254,13 +257,11 @@ function SoundEffectsView() {
             <DropdownMenuCheckboxItem
               checked={showCommercialOnly}
               onCheckedChange={() => toggleCommercialFilter()}
-            >
-              Show only commercially licensed
-            </DropdownMenuCheckboxItem>
+            >{uiText("video-editor.show.only.commercially.licensed")}{" "}</DropdownMenuCheckboxItem>
             <div className="text-muted-foreground px-2 py-1.5 text-xs">
               {showCommercialOnly
-                ? "Only showing sounds licensed for commercial use"
-                : "Showing all sounds regardless of license"}
+                ? uiText("video-editor.only.showing.sounds.licensed.for.commercial.use")
+                : uiText("video-editor.showing.all.sounds.regardless.of.license")}
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -274,12 +275,10 @@ function SoundEffectsView() {
         >
           <div className="flex flex-col gap-4">
             {isLoading && !searchQuery && (
-              <div className="text-muted-foreground text-sm">
-                Loading sounds...
-              </div>
+              <div className="text-muted-foreground text-sm">{uiText("video-editor.loading.sounds")}{" "}</div>
             )}
             {isSearching && searchQuery && (
-              <div className="text-muted-foreground text-sm">Searching...</div>
+              <div className="text-muted-foreground text-sm">{uiText("video-editor.searching")}</div>
             )}
             {displayedSounds.map((sound) => (
               <AudioItem
@@ -291,13 +290,11 @@ function SoundEffectsView() {
             ))}
             {!isLoading && !isSearching && displayedSounds.length === 0 && (
               <div className="text-muted-foreground text-sm">
-                {searchQuery ? "No sounds found" : "No sounds available"}
+                {searchQuery ? uiText("video-editor.no.sounds.found") : uiText("video-editor.no.sounds.available")}
               </div>
             )}
             {isLoadingMore && (
-              <div className="text-muted-foreground py-4 text-center text-sm">
-                Loading more sounds...
-              </div>
+              <div className="text-muted-foreground py-4 text-center text-sm">{uiText("video-editor.loading.more.sounds")}{" "}</div>
             )}
           </div>
         </ScrollArea>
@@ -307,6 +304,7 @@ function SoundEffectsView() {
 }
 
 function SavedSoundsView() {
+  useUiLocale();
   const {
     savedSounds,
     isLoadingSavedSounds,
@@ -383,9 +381,7 @@ function SavedSoundsView() {
   if (isLoadingSavedSounds) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-muted-foreground text-sm">
-          Loading saved sounds...
-        </div>
+        <div className="text-muted-foreground text-sm">{uiText("video-editor.loading.saved.sounds")}{" "}</div>
       </div>
     );
   }
@@ -393,8 +389,7 @@ function SavedSoundsView() {
   if (savedSoundsError) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="text-destructive text-sm">
-          Error: {savedSoundsError}
+        <div className="text-destructive text-sm">{uiText("video-editor.error")}{" "}{savedSoundsError}
         </div>
       </div>
     );
@@ -408,10 +403,8 @@ function SavedSoundsView() {
           className="text-muted-foreground size-10"
         />
         <div className="flex flex-col gap-2 text-center">
-          <p className="text-lg font-medium">No saved sounds</p>
-          <p className="text-muted-foreground text-sm text-balance">
-            Click the heart icon on any sound to save it here
-          </p>
+          <p className="text-lg font-medium">{uiText("video-editor.no.saved.sounds")}</p>
+          <p className="text-muted-foreground text-sm text-balance">{uiText("video-editor.click.the.heart.icon.on.any.sound.to.save.it.here")}{" "}</p>
         </div>
       </div>
     );
@@ -421,8 +414,8 @@ function SavedSoundsView() {
     <div className="mt-1 flex h-full flex-col gap-5">
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-sm">
-          {savedSounds.length} saved{" "}
-          {savedSounds.length === 1 ? "sound" : "sounds"}
+          {savedSounds.length}{" "}{uiText("video-editor.saved")}{" "}
+          {savedSounds.length === 1 ? uiText("video-editor.sound") : uiText("video-editor.sounds.2")}
         </p>
         <Dialog open={showClearDialog} onOpenChange={setShowClearDialog}>
           <DialogTrigger asChild>
@@ -430,22 +423,15 @@ function SavedSoundsView() {
               variant="text"
               size="sm"
               className="text-muted-foreground hover:text-destructive h-auto !opacity-100"
-            >
-              Clear all
-            </Button>
+            >{uiText("common.clear.all")}{" "}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Clear all saved sounds?</DialogTitle>
-              <DialogDescription>
-                This will permanently remove all {savedSounds.length} saved
-                sounds from your collection. This action cannot be undone.
-              </DialogDescription>
+              <DialogTitle>{uiText("video-editor.clear.all.saved.sounds")}</DialogTitle>
+              <DialogDescription>{uiText("video-editor.this.will.permanently.remove.all")}{" "}{savedSounds.length}{" "}{uiText("video-editor.saved.sounds.from.your.collection.this.action.cannot.be.undone")}{" "}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button variant="text" onClick={() => setShowClearDialog(false)}>
-                Cancel
-              </Button>
+              <Button variant="text" onClick={() => setShowClearDialog(false)}>{uiText("common.cancel")}{" "}</Button>
               <Button
                 variant="destructive"
                 onClick={async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -453,9 +439,7 @@ function SavedSoundsView() {
                   await clearSavedSounds();
                   setShowClearDialog(false);
                 }}
-              >
-                Clear all sounds
-              </Button>
+              >{uiText("video-editor.clear.all.sounds")}{" "}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -486,6 +470,7 @@ interface AudioItemProps {
 }
 
 function AudioItem({ sound, isPlaying, onPlay }: AudioItemProps) {
+  useUiLocale();
   const { addSoundToTimeline, isSoundSaved, toggleSavedSound } =
     useSoundsStore();
   const isSaved = isSoundSaved({ soundId: sound.id });
@@ -536,7 +521,7 @@ function AudioItem({ sound, isPlaying, onPlay }: AudioItemProps) {
           size="icon"
           className="text-muted-foreground hover:text-foreground w-auto !opacity-100"
           onClick={handleAddToTimeline}
-          title="Add to timeline"
+          title={uiText("video-editor.add.to.timeline")}
         >
           <HugeiconsIcon icon={PlusSignIcon} />
         </Button>
@@ -549,7 +534,7 @@ function AudioItem({ sound, isPlaying, onPlay }: AudioItemProps) {
               : "text-muted-foreground"
           }`}
           onClick={handleSaveClick}
-          title={isSaved ? "Remove from saved" : "Save sound"}
+          title={isSaved ? uiText("video-editor.remove.from.saved") : uiText("video-editor.save.sound")}
         >
           <HugeiconsIcon
             icon={FavouriteIcon}

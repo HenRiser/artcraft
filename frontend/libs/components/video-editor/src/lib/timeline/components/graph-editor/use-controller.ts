@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -168,7 +169,7 @@ export function useGraphEditorController() {
     open,
     onOpenChange: handleOpenChange,
     canOpen: state.status === "ready",
-    tooltip: state.status === "ready" ? "Open graph editor" : state.message,
+    tooltip: state.status === "ready" ? uiText("desktop.open.graph.editor") : state.message,
     state,
     onActiveComponentKeyChange: handleActiveComponentKeyChange,
     onPreviewValue: handlePreviewValue,

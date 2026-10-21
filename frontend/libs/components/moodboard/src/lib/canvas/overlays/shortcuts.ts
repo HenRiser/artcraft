@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 // Single source of truth for moodboard keyboard shortcuts. Consumed by
 // `ShortcutCheatsheet.tsx` (rendering) and indirectly by
 // `useKeyboardShortcuts.ts` (wiring). The `keys` array is the label shown
@@ -26,29 +27,29 @@ export const fmtShortcut = (keys: string[]): string =>
 
 export const SHORTCUTS: ShortcutRow[] = [
   // Tools
-  { section: "Tools", label: "Select tool", keys: ["V"] },
-  { section: "Tools", label: "Lasso tool", keys: ["L"] },
-  { section: "Tools", label: "Text tool", keys: ["T"] },
+  { section: "Tools", get label() { return uiText("moodboard.select.tool"); }, keys: ["V"] },
+  { section: "Tools", get label() { return uiText("moodboard.lasso.tool"); }, keys: ["L"] },
+  { section: "Tools", get label() { return uiText("moodboard.text.tool"); }, keys: ["T"] },
 
   // Selection
-  { section: "Selection", label: "Select all", keys: [MOD, "A"] },
-  { section: "Selection", label: "Clear selection", keys: ["Esc"] },
-  { section: "Selection", label: "Add / remove from selection", keys: ["Shift", "Click"] },
+  { section: "Selection", get label() { return uiText("moodboard.select.all"); }, keys: [MOD, "A"] },
+  { section: "Selection", get label() { return uiText("common.clear.selection"); }, keys: ["Esc"] },
+  { section: "Selection", get label() { return uiText("moodboard.add.remove.from.selection"); }, keys: ["Shift", "Click"] },
 
   // Editing
-  { section: "Editing", label: "Delete selection", keys: ["Delete"] },
-  { section: "Editing", label: "Group selection", keys: [MOD, "G"] },
-  { section: "Editing", label: "Ungroup selection", keys: [MOD, "Shift", "G"] },
-  { section: "Editing", label: "Paste image", keys: [MOD, "V"] },
+  { section: "Editing", get label() { return uiText("moodboard.delete.selection"); }, keys: ["Delete"] },
+  { section: "Editing", get label() { return uiText("moodboard.group.selection"); }, keys: [MOD, "G"] },
+  { section: "Editing", get label() { return uiText("moodboard.ungroup.selection"); }, keys: [MOD, "Shift", "G"] },
+  { section: "Editing", get label() { return uiText("moodboard.paste.image"); }, keys: [MOD, "V"] },
 
   // Viewport
-  { section: "Viewport", label: "Pan", keys: ["Middle-click", "drag"] },
-  { section: "Viewport", label: "Pan (alt)", keys: ["Space", "drag"] },
-  { section: "Viewport", label: "Zoom", keys: ["Scroll"] },
-  { section: "Viewport", label: "Reset zoom", keys: [MOD, "0"] },
-  { section: "Viewport", label: "Zoom to fit", keys: ["Shift", "1"] },
+  { section: "Viewport", get label() { return uiText("moodboard.pan"); }, keys: ["Middle-click", "drag"] },
+  { section: "Viewport", get label() { return uiText("moodboard.pan.alt"); }, keys: ["Space", "drag"] },
+  { section: "Viewport", get label() { return uiText("common.zoom"); }, keys: ["Scroll"] },
+  { section: "Viewport", get label() { return uiText("moodboard.reset.zoom"); }, keys: [MOD, "0"] },
+  { section: "Viewport", get label() { return uiText("moodboard.zoom.to.fit"); }, keys: ["Shift", "1"] },
 
   // History
-  { section: "History", label: "Undo", keys: [MOD, "Z"] },
-  { section: "History", label: "Redo", keys: [MOD, "Shift", "Z"] },
+  { section: "History", get label() { return uiText("common.undo"); }, keys: [MOD, "Z"] },
+  { section: "History", get label() { return uiText("common.redo"); }, keys: [MOD, "Shift", "Z"] },
 ];

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { invoke } from "@tauri-apps/api/core";
@@ -8,6 +9,7 @@ import { createDesktopLoginChallenge, pollDesktopLoginChallenge, cancelDesktopLo
 const OpenUrl = (url: string) => invoke("plugin:opener|open_url", { url });
 
 export function DesktopLoginBridge({ onSuccess, onStart, onActiveChange }: { onSuccess: (user: UserInfo) => void; onStart?: () => void; onActiveChange?: (active: boolean) => void }) {
+  useUiLocale();
   const [challenge, setChallenge] = useState<DesktopLoginChallenge | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -47,12 +49,12 @@ export function DesktopLoginBridge({ onSuccess, onStart, onActiveChange }: { onS
           if (!result.maybe_user) throw new Error("Native session verification did not return a user");
           active = false;
           setChallenge(null);
-          setMessage("Signed in successfully.");
+          setMessage(uiText("desktop.signed.in.successfully"));
           success.current(result.maybe_user);
           return;
         }
         if (result.status === "failed") {
-          finish(result.maybe_failure_type === "user_declined" ? "Login was declined on the website." : result.maybe_failure_type === "expired" ? "Login request expired. Start a new request." : "Login failed. Start a new request.");
+          finish(result.maybe_failure_type === "user_declined" ? uiText("desktop.login.was.declined.on.the.website") : result.maybe_failure_type === "expired" ? uiText("desktop.login.request.expired.start.a.new.request") : uiText("desktop.login.failed.start.a.new.request"));
           return;
         }
         if (!["pending", "approved"].includes(result.status)) {
@@ -98,7 +100,7 @@ export function DesktopLoginBridge({ onSuccess, onStart, onActiveChange }: { onS
       setMessage("Waiting for your confirmation on the website…");
       if (openBrowser) await OpenUrl(created.verification_url);
     } catch (error) {
-      if (current === generation.current) setMessage(isDesktopLoginError(error) ? error.message : "Unable to open website login. Try again or scan the QR code.");
+      if (current === generation.current) setMessage(isDesktopLoginError(error) ? error.message : uiText("desktop.unable.to.open.website.login.try.again.or.scan.the.qr.code"));
     } finally {
       if (current === generation.current) setBusy(false);
     }
@@ -112,22 +114,21 @@ export function DesktopLoginBridge({ onSuccess, onStart, onActiveChange }: { onS
   };
 
   const remaining = challenge ? Math.max(0, Math.ceil((Date.parse(challenge.expires_at) - now) / 1000)) : 0;
-  return <section aria-label="Website login" className="mb-6 border border-white/15 bg-white/[0.03] p-4 text-center">
+  return <section aria-label={uiText("login-modal.website.login")} className="mb-6 border border-white/15 bg-white/[0.03] p-4 text-center">
     {isActive && <div className="mb-4 text-left">
       <button type="button" className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/60 transition-colors hover:text-white" onClick={back}>
-        <ArrowLeftIcon size={16} aria-hidden="true" /> Back
-      </button>
+        <ArrowLeftIcon size={16} aria-hidden="true" />{" "}{uiText("common.back")}{" "}</button>
     </div>}
     {challenge ? <>
-      <p className="mb-3 text-sm text-white/70">Scan with your phone or approve in your browser.</p>
-      <QRCodeSVG value={challenge.verification_url} size={192} marginSize={4} title="Scan to approve desktop login" className="mx-auto" />
+      <p className="mb-3 text-sm text-white/70">{uiText("login-modal.scan.with.your.phone.or.approve.in.your.browser")}</p>
+      <QRCodeSVG value={challenge.verification_url} size={192} marginSize={4} title={uiText("login-modal.scan.to.approve.desktop.login")} className="mx-auto" />
       <p className="my-3 font-mono text-2xl tracking-[0.2em]">{challenge.confirmation_code.slice(0, 4)}-{challenge.confirmation_code.slice(4)}</p>
-      <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.12em] text-white/50">Verify this code on the website. Expires in {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</p>
-      <button type="button" className="h-10 rounded-[3px] border border-white/15 bg-white/5 px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-white/10" onClick={() => OpenUrl(challenge.verification_url).catch(() => setMessage("Unable to open the browser. Scan the QR code instead."))}>Open website</button>
-    </> : busy ? <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/60" role="status">Preparing login…</p> : <div className="flex flex-col gap-2">
-      <button type="button" className="h-10 rounded-[3px] bg-white px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-black transition-colors hover:bg-white/90" onClick={() => start(true)}>Login with Website</button>
-      <button type="button" className="h-10 rounded-[3px] border border-white/15 bg-white/5 px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-white/10" onClick={() => start(false)}>Scan to Login</button>
-      <p className="text-xs text-white/50">Use Google or any account already signed in on the website.</p>
+      <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.12em] text-white/50">{uiText("login-modal.verify.this.code.on.the.website.expires.in")}{" "}{Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}</p>
+      <button type="button" className="h-10 rounded-[3px] border border-white/15 bg-white/5 px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-white/10" onClick={() => OpenUrl(challenge.verification_url).catch(() => setMessage("Unable to open the browser. Scan the QR code instead."))}>{uiText("login-modal.open.website")}</button>
+    </> : busy ? <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/60" role="status">{uiText("login-modal.preparing.login")}</p> : <div className="flex flex-col gap-2">
+      <button type="button" className="h-10 rounded-[3px] bg-white px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-black transition-colors hover:bg-white/90" onClick={() => start(true)}>{uiText("login-modal.login.with.website")}</button>
+      <button type="button" className="h-10 rounded-[3px] border border-white/15 bg-white/5 px-4 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-white/10" onClick={() => start(false)}>{uiText("login-modal.scan.to.login")}</button>
+      <p className="text-xs text-white/50">{uiText("login-modal.use.google.or.any.account.already.signed.in.on.the.website")}</p>
     </div>}
     {message && <p className="mt-3 text-sm text-white/70" role="status">{message}</p>}
   </section>;

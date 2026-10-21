@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Button } from "@storyteller/ui-button";
 import { HistoryIcon, Trash2Icon, XIcon } from "lucide-react";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -32,6 +33,7 @@ export const HistoryStack = ({
   selectedImageToken,
   blurredBackgroundUrl,
 }: HistoryStackProps) => {
+  useUiLocale();
   const handleSelectWithPreload = (image: BaseSelectorImage) => {
     const preload = new Image();
     preload.crossOrigin = "anonymous";
@@ -76,22 +78,16 @@ export const HistoryStack = ({
     setPendingRemoveTargetId(id);
     showActionReminder({
       reminderType: "default",
-      title: "Remove pending generation",
+      get title() { return uiText("pagedraw.remove.pending.generation"); },
       primaryActionIcon: Trash2Icon,
       primaryActionBtnClassName: "bg-red hover:bg-red/80",
       message: (
         <>
-          <p className="text-base-fg text-sm opacity-70">
-            Stop showing this generation in the history stack? This action
-            cannot be undone.
-          </p>
-          <p className="text-base-fg text-sm opacity-70">
-            The image may still finish in the background and will be available
-            in your library when it does.
-          </p>
+          <p className="text-base-fg text-sm opacity-70">{uiText("pagedraw.stop.showing.this.generation.in.the.history.stack.this.action.cannot.be.undone")}{" "}</p>
+          <p className="text-base-fg text-sm opacity-70">{uiText("pagedraw.the.image.may.still.finish.in.the.background.and.will.be.available.in.your.library.wh")}{" "}</p>
         </>
       ),
-      primaryActionText: "Remove",
+      primaryActionText: uiText("common.remove"),
       onPrimaryAction: () => {
         onPendingRemove(id);
         setPendingRemoveTargetId(null);
@@ -186,8 +182,8 @@ export const HistoryStack = ({
                     className="group relative w-full cursor-pointer"
                     title={
                       tileCount > 1
-                        ? `Remove batch of ${tileCount}`
-                        : "Remove"
+                        ? uiText("pagedraw.remove.batch.of.value", { value0: tileCount })
+                        : uiText("common.remove")
                     }
                     onClick={(e) => {
                       e.stopPropagation();
@@ -313,18 +309,13 @@ export const HistoryStack = ({
                         e.stopPropagation();
                         showActionReminder({
                           reminderType: "default",
-                          title: "Remove Image",
+                          get title() { return uiText("pagedraw.remove.image"); },
                           primaryActionIcon: Trash2Icon,
                           primaryActionBtnClassName: "bg-red hover:bg-red/80",
                           message: (
                             <>
-                            <p className="text-base-fg text-sm opacity-70">
-                              Are you sure you want to remove this image from the history stack? This
-                              action cannot be undone.
-                            </p>
-                            <p className="text-base-fg text-sm opacity-70">
-                              Images removed here can still be found in the library.
-                            </p>
+                            <p className="text-base-fg text-sm opacity-70">{uiText("pagedraw.are.you.sure.you.want.to.remove.this.image.from.the.history.stack.this.action.cannot")}{" "}</p>
+                            <p className="text-base-fg text-sm opacity-70">{uiText("pagedraw.images.removed.here.can.still.be.found.in.the.library")}{" "}</p>
                             </>
                           ),
                           primaryActionText: "Delete",
@@ -356,7 +347,7 @@ export const HistoryStack = ({
         <div className="glass w-fit rounded-xl border-2 border-red/50 shadow-lg hover:border-red/80">
           <div className="relative h-full">
             <Tooltip
-              content="Reset All"
+              content={uiText("common.reset.all")}
               position="left"
               closeOnClick={true}
               className="ms-1 rounded-md bg-red px-3 py-1"
@@ -367,14 +358,11 @@ export const HistoryStack = ({
                 onClick={() =>
                   showActionReminder({
                     reminderType: "default",
-                    title: "Reset All",
+                    get title() { return uiText("common.reset.all"); },
                     primaryActionIcon: Trash2Icon,
                     primaryActionBtnClassName: "bg-red hover:bg-red/80",
                     message: (
-                      <p className="text-base-fg text-sm opacity-70">
-                        Are you sure you want to reset all? This will clear all
-                        your work and cannot be undone.
-                      </p>
+                      <p className="text-base-fg text-sm opacity-70">{uiText("pagedraw.are.you.sure.you.want.to.reset.all.this.will.clear.all.your.work.and.cannot.be.undone")}{" "}</p>
                     ),
                     primaryActionText: "Reset all",
                     onPrimaryAction: () => {

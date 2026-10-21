@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState, useRef, useEffect, type ReactNode } from "react";
 import { IsDesktopApp } from "@storyteller/tauri-utils";
 import { CameraIcon, ChevronDownIcon, ChevronUpIcon, DownloadIcon, Grid2x2Icon, HistoryIcon, MaximizeIcon, MousePointerIcon, PlusIcon, RectangleHorizontalIcon, RectangleVerticalIcon, SaveIcon, SquareIcon, WandSparklesIcon } from "lucide-react";
@@ -134,6 +135,7 @@ export const PromptBox3D = ({
   onAddTimeline,
   showAddTimelineButton = true,
 }: PromptBox3DProps) => {
+  useUiLocale();
   //const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [content, setContent] = useState<React.ReactNode>(null);
@@ -329,12 +331,12 @@ export const PromptBox3D = ({
     const trimmed = prompt.trim();
     if (!trimmed) return;
     if (isFinite(maxLen) && trimmed.length > maxLen) {
-      toast.error(`Prompt exceeds the ${maxLen} character limit for this model`);
+      toast.error(uiText("common.prompt.exceeds.the.value.character.limit.for.this.model", { value0: maxLen }));
       return;
     }
     setEnginePrompt(trimmed);
     pushPromptHistory(trimmed);
-    toast.success("Scene update saved — applying edits is coming soon.");
+    toast.success(uiText("promptbox.scene.update.saved.applying.edits.is.coming.soon"));
   };
 
   const handleEnqueue = async () => {
@@ -343,7 +345,7 @@ export const PromptBox3D = ({
     }
     if (isFinite(maxLen) && prompt.length > maxLen) {
       toast.error(
-        `Prompt exceeds the ${maxLen} character limit for this model`,
+        uiText("common.prompt.exceeds.the.value.character.limit.for.this.model", { value0: maxLen }),
       );
       return;
     }
@@ -367,7 +369,7 @@ export const PromptBox3D = ({
     // omni-gen backend which keys off the canonical `model` / `id`
     // string. Bail loudly if nothing is selected.
     if (!selectedImageModel?.id) {
-      handleError("No model selected");
+      handleError(uiText("desktop.no.model.selected"));
       return;
     }
 
@@ -389,7 +391,7 @@ export const PromptBox3D = ({
           });
           if (!snapshotResult.success || !snapshotResult.data) {
             handleError(
-              snapshotResult.errorMessage || "Failed to upload scene snapshot",
+              snapshotResult.errorMessage || uiText("desktop.failed.to.upload.scene.snapshot"),
             );
             return;
           }
@@ -423,7 +425,7 @@ export const PromptBox3D = ({
 
       const response = await new OmniGenApi().generateImage(request);
       if (!response.success || !response.inference_job_token) {
-        handleError("Generation failed");
+        handleError(uiText("common.generation.failed"));
         return;
       }
 
@@ -436,10 +438,10 @@ export const PromptBox3D = ({
         timestamp: Date.now(),
       });
 
-      toast.success("Image added to queue");
+      toast.success(uiText("common.image.added.to.queue"));
     } catch (err) {
       handleError(
-        err instanceof Error ? err.message : "Generation request failed",
+        err instanceof Error ? err.message : uiText("desktop.generation.request.failed"),
       );
     } finally {
       setIsEnqueueing(false);
@@ -529,7 +531,7 @@ export const PromptBox3D = ({
         await new Promise((resolve) => setTimeout(resolve, 2000));
       } finally {
         setIsEnqueueing(false);
-        toast.success("Image added to queue");
+        toast.success(uiText("common.image.added.to.queue"));
       }
     }
 
@@ -636,15 +638,14 @@ export const PromptBox3D = ({
                   {
                     value: "manual",
                     icon: MousePointerIcon,
-                    text: "Manual",
-                    tooltip: "Manual — place and transform objects yourself",
+                    get text() { return uiText("promptbox.manual"); },
+                    get tooltip() { return uiText("promptbox.manual.place.and.transform.objects.yourself"); },
                   },
                   {
                     value: "prompted",
                     icon: WandSparklesIcon,
-                    text: "Prompted",
-                    tooltip:
-                      "Prompted — describe changes and let AI edit the scene",
+                    get text() { return uiText("promptbox.prompted"); },
+                    get tooltip() { return uiText("promptbox.prompted.describe.changes.and.let.ai.edit.the.scene"); },
                   },
                 ]}
                 selectedOption={buildMode}
@@ -670,7 +671,7 @@ export const PromptBox3D = ({
               setContent(
                 <img
                   src={image.fullUrl ?? image.url}
-                  alt="Reference preview"
+                  alt={uiText("common.reference.preview")}
                   className="w-full h-full object-contain"
                 />,
               );
@@ -695,7 +696,7 @@ export const PromptBox3D = ({
           <div className="flex gap-3">
             {selectedImageModel?.canUseImagePrompt && (
               <Tooltip
-                content="Add Image"
+                content={uiText("common.add.image")}
                 position="top"
                 closeOnClick={true}
                 className={twMerge(isImageRowVisible && "hidden opacity-0")}
@@ -730,7 +731,7 @@ export const PromptBox3D = ({
               <textarea
                 ref={textareaRef}
                 rows={1}
-                placeholder="Describe your image..."
+                placeholder={uiText("common.describe.your.image")}
                 className={`promptbox-scrollbar text-md min-h-[2.5em] w-full resize-y overflow-y-auto bg-transparent pr-8 text-base-fg placeholder-base-fg/60 focus:outline-none ${isExpanded ? "max-h-[300px]" : "max-h-[5.5em]"}`}
                 value={prompt}
                 onChange={handleChange}
@@ -767,7 +768,7 @@ export const PromptBox3D = ({
               {selectedImageModel?.canChangeAspectRatio &&
                 !selectedImageModel?.supportsNewAspectRatio() && (
                   <Tooltip
-                    content="Aspect ratio"
+                    content={uiText("common.aspect.ratio.2")}
                     position="top"
                     className="z-50"
                     closeOnClick={true}
@@ -776,7 +777,7 @@ export const PromptBox3D = ({
                       items={aspectRatioList}
                       onSelect={handleAspectRatioSelect}
                       mode="toggle"
-                      panelTitle="Aspect Ratio"
+                      panelTitle={uiText("common.aspect.ratio")}
                       showIconsInList
                       triggerIcon={
                         <DynamicIcon
@@ -789,7 +790,7 @@ export const PromptBox3D = ({
                 )}
               {selectedImageModel?.canChangeResolution && (
                 <Tooltip
-                  content="Resolution"
+                  content={uiText("common.resolution")}
                   position="top"
                   className="z-50"
                   closeOnClick={true}
@@ -798,7 +799,7 @@ export const PromptBox3D = ({
                     items={resolutionList}
                     onSelect={handleResolutionSelect}
                     mode="toggle"
-                    panelTitle="Resolution"
+                    panelTitle={uiText("common.resolution")}
                     showIconsInList
                     triggerIcon={
                       <MaximizeIcon  className="h-4 w-4" />
@@ -807,7 +808,7 @@ export const PromptBox3D = ({
                 </Tooltip>
               )}
               <Tooltip
-                content="Camera"
+                content={uiText("common.camera")}
                 position="top"
                 className="z-50"
                 delay={300}
@@ -835,14 +836,14 @@ export const PromptBox3D = ({
                   disableAddButton={cameras.length >= 6}
                   showIconsInList
                   mode="toggle"
-                  panelTitle="Camera"
-                  panelActionLabel="Settings"
+                  panelTitle={uiText("common.camera")}
+                  panelActionLabel={uiText("common.settings")}
                   onPanelAction={() => setIsCameraSettingsOpen(true)}
                   buttonClassName="max-w-[130px] h-9"
                 />
               </Tooltip>
               <Tooltip
-                content={gridVisibility ? "Grid: ON" : "Grid: OFF"}
+                content={gridVisibility ? uiText("promptbox.grid.on") : uiText("promptbox.grid.off")}
                 position="top"
                 className="z-50"
                 delay={200}
@@ -862,7 +863,7 @@ export const PromptBox3D = ({
                 confirmClear={referenceImages.length > 0}
               />
               <Tooltip
-                content="Download frame"
+                content={uiText("promptbox.download.frame")}
                 position="top"
                 className="z-50"
                 closeOnClick={true}
@@ -881,9 +882,7 @@ export const PromptBox3D = ({
                 variant="secondary"
                 icon={SaveIcon}
                 onClick={handleSaveFrame}
-              >
-                Save frame
-              </Button>
+              >{uiText("promptbox.save.frame")}{" "}</Button>
               <GenerateButton
                 className="flex items-center border-none bg-white px-3 text-sm font-bold text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
                 icon={undefined}
@@ -891,9 +890,7 @@ export const PromptBox3D = ({
                 disabled={isEnqueueing || !prompt.trim()}
                 loading={isEnqueueing}
                 credits={credits}
-              >
-                Generate
-              </GenerateButton>
+              >{uiText("common.generate")}{" "}</GenerateButton>
             </div>
           </div>
           )}
@@ -905,15 +902,13 @@ export const PromptBox3D = ({
                   icon={PlusIcon}
                   className="flex h-9 items-center border border-ui-controls-border bg-ui-controls/60 px-3 text-sm text-base-fg backdrop-blur-lg hover:bg-ui-controls/90"
                   onClick={() => onAddTimeline?.()}
-                >
-                  Add animation timeline
-                </Button>
+                >{uiText("promptbox.add.animation.timeline")}{" "}</Button>
               ) : (
                 <span />
               )}
               <div className="flex items-center gap-2">
                 <Tooltip
-                  content="Prompt history"
+                  content={uiText("promptbox.prompt.history")}
                   position="top"
                   className="z-50"
                   delay={200}
@@ -921,7 +916,7 @@ export const PromptBox3D = ({
                 >
                   <PopoverMenu
                     mode="toggle"
-                    panelTitle="Recent prompts"
+                    panelTitle={uiText("desktop.recent.prompts")}
                     triggerIcon={
                       <HistoryIcon
                         
@@ -952,16 +947,14 @@ export const PromptBox3D = ({
                   className="flex items-center border-none bg-white px-3 text-sm font-bold text-black hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={handlePromptedUpdate}
                   disabled={!prompt.trim()}
-                >
-                  Update
-                </Button>
+                >{uiText("promptbox.update")}{" "}</Button>
               </div>
             </div>
           )}
           {buildMode === "manual" && (
           <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
             <Tooltip
-              content={isExpanded ? "Collapse" : "Expand"}
+              content={isExpanded ? uiText("common.collapse") : uiText("common.expand")}
               position="top"
               className="-mb-2"
             >
@@ -1034,7 +1027,7 @@ export const PromptBox3D = ({
         }
       >
         <textarea
-          placeholder="Describe your image..."
+          placeholder={uiText("common.describe.your.image")}
           className="promptbox-scrollbar text-md h-full min-h-0 w-full resize-none overflow-y-auto rounded-[3px] bg-transparent text-base-fg placeholder-base-fg/60 focus:outline-none"
           value={prompt}
           onChange={handleChange}

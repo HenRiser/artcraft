@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { DownloadIcon, EyeIcon, ImagesIcon, PlusIcon, UploadIcon, WandSparklesIcon } from "lucide-react";
 import { Button } from "@storyteller/ui-button";
@@ -34,6 +35,7 @@ const convertFileToBase64 = (file: File): Promise<string> => {
 };
 
 export const RemoveBackground = () => {
+  useUiLocale();
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [selectedGalleryImages, setSelectedGalleryImages] = useState<string[]>(
     [],
@@ -139,7 +141,7 @@ export const RemoveBackground = () => {
         });
       } catch (error) {
         console.error("Error processing external image:", error);
-        toast.error("Failed to process image");
+        toast.error(uiText("common.failed.to.process.image"));
         setIsLoadingImage(false);
         setIsProcessing(false);
         setPendingJobId(null);
@@ -162,13 +164,13 @@ export const RemoveBackground = () => {
   const addMenuItems: PopoverItem[] = useMemo(
     () => [
       {
-        label: "Upload Image",
+        get label() { return uiText("common.upload.image"); },
         selected: false,
         icon: <UploadIcon  className="h-4 w-4" />,
         action: "upload",
       },
       {
-        label: "Choose from Library",
+        get label() { return uiText("common.choose.from.library"); },
         selected: false,
         icon: <ImagesIcon  className="h-4 w-4" />,
         action: "library",
@@ -266,7 +268,7 @@ export const RemoveBackground = () => {
       addImage(newImage);
       setIsProcessing(false);
       setPendingJobId(null);
-      toast.success("Saved to Library");
+      toast.success(uiText("common.saved.to.library"));
 
       setImageDimensions({
         width: originalImg.naturalWidth,
@@ -279,7 +281,7 @@ export const RemoveBackground = () => {
       addImage(newImage);
       setIsProcessing(false);
       setPendingJobId(null);
-      toast.success("Saved to Library");
+      toast.success(uiText("common.saved.to.library"));
     }
   });
 
@@ -333,7 +335,7 @@ export const RemoveBackground = () => {
         });
       } catch (error) {
         console.error("Error processing image:", error);
-        toast.error("Failed to process image");
+        toast.error(uiText("common.failed.to.process.image"));
         setIsLoadingImage(false);
         setIsProcessing(false);
         setPendingJobId(null);
@@ -360,7 +362,7 @@ export const RemoveBackground = () => {
     async (selectedItems: GalleryItem[]) => {
       const item = selectedItems[0];
       if (!item || !item.fullImage) {
-        toast.error("No image selected");
+        toast.error(uiText("common.no.image.selected"));
         return;
       }
 
@@ -405,7 +407,7 @@ export const RemoveBackground = () => {
         });
       } catch (error) {
         console.error("Error processing gallery image:", error);
-        toast.error("Failed to process image");
+        toast.error(uiText("common.failed.to.process.image"));
         setIsLoadingImage(false);
         setIsProcessing(false);
         setPendingJobId(null);
@@ -424,15 +426,15 @@ export const RemoveBackground = () => {
   const handleDownload = useCallback(async () => {
     const currentActiveImage = getActiveImage();
     if (!currentActiveImage) {
-      toast.error("No image to download");
+      toast.error(uiText("common.no.image.to.download"));
       return;
     }
     try {
       await downloadFileFromUrl(currentActiveImage.processedUrl);
-      toast.success("Image saved to Downloads folder");
+      toast.success(uiText("common.image.saved.to.downloads.folder"));
     } catch (error) {
       console.error("Download failed:", error);
-      toast.error("Failed to download image");
+      toast.error(uiText("common.failed.to.download.image"));
     }
   }, [getActiveImage]);
 
@@ -551,14 +553,14 @@ export const RemoveBackground = () => {
                 <div className="relative aspect-video overflow-hidden border border-ui-panel-border bg-ui-background">
                   <UploadEntryCard
                     icon={WandSparklesIcon}
-                    title="Remove Background"
-                    description="Instantly remove backgrounds from your images with AI-powered precision."
+                    title={uiText("common.remove.background")}
+                    description={uiText("removebackground.instantly.remove.backgrounds.from.your.images.with.ai.powered.precision")}
                     accentBackgroundClass="bg-violet-500/40"
                     accentBorderClass="border-violet-400/30"
                     accept="image/*"
                     onFilesSelected={handleLocalImageSelect}
-                    primaryLabel="Select Image"
-                    secondaryLabel="Pick from Library"
+                    primaryLabel={uiText("gallery-modal.select.image")}
+                    secondaryLabel={uiText("moodboard.pick.from.library")}
                     secondaryIcon={ImagesIcon}
                     onSecondaryClick={handleOpenGallery}
                     disabled={isLoadingImage}
@@ -589,8 +591,8 @@ export const RemoveBackground = () => {
                       )}
                     >
                       {isHoldingCompare
-                        ? "Showing Original"
-                        : "Hold to Compare"}
+                        ? uiText("removebackground.showing.original")
+                        : uiText("removebackground.hold.to.compare")}
                     </Button>
                     <Button
                       variant="primary"
@@ -602,9 +604,7 @@ export const RemoveBackground = () => {
                         (!activeImage || isProcessing) &&
                           "cursor-not-allowed opacity-50",
                       )}
-                    >
-                      Download
-                    </Button>
+                    >{uiText("common.download")}{" "}</Button>
                   </div>
                 )}
 
@@ -618,7 +618,7 @@ export const RemoveBackground = () => {
                         {currentOriginalUrl && (
                           <img
                             src={currentOriginalUrl}
-                            alt="Processing"
+                            alt={uiText("removebackground.processing")}
                             className="absolute inset-0 h-full w-full object-contain opacity-30"
                           />
                         )}
@@ -629,9 +629,7 @@ export const RemoveBackground = () => {
                               
                               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl text-white" />
                           </div>
-                          <span className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">
-                            Removing Background...
-                          </span>
+                          <span className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-white">{uiText("removebackground.removing.background")}{" "}</span>
                         </div>
                       </div>
                     )}
@@ -655,7 +653,7 @@ export const RemoveBackground = () => {
 
                         <img
                           src={activeImage.processedUrl}
-                          alt="Background Removed"
+                          alt={uiText("removebackground.background.removed")}
                           className="absolute inset-0 h-full w-full object-contain"
                         />
 
@@ -672,7 +670,7 @@ export const RemoveBackground = () => {
                         >
                           <img
                             src={activeImage.originalUrl}
-                            alt="Original"
+                            alt={uiText("removebackground.original")}
                             className="absolute inset-0 h-full w-full object-contain"
                           />
                         </div>
@@ -732,7 +730,7 @@ export const RemoveBackground = () => {
                     >
                       <img
                         src={img.processedUrl}
-                        alt="Processed"
+                        alt={uiText("removebackground.processed")}
                         className="h-full w-full object-cover"
                       />
                     </button>

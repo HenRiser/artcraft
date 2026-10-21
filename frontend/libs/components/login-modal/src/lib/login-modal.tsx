@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Button } from "@storyteller/ui-button";
 import { Transition, TransitionChild } from "@headlessui/react";
 import { useState, useEffect, useRef } from "react";
@@ -41,6 +42,7 @@ export function LoginModal({
   isSignUp: initialIsSignUp = true,
   videoUrl = DEFAULT_SHOWCASE_VIDEO,
 }: LoginModalProps) {
+  useUiLocale();
   const { isOpen, recheckTrigger, closeModal } = useLoginModalStore();
   const [isLoading, setIsLoading] = useState(false);
   const [_isLoggedInArtCraft, setIsLoggedInArtCraft] = useState(false);
@@ -79,7 +81,7 @@ export function LoginModal({
       }
     }).catch((error) => {
       if (!active || generation !== authGeneration.current) return;
-      setErrorMessage(isDesktopLoginError(error) ? error.message : "Unable to check your account. Please sign in again.");
+      setErrorMessage(isDesktopLoginError(error) ? error.message : uiText("desktop.unable.to.check.your.account.please.sign.in.again"));
       useLoginModalStore.getState().openModal();
     });
     return () => { active = false; };
@@ -140,7 +142,7 @@ export function LoginModal({
         handleLoginSuccess(user);
       }
     } catch (error) {
-      if (generation === authGeneration.current) setErrorMessage(isDesktopLoginError(error) ? error.message : "An unexpected error occurred. Please try again.");
+      if (generation === authGeneration.current) setErrorMessage(isDesktopLoginError(error) ? error.message : uiText("desktop.an.unexpected.error.occurred.please.try.again"));
     } finally {
       if (generation === authGeneration.current) setIsLoading(false);
     }
@@ -151,21 +153,15 @@ export function LoginModal({
     if (showSuccess) {
       return (
         <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
-          <h2 className="mb-3 font-display text-3xl leading-[1.05] tracking-tight text-white sm:text-4xl">
-            Thank you for signing in!
-          </h2>
-          <p className="mb-8 text-sm leading-relaxed text-white/60">
-            You're all set to start creating amazing content.
-          </p>
+          <h2 className="mb-3 font-display text-3xl leading-[1.05] tracking-tight text-white sm:text-4xl">{uiText("login-modal.thank.you.for.signing.in")}{" "}</h2>
+          <p className="mb-8 text-sm leading-relaxed text-white/60">{uiText("login-modal.you.re.all.set.to.start.creating.amazing.content")}{" "}</p>
           <Button
             variant="primary"
             onClick={handleClose}
             icon={ArrowRightIcon}
             iconFlip={true}
             className="h-10 rounded-[3px] bg-white px-5 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-black shadow-none hover:bg-white/90"
-          >
-            Get Started
-          </Button>
+          >{uiText("login-modal.get.started")}{" "}</Button>
         </div>
       );
     }
@@ -173,13 +169,9 @@ export function LoginModal({
     // Discord
     return (
       <div className="flex flex-1 flex-col items-center justify-center px-8 py-16 text-center">
-        <h2 className="mb-3 font-display text-3xl leading-[1.05] tracking-tight text-white sm:text-4xl">
-          Join our <span className="font-serif-italic">community.</span>
+        <h2 className="mb-3 font-display text-3xl leading-[1.05] tracking-tight text-white sm:text-4xl">{uiText("login-modal.join.our")}{" "}<span className="font-serif-italic">{uiText("login-modal.community")}</span>
         </h2>
-        <p className="mb-8 max-w-md text-sm leading-relaxed text-white/60">
-          Connect with other creators, share your work, and get the latest
-          updates in our Discord community.
-        </p>
+        <p className="mb-8 max-w-md text-sm leading-relaxed text-white/60">{uiText("login-modal.connect.with.other.creators.share.your.work.and.get.the.latest.updates.in.our.discord")}{" "}</p>
         <div className="flex gap-3">
           <Button
             variant="secondary"
@@ -188,17 +180,13 @@ export function LoginModal({
               setShowDiscord(false);
               setShowSuccess(true);
             }}
-          >
-            Skip for now
-          </Button>
+          >{uiText("login-modal.skip.for.now")}{" "}</Button>
           <Button
             variant="primary"
             onClick={handleDiscordJoin}
             icon={DiscordIcon}
             className="h-10 rounded-[3px] bg-[#5865F2] px-4 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-white shadow-none hover:bg-[#6a76ff]"
-          >
-            Join Discord
-          </Button>
+          >{uiText("login-modal.join.discord")}{" "}</Button>
         </div>
       </div>
     );
@@ -254,27 +242,24 @@ export function LoginModal({
                             />
                             <h1 className="mb-3 text-balance font-display text-3xl leading-[1.05] tracking-tight sm:text-4xl">
                               {isSignUp ? (
-                                "Create your account"
+                                uiText("desktop.create.your.account")
                               ) : (
-                                <>
-                                  Welcome{" "}
-                                  <span className="font-serif-italic">back.</span>
+                                <>{uiText("login-modal.welcome")}{" "}
+                                  <span className="font-serif-italic">{uiText("login-modal.back")}</span>
                                 </>
                               )}
                             </h1>
                             <p className="text-sm leading-relaxed text-white/60">
                               {isSignUp
-                                ? "Sign up to start creating with ArtCraft"
-                                : "Log in to your creative workspace."}
+                                ? uiText("login-modal.sign.up.to.start.creating.with.artcraft")
+                                : uiText("login-modal.log.in.to.your.creative.workspace")}
                             </p>
                           </div>
 
                           {!isSignUp && <DesktopLoginBridge onActiveChange={setIsChallengeActive} onStart={() => { authGeneration.current += 1; }} onSuccess={handleLoginSuccess} />}
                           {!isSignUp && !isChallengeActive && (
                             <div className="mb-6 flex items-center gap-4 before:h-px before:flex-1 before:bg-white/15 after:h-px after:flex-1 after:bg-white/15">
-                              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
-                                or
-                              </span>
+                              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">{uiText("common.or")}{" "}</span>
                             </div>
                           )}
                           {!isChallengeActive && <ArtCraftSignUp
@@ -288,9 +273,7 @@ export function LoginModal({
                       </div>
 
                       <div className="px-6 pb-6 text-center font-mono text-[10px] uppercase tracking-[0.12em] text-white/25 sm:px-10">
-                        &copy; {new Date().getFullYear()} ArtCraft. All rights
-                        reserved.
-                      </div>
+                        &copy; {new Date().getFullYear()}{" "}{uiText("login-modal.artcraft.all.rights.reserved")}{" "}</div>
                     </div>
 
                     {/* ── Showcase pane (desktop only) ── */}
@@ -318,6 +301,7 @@ export function LoginModal({
 // Right-pane video showcase — muted background video cropped to cover the pane,
 // with a legibility gradient + caption. Mirrors the webapp auth-showcase.
 function LoginShowcase({ videoUrl }: { videoUrl: string }) {
+  useUiLocale();
   return (
     <div className="absolute inset-0 overflow-hidden bg-[#1e1f22]">
       <video
@@ -336,15 +320,9 @@ function LoginShowcase({ videoUrl }: { videoUrl: string }) {
       />
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 p-8">
-        <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70">
-          One of the cheapest
-        </p>
-        <h2 className="text-2xl font-bold leading-tight">
-          Seedance 2.0 Video Generation
-        </h2>
-        <p className="mt-1 max-w-sm text-sm text-white/70">
-          Generate jaw-dropping AI videos with Seedance 2.0.
-        </p>
+        <p className="mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-white/70">{uiText("login-modal.one.of.the.cheapest")}{" "}</p>
+        <h2 className="text-2xl font-bold leading-tight">{uiText("login-modal.seedance.2.0.video.generation")}{" "}</h2>
+        <p className="mt-1 max-w-sm text-sm text-white/70">{uiText("login-modal.generate.jaw.dropping.ai.videos.with.seedance.2.0")}{" "}</p>
       </div>
     </div>
   );

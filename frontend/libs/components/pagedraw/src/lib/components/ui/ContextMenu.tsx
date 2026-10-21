@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -21,6 +22,7 @@ interface ContextMenuProps {
 }
 
 export const ContextMenu: React.FC<ContextMenuProps> = ({ items, onAction, onClose, position }) => {
+  useUiLocale();
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,6 +84,7 @@ export const ContextMenuContainer: React.FC<ContextMenuContainerProps> = ({
   className = '',
   isLocked = false
 }) => {
+  useUiLocale();
   const [showMenu, setShowMenu] = React.useState(false);
   const [position, setPosition] = React.useState<MenuPosition>({ x: 0, y: 0 });
 
@@ -92,7 +95,7 @@ export const ContextMenuContainer: React.FC<ContextMenuContainerProps> = ({
           icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round"/>
           </svg>,
-          label: 'Unlock',
+          get label() { return uiText("common.unlock"); },
           action: 'LOCK'
         }
       ];
@@ -146,14 +149,14 @@ const defaultMenuItems: MenuItem[] = [
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M4 4v16h16M4 20l16-16" strokeWidth="2" strokeLinecap="round"/>
     </svg>,
-    label: 'Remove background',
+    get label() { return uiText("pagedraw.remove.background"); },
     action: 'REMOVE_BACKGROUND'
   },
   {
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M12 10V14M8 6H16C17.1046 6 18 6.89543 18 8V16C18 17.1046 17.1046 18 16 18H8C6.89543 18 6 17.1046 6 16V8C6 6.89543 6.89543 6 8 6Z" strokeWidth="2" strokeLinecap="round"/>
     </svg>,
-    label: 'Lock',
+    get label() { return uiText("common.lock"); },
     action: 'LOCK',
     divider: true
   },
@@ -161,28 +164,28 @@ const defaultMenuItems: MenuItem[] = [
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M5 15L12 8L19 15" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>,
-    label: 'Bring to front',
+    get label() { return uiText("pagedraw.bring.to.front"); },
     action: 'BRING_TO_FRONT'
   },
   {
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M8 14L12 10L16 14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>,
-    label: 'Bring forward',
+    get label() { return uiText("pagedraw.bring.forward"); },
     action: 'BRING_FORWARD'
   },
   {
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M8 10L12 14L16 10" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>,
-    label: 'Send backward',
+    get label() { return uiText("pagedraw.send.backward"); },
     action: 'SEND_BACKWARD'
   },
   {
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M5 9L12 16L19 9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>,
-    label: 'Send to back',
+    get label() { return uiText("pagedraw.send.to.back"); },
     action: 'SEND_TO_BACK',
     divider: true
   },
@@ -190,7 +193,7 @@ const defaultMenuItems: MenuItem[] = [
     icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M16 8V6M16 8H8M16 8V16M8 8V6M8 8V16M8 16H6M8 16H16M16 16H18M6 6H8M8 6H16M16 6H18" strokeWidth="2" strokeLinecap="round"/>
     </svg>,
-    label: 'Duplicate',
+    get label() { return uiText("common.duplicate"); },
     action: 'DUPLICATE'
   },
   {
@@ -209,7 +212,7 @@ const defaultMenuItems: MenuItem[] = [
         />
       </svg>
     ),
-    label: 'Delete',
+    get label() { return uiText("common.delete"); },
     action: 'DELETE'
   },
 ];

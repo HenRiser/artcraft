@@ -1,3 +1,4 @@
+import { localize as uiLocalize } from "@storyteller/common";
 import {
   Listbox,
   ListboxButton,
@@ -43,7 +44,7 @@ export const Select = ({
               <span
                 className={twMerge("block truncate", !value && "opacity-50")}
               >
-                {selectedOption.label}
+                {uiLocalize(selectedOption.label)}
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5">
                 <ChevronDownIcon aria-hidden="true" />
@@ -78,7 +79,7 @@ export const Select = ({
                             selected ? "font-medium" : "font-normal"
                           }`}
                         >
-                          {option.label}
+                          {uiLocalize(option.label)}
                         </span>
                         {selected ? (
                           <span className="absolute inset-y-0 left-0 flex items-center pl-2.5">

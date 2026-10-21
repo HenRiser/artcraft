@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { GenerationProvider } from "@storyteller/common";
 
 interface GenericProviderBillingBlockProps {
@@ -7,19 +8,16 @@ interface GenericProviderBillingBlockProps {
 export function GenericProviderBillingBlock({
   provider
 }: GenericProviderBillingBlockProps) {
+  useUiLocale();
 
   const serviceProviderName = getServiceProviderName(provider);
 
   return (
     <div className="flex w-full flex-col gap-3 text-base-fg">
-      <p className="hud-label text-base-fg/55">Billing</p>
-      <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">
-        Set up {serviceProviderName}
+      <p className="hud-label text-base-fg/55">{uiText("provider-billing-modal.billing")}</p>
+      <h2 className="font-display text-2xl font-medium tracking-[-0.02em]">{uiText("provider-billing-modal.set.up")}{" "}{serviceProviderName}
       </h2>
-      <p className="text-sm leading-relaxed text-base-fg/60">
-        Please set up {serviceProviderName} on their website to use it with
-        ArtCraft.
-      </p>
+      <p className="text-sm leading-relaxed text-base-fg/60">{uiText("provider-billing-modal.please.set.up")}{" "}{serviceProviderName}{" "}{uiText("provider-billing-modal.on.their.website.to.use.it.with.artcraft")}{" "}</p>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { ChevronUpIcon, PauseIcon, PlayIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -11,6 +12,7 @@ import { DurationLabel } from "./DurationLabel";
 // Sits above the prompt card (rendered via the promptbox aboveStackSlot).
 // `readOnly` (record mode) hides the expand chevron — playback only.
 export const TimelineBar = ({ readOnly = false }: { readOnly?: boolean }) => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const playhead = usePageSceneStore((s) => s.timelinePlayhead);
   const isPlaying = usePageSceneStore((s) => s.timelineIsPlaying);
@@ -32,7 +34,7 @@ export const TimelineBar = ({ readOnly = false }: { readOnly?: boolean }) => {
       <button
         type="button"
         onClick={togglePlay}
-        aria-label={isPlaying ? "Pause timeline" : "Play timeline"}
+        aria-label={isPlaying ? uiText("common.pause.timeline") : uiText("common.play.timeline")}
         className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/80 hover:bg-white/10"
       >
         <DynamicIcon icon={isPlaying ? PauseIcon : PlayIcon} className="h-3.5 w-3.5" />
@@ -42,7 +44,7 @@ export const TimelineBar = ({ readOnly = false }: { readOnly?: boolean }) => {
       </span>
       <input
         type="range"
-        aria-label="Timeline playhead"
+        aria-label={uiText("common.timeline.playhead")}
         min={0}
         max={duration}
         step={0.01}
@@ -64,7 +66,7 @@ export const TimelineBar = ({ readOnly = false }: { readOnly?: boolean }) => {
       {!readOnly && (
         <button
           type="button"
-          title="Expand timeline"
+          title={uiText("pagescene.expand.timeline")}
           onClick={() => setExpanded(true)}
           className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/60 hover:bg-white/10"
         >

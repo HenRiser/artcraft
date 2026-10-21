@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ExportSinkAdapter } from "../export-sink";
 
 // Default export sink: triggers a browser download. Hosts can replace
@@ -47,7 +48,7 @@ export const downloadExportSink: ExportSinkAdapter = {
       onProgress?.({
         destination: "disk",
         status: "error",
-        error: error instanceof Error ? error.message : "Download failed",
+        error: error instanceof Error ? error.message : uiText("desktop.download.failed"),
       });
       throw error;
     }

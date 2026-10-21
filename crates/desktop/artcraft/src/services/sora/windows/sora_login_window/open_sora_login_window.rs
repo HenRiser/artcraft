@@ -1,3 +1,4 @@
+use crate::core::state::app_preferences::ui_language::localized_window_title;
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
 use crate::core::utils::clear_all_webview_cookies::clear_all_webview_cookies;
 use crate::services::sora::state::sora_credential_manager::SoraCredentialManager;
@@ -44,7 +45,7 @@ pub async fn open_sora_login_window(
   let window = WebviewWindowBuilder::new(app, LOGIN_WINDOW_NAME, url)
       //.user_agent(openai_sora_client::credentials::USER_AGENT)
       .always_on_top(true)
-      .title("Login to OpenAI's Sora")
+      .title(localized_window_title(app, LOGIN_WINDOW_NAME, "Login to OpenAI's Sora"))
       .center()
       .resizable(true)
       .visible(true)

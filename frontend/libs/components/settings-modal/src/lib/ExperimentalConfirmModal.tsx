@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { Modal } from "@storyteller/ui-modal";
 import { Button } from "@storyteller/ui-button";
 
@@ -18,8 +19,8 @@ export const ExperimentalConfirmModal = ({
   onConfirm,
   title,
   text,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  confirmText = uiText("button-dropdown.confirm"),
+  cancelText = uiText("common.cancel"),
   confirmVariant = "destructive",
 }: Props) => {
   return (

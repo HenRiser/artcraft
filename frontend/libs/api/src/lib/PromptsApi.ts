@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ApiManager, ApiResponse, buildSessionHeaders } from "./ApiManager.js";
 import { Prompts } from "./models/Prompts.js";
 import { FetchProxy as fetch } from "@storyteller/tauri-utils";
@@ -68,7 +69,7 @@ export class PromptsApi extends ApiManager {
         },
         job_token: jobToken,
         request: {
-          maybe_model_title: "Image Generation",
+          maybe_model_title: uiText("generation-feed.image.generation"),
         },
         status: {
           status: status_string.toLowerCase(),

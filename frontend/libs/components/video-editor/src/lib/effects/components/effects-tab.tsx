@@ -1,3 +1,5 @@
+import { localize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useState } from "react";
@@ -34,6 +36,7 @@ export function StandaloneEffectTab({
   element: EffectElement;
   trackId: string;
 }) {
+  useUiLocale();
   const { renderElement, previewUpdates, commit } = useElementPreview({
     trackId,
     elementId: element.id,
@@ -56,7 +59,7 @@ export function StandaloneEffectTab({
   return (
     <div className="flex flex-col h-full">
       <div className="border-b px-3.5 h-11 shrink-0 flex items-center">
-        <SectionTitle>Effect</SectionTitle>
+        <SectionTitle>{uiText("video-editor.effect")}</SectionTitle>
       </div>
       <EffectSection
         effect={effect}
@@ -75,6 +78,7 @@ export function ClipEffectsTab({
   element: VisualElement;
   trackId: string;
 }) {
+  useUiLocale();
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dropIndex, setDropIndex] = useState<number | null>(null);
   const editor = useEditor();
@@ -143,7 +147,7 @@ export function ClipEffectsTab({
   return (
     <div className="flex flex-col h-full">
       <div className="border-b px-3.5 h-11 shrink-0 flex items-center">
-        <SectionTitle>Effects</SectionTitle>
+        <SectionTitle>{uiText("common.effects")}</SectionTitle>
       </div>
       {effects.length === 0 ? (
         <EmptyView />
@@ -204,6 +208,7 @@ export function ClipEffectsTab({
 }
 
 function EmptyView() {
+  useUiLocale();
   const setActiveTab = useAssetsPanelStore((s) => s.setActiveTab);
 
   return (
@@ -214,18 +219,14 @@ function EmptyView() {
         strokeWidth={1}
       />
       <div className="flex flex-col gap-2">
-        <h3 className="font-medium text-foreground">No effects</h3>
-        <p className="text-muted-foreground text-sm text-balance max-w-44">
-          Add effects to this layer from the Assets panel.
-        </p>
+        <h3 className="font-medium text-foreground">{uiText("video-editor.no.effects")}</h3>
+        <p className="text-muted-foreground text-sm text-balance max-w-44">{uiText("video-editor.add.effects.to.this.layer.from.the.assets.panel")}{" "}</p>
       </div>
       <Button
         variant="default"
         size="sm"
         onClick={() => setActiveTab("effects")}
-      >
-        Open effects
-      </Button>
+      >{uiText("video-editor.open.effects")}{" "}</Button>
     </div>
   );
 }
@@ -245,6 +246,7 @@ function EffectSection({
   onToggle?: () => void;
   onRemove?: () => void;
 }) {
+  useUiLocale();
   const definition = effectsRegistry.get(effect.type);
 
   return (
@@ -260,7 +262,7 @@ function EffectSection({
               <Button
                 variant={effect.enabled ? "secondary" : "ghost"}
                 size="icon"
-                aria-label={`Toggle ${definition.name}`}
+                aria-label={uiText("video-editor.toggle.value", { value0: definition.name })}
                 onClick={onToggle}
               >
                 <HugeiconsIcon
@@ -270,7 +272,7 @@ function EffectSection({
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label={`Remove ${definition.name}`}
+                aria-label={uiText("video-editor.remove.value", { value0: definition.name })}
                 onClick={onRemove}
               >
                 <HugeiconsIcon icon={Delete02Icon} />
@@ -282,7 +284,7 @@ function EffectSection({
         <SectionTitle
           className={cn(onToggle && !effect.enabled && "text-muted-foreground")}
         >
-          {definition.name}
+          {localize(definition.name)}
         </SectionTitle>
       </SectionHeader>
       <SectionContent

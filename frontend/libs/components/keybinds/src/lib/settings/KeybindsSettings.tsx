@@ -1,3 +1,5 @@
+import { localize as uiLocalize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useKeybindsStore } from "../keybinds-store";
@@ -49,6 +51,7 @@ export function KeybindsSettings({
 }: {
   onOpenVideoEditorShortcuts?: () => void;
 }) {
+  useUiLocale();
   const selectedPreset = useKeybindsStore((s) => s.selectedPreset);
   const overrides = useKeybindsStore((s) => s.overrides);
   const setPreset = useKeybindsStore((s) => s.setPreset);
@@ -167,7 +170,7 @@ export function KeybindsSettings({
     <div className="flex flex-col gap-8">
       {/* ── Preset + layering explainer ────────────────────────────────────── */}
       <section className="flex flex-col gap-3">
-        <Eyebrow>Preset</Eyebrow>
+        <Eyebrow>{uiText("common.preset")}</Eyebrow>
         <PresetDropdown value={selectedPreset} onChange={setPreset} />
         <LayeringNote preset={selectedPreset} />
       </section>
@@ -206,8 +209,8 @@ export function KeybindsSettings({
           {searchActive
             ? `${totalMatches} ${totalMatches === 1 ? "match" : "matches"}`
             : overriddenCount > 0
-              ? `${overriddenCount} customized`
-              : "Default bindings"}
+              ? uiText("keybinds.value.customized", { value0: overriddenCount })
+              : uiText("keybinds.default.bindings")}
         </span>
         {!searchActive && (
           <button
@@ -215,7 +218,7 @@ export function KeybindsSettings({
             onClick={toggleAll}
             className="font-medium text-base-fg/50 transition-colors hover:text-base-fg/80"
           >
-            {allOpen ? "Collapse all" : "Expand all"}
+            {allOpen ? uiText("keybinds.collapse.all") : uiText("keybinds.expand.all")}
           </button>
         )}
       </div>
@@ -245,7 +248,7 @@ export function KeybindsSettings({
               >
                 {groups.map(({ group, actions }) => (
                   <div key={group}>
-                    <GroupLabel>{group}</GroupLabel>
+                    <GroupLabel>{uiLocalize(group)}</GroupLabel>
                     {actions.map((action) => (
                       <ActionRow
                         key={action.id}
@@ -275,19 +278,13 @@ export function KeybindsSettings({
       {overriddenCount > 0 && (
         <div className="flex items-center justify-between gap-4 rounded-none bg-red/[0.04] p-4 ring-1 ring-red/20">
           <div className="flex min-w-0 flex-col gap-0.5">
-            <span className="text-[13px] font-medium text-base-fg/90">
-              Reset all customizations
-            </span>
-            <span className="text-xs leading-relaxed text-base-fg/50">
-              Removes {overriddenCount === 1 ? "your 1 custom binding" : `all ${overriddenCount} custom bindings`}{" "}
-              on every surface. Your preset stays selected. This can’t be
-              undone.
-            </span>
+            <span className="text-[13px] font-medium text-base-fg/90">{uiText("keybinds.reset.all.customizations")}{" "}</span>
+            <span className="text-xs leading-relaxed text-base-fg/50">{uiText("keybinds.removes")}{" "}{overriddenCount === 1 ? uiText("keybinds.your.1.custom.binding") : uiText("keybinds.all.value.custom.bindings", { value0: overriddenCount })}{" "}{uiText("keybinds.on.every.surface.your.preset.stays.selected.this.can.t.be.undone")}{" "}</span>
           </div>
           <ConfirmResetButton
-            idleLabel="Reset all"
-            confirmLabel={`Confirm — reset ${overriddenCount}`}
-            title={`Reset all ${overriddenCount} customized bindings to the preset defaults`}
+            idleLabel={uiText("desktop.reset.all")}
+            confirmLabel={uiText("desktop.confirm.reset.value", { value0: overriddenCount })}
+            title={uiText("keybinds.reset.all.value.customized.bindings.to.the.preset.defaults", { value0: overriddenCount })}
             prominent
             confirmDelayMs={2000}
             onConfirm={resetAll}
@@ -298,18 +295,14 @@ export function KeybindsSettings({
       {/* ── Video editor lives in its own customizer ───────────────────────── */}
       <div className="flex items-start gap-3 rounded-none bg-white/[0.02] p-4 text-[13px] leading-relaxed text-base-fg/55 ring-1 ring-white/15">
         <InfoIcon className="mt-0.5 h-4 w-4 shrink-0 text-base-fg/35" />
-        <span>
-          Video editor shortcuts are managed in the video editor itself
-          {onOpenVideoEditorShortcuts ? (
+        <span>{uiText("keybinds.video.editor.shortcuts.are.managed.in.the.video.editor.itself")}{" "}{onOpenVideoEditorShortcuts ? (
             <>
               {" — "}
               <button
                 type="button"
                 onClick={onOpenVideoEditorShortcuts}
                 className="font-medium text-primary underline-offset-2 hover:underline"
-              >
-                open shortcut settings
-              </button>
+              >{uiText("keybinds.open.shortcut.settings")}{" "}</button>
               .
             </>
           ) : (
@@ -330,6 +323,7 @@ function PresetDropdown({
   value: PresetId;
   onChange: (id: PresetId) => void;
 }) {
+  useUiLocale();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const def = PRESETS[value];
@@ -363,9 +357,9 @@ function PresetDropdown({
         )}
       >
         <div className="flex min-w-0 grow flex-col gap-0.5 px-3 py-1.5">
-          <span className="text-sm font-medium text-base-fg">{def.label}</span>
+          <span className="text-sm font-medium text-base-fg">{uiLocalize(def.label)}</span>
           <span className="text-[12px] leading-relaxed text-base-fg/60">
-            {def.description}
+            {uiLocalize(def.description)}
           </span>
         </div>
         <ChevronIcon
@@ -379,7 +373,7 @@ function PresetDropdown({
 
       <div
         role="listbox"
-        aria-label="Preset"
+        aria-label={uiText("common.preset")}
         className={twMerge(
           "absolute left-0 right-0 top-full z-20 mt-2 origin-top rounded-none bg-ui-modal shadow-[0_20px_50px_-16px_rgba(0,0,0,0.7)] ring-1 ring-white/10 transition-all duration-200 overflow-hidden",
           EASE,
@@ -417,10 +411,10 @@ function PresetDropdown({
               </span>
               <div className="flex min-w-0 flex-col gap-0.5">
                 <span className="text-sm font-medium text-base-fg">
-                  {p.label}
+                  {uiLocalize(p.label)}
                 </span>
                 <span className="text-[12px] leading-relaxed text-base-fg/55">
-                  {p.description}
+                  {uiLocalize(p.description)}
                 </span>
               </div>
             </button>
@@ -432,18 +426,13 @@ function PresetDropdown({
 }
 
 function LayeringNote({ preset }: { preset: PresetId }) {
+  useUiLocale();
   return (
-    <p className="text-[13px] leading-relaxed text-base-fg/55">
-      Every shortcut starts from the{" "}
+    <p className="text-[13px] leading-relaxed text-base-fg/55">{uiText("keybinds.every.shortcut.starts.from.the")}{" "}
       <span className="font-medium text-base-fg/80">
-        {PRESETS[preset].label}
-      </span>{" "}
-      preset. Any key you change is saved as your own{" "}
-      <span className="font-medium text-base-fg/80">override</span> on top —
-      these sit beside the dimmed preset default
-      <span className="mx-1 inline-block h-1.5 w-1.5 translate-y-px rounded-full bg-primary align-middle" />
-      and revert with ↺.
-    </p>
+        {uiLocalize(PRESETS[preset].label)}
+      </span>{" "}{uiText("keybinds.preset.any.key.you.change.is.saved.as.your.own")}{" "}
+      <span className="font-medium text-base-fg/80">{uiText("keybinds.override")}</span>{" "}{uiText("keybinds.on.top.these.sit.beside.the.dimmed.preset.default")}{" "}<span className="mx-1 inline-block h-1.5 w-1.5 translate-y-px rounded-full bg-primary align-middle" />{uiText("keybinds.and.revert.with")}{" "}</p>
   );
 }
 
@@ -456,6 +445,7 @@ function ModeToggle({
   mode: SearchMode;
   onChange: (mode: SearchMode) => void;
 }) {
+  useUiLocale();
   return (
     <div className="flex shrink-0 items-center gap-0.5 rounded-[3px] bg-ui-modal/60 p-0.5">
       {(["name", "key"] as SearchMode[]).map((m) => (
@@ -486,6 +476,7 @@ function NameSearchField({
   value: string;
   onChange: (v: string) => void;
 }) {
+  useUiLocale();
   return (
     <div
       className={twMerge(
@@ -499,14 +490,14 @@ function NameSearchField({
         type="search"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search by name — “rotate”, “camera up”…"
+        placeholder={uiText("keybinds.search.by.name.rotate.camera.up")}
         className="h-10 w-full bg-transparent px-3 text-sm text-base-fg placeholder:text-base-fg/35 focus:outline-none [&::-webkit-search-cancel-button]:hidden"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
-          aria-label="Clear search"
+          aria-label={uiText("common.clear.search")}
           className={twMerge(
             "mr-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-[3px] text-base-fg/40 transition-all hover:bg-white/10 hover:text-base-fg active:scale-90",
             EASE,
@@ -530,6 +521,7 @@ function KeySearchField({
   onArm: () => void;
   onClear: () => void;
 }) {
+  useUiLocale();
   return (
     <div
       className={twMerge(
@@ -550,25 +542,21 @@ function KeySearchField({
           )}
         />
         {listening ? (
-          <span className="animate-pulse text-[13px] font-medium text-primary">
-            Listening… press a shortcut
-          </span>
+          <span className="animate-pulse text-[13px] font-medium text-primary">{uiText("keybinds.listening.press.a.shortcut")}{" "}</span>
         ) : binding ? (
           <span className="flex items-center gap-2 text-[13px] text-base-fg/60">
             <KbdBindings bindings={[binding]} />
-            <span className="text-base-fg/35">— filtering by this key</span>
+            <span className="text-base-fg/35">{uiText("keybinds.filtering.by.this.key")}</span>
           </span>
         ) : (
-          <span className="text-sm text-base-fg/35">
-            Click, then press a shortcut to filter…
-          </span>
+          <span className="text-sm text-base-fg/35">{uiText("keybinds.click.then.press.a.shortcut.to.filter")}{" "}</span>
         )}
       </button>
       {binding && (
         <button
           type="button"
           onClick={onClear}
-          aria-label="Clear key filter"
+          aria-label={uiText("keybinds.clear.key.filter")}
           className={twMerge(
             "mr-1.5 grid h-7 w-7 shrink-0 place-items-center rounded-[3px] text-base-fg/40 transition-all hover:bg-white/10 hover:text-base-fg active:scale-90",
             EASE,
@@ -604,6 +592,7 @@ function CollapsibleSurface({
   onReset: () => void;
   children: React.ReactNode;
 }) {
+  useUiLocale();
   return (
     <div className="rounded-none bg-white/[0.04] ring-1 ring-white/15">
       <div className="overflow-hidden rounded-[3px] bg-ui-modal/40">
@@ -639,11 +628,9 @@ function CollapsibleSurface({
           </button>
           {overriddenCount > 0 && (
             <ConfirmResetButton
-              idleLabel={`Reset ${overriddenCount}`}
-              confirmLabel="Confirm?"
-              title={`Reset ${title}'s ${overriddenCount} customized ${
-                overriddenCount === 1 ? "binding" : "bindings"
-              } to the preset defaults`}
+              idleLabel={uiText("desktop.reset.value", { value0: overriddenCount })}
+              confirmLabel={uiText("desktop.confirm")}
+              title={uiText("keybinds.reset.value.s.value.customized.value.to.the.preset.defaults", { value0: title, value1: overriddenCount, value2: overriddenCount === 1 ? "binding" : "bindings" })}
               onConfirm={onReset}
             />
           )}
@@ -695,6 +682,7 @@ function ConfirmResetButton({
   confirmDelayMs?: number;
   onConfirm: () => void;
 }) {
+  useUiLocale();
   const [armed, setArmed] = useState(false);
   const [ready, setReady] = useState(false); // lockout elapsed, click confirms
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -736,7 +724,7 @@ function ConfirmResetButton({
         }
       }}
       title={title}
-      aria-label={armed ? `${title} — click again to confirm` : title}
+      aria-label={armed ? uiText("keybinds.value.click.again.to.confirm", { value0: title }) : title}
       className={twMerge(
         "relative shrink-0 overflow-hidden whitespace-nowrap rounded-[3px] font-medium transition-all active:scale-[0.97]",
         EASE,
@@ -781,6 +769,7 @@ function TimedFill({
   durationMs: number;
   className?: string;
 }) {
+  useUiLocale();
   const [engaged, setEngaged] = useState(false);
   useEffect(() => {
     let inner: number | undefined;
@@ -824,6 +813,7 @@ function ActionRow({
   onCapture: (binding: Binding) => void;
   onReset: () => void;
 }) {
+  useUiLocale();
   return (
     <div
       className={twMerge(
@@ -837,17 +827,17 @@ function ActionRow({
           "h-1.5 w-1.5 shrink-0 rounded-full bg-primary transition-opacity duration-300",
           overridden ? "opacity-100" : "opacity-0",
         )}
-        title={overridden ? "Customized" : undefined}
+        title={overridden ? uiText("keybinds.customized") : undefined}
       />
       <span className="grow truncate text-[13px] text-base-fg/90">
-        {action.label}
+        {uiLocalize(action.label)}
       </span>
 
       {/* Layering made literal: dimmed preset default → revert → live override. */}
       {overridden && (
         <span
           className="hidden items-center gap-1.5 text-xs text-base-fg/35 opacity-70 sm:inline-flex"
-          title="Preset default"
+          title={uiText("keybinds.preset.default")}
         >
           <KbdBindings bindings={defaultBindings} />
         </span>
@@ -856,8 +846,8 @@ function ActionRow({
         <button
           type="button"
           onClick={onReset}
-          title="Revert to preset default"
-          aria-label="Revert to preset default"
+          title={uiText("common.revert.to.preset.default")}
+          aria-label={uiText("common.revert.to.preset.default")}
           className={twMerge(
             "grid h-7 w-7 shrink-0 place-items-center rounded-[3px] text-base-fg/40 transition-all hover:bg-white/10 hover:text-base-fg active:scale-90",
             EASE,
@@ -884,13 +874,14 @@ function ConflictAlert({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  useUiLocale();
   return (
     <div
       role="alert"
       className="flex flex-col gap-2.5 rounded-none bg-red/[0.08] p-3.5 text-[13px] ring-1 ring-red/30"
     >
       <span className="leading-relaxed text-base-fg/80">
-        <KbdBindings bindings={[pending.binding]} /> is already used by{" "}
+        <KbdBindings bindings={[pending.binding]} />{" "}{uiText("keybinds.is.already.used.by")}{" "}
         <strong className="font-medium text-base-fg">
           {pending.conflicts.map((c) => ACTIONS[c]?.label).join(", ")}
         </strong>
@@ -904,9 +895,7 @@ function ConflictAlert({
             "rounded-[3px] bg-red px-4 py-1.5 text-[13px] font-medium text-white transition-all hover:bg-red/85 active:scale-[0.97]",
             EASE,
           )}
-        >
-          Rebind anyway
-        </button>
+        >{uiText("keybinds.rebind.anyway")}{" "}</button>
         <button
           type="button"
           onClick={onCancel}
@@ -914,9 +903,7 @@ function ConflictAlert({
             "rounded-[3px] bg-white/[0.06] px-4 py-1.5 text-[13px] text-base-fg/80 transition-all hover:bg-white/10 active:scale-[0.97]",
             EASE,
           )}
-        >
-          Cancel
-        </button>
+        >{uiText("common.cancel")}{" "}</button>
       </div>
     </div>
   );
@@ -931,6 +918,7 @@ function EmptyState({
   query: string;
   binding: Binding | null;
 }) {
+  useUiLocale();
   return (
     <div className="flex flex-col items-center gap-3 rounded-none bg-white/[0.06] px-6 py-12 text-center ring-1 ring-white/15">
       {mode === "key" ? (
@@ -938,14 +926,12 @@ function EmptyState({
       ) : (
         <SearchIcon className="h-6 w-6 text-base-fg/25" />
       )}
-      <p className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-base-fg/60">
-        Nothing is bound to
-        {mode === "key" && binding ? (
+      <p className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-base-fg/60">{uiText("keybinds.nothing.is.bound.to")}{" "}{mode === "key" && binding ? (
           <KbdBindings bindings={[binding]} />
         ) : (
           <span className="font-medium text-base-fg/90">“{query}”</span>
         )}
-        {mode === "key" ? " yet." : "."}
+        {mode === "key" ? uiText("keybinds.yet") : "."}
       </p>
     </div>
   );
@@ -954,6 +940,7 @@ function EmptyState({
 // ── Bits ──────────────────────────────────────────────────────────────────────
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
+  useUiLocale();
   return (
     <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
       {children}
@@ -962,6 +949,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 
 function GroupLabel({ children }: { children: React.ReactNode }) {
+  useUiLocale();
   return (
     <div className="px-3 pb-1 pt-4 font-mono text-[11px] font-medium uppercase tracking-[0.13em] text-base-fg/45 first:pt-2">
       {children}
@@ -976,6 +964,7 @@ function presetDefault(id: ActionId, preset: PresetId): Binding[] {
 // ── Icons (thin-line, currentColor; keeps the lib dependency-free) ────────────
 
 function SearchIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -995,6 +984,7 @@ function SearchIcon({ className }: { className?: string }) {
 }
 
 function KeyIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -1015,6 +1005,7 @@ function KeyIcon({ className }: { className?: string }) {
 }
 
 function ChevronIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -1034,6 +1025,7 @@ function ChevronIcon({ className }: { className?: string }) {
 }
 
 function ClearIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -1052,6 +1044,7 @@ function ClearIcon({ className }: { className?: string }) {
 }
 
 function CheckIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -1071,6 +1064,7 @@ function CheckIcon({ className }: { className?: string }) {
 }
 
 function ResetIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"
@@ -1097,6 +1091,7 @@ function ResetIcon({ className }: { className?: string }) {
 }
 
 function InfoIcon({ className }: { className?: string }) {
+  useUiLocale();
   return (
     <svg
       viewBox="0 0 24 24"

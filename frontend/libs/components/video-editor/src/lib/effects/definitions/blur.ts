@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { EffectDefinition, EffectPass } from "../types";
 
 export const GAUSSIAN_BLUR_SHADER = "gaussian-blur";
@@ -85,7 +86,7 @@ export const blurEffectDefinition: EffectDefinition = {
   params: [
     {
       key: "intensity",
-      label: "Intensity",
+      get label() { return uiText("video-editor.intensity"); },
       type: "number",
       default: 15,
       min: 0,

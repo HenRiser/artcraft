@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { JobsApi, JobStatus, MediaFilesApi } from "@storyteller/api";
 import type { Job, Prompts } from "@storyteller/api";
@@ -125,7 +126,7 @@ function getModelLabel(job: Job, promptsMap?: Map<string, Prompts>): string {
     : undefined;
 
   if (modelDisplay && provider) return `${modelDisplay} · ${provider}`;
-  return modelDisplay || provider || "Unknown model";
+  return modelDisplay || provider || uiText("desktop.unknown.model");
 }
 
 function getPrompt(job: Job, promptsMap?: Map<string, Prompts>): string {

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -251,7 +252,7 @@ export const useMoodboardStore = create<MoodboardState>((set, get) => ({
       height: DEFAULT_TEXT_H,
       rotation: 0,
       zIndex: get().rootOrder.length,
-      text: "Note",
+      get text() { return uiText("common.note"); },
       fontSize: DEFAULT_FONT_SIZE,
       color: DEFAULT_TEXT_COLOR,
     };

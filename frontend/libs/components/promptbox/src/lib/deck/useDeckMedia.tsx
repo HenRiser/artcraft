@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { GalleryItem, GalleryModal } from "@storyteller/ui-gallery-modal";
 import { type UploadMediaFn } from "@storyteller/api";
@@ -371,7 +372,7 @@ export function useDeckMedia<
       const currentTotal = committed.reduce((sum, v) => sum + v.duration, 0);
 
       if (currentTotal + duration > maxVideoTotalSec) {
-        toast.error(`Total video duration cannot exceed ${maxVideoTotalSec}s`, {
+        toast.error(uiText("common.total.video.duration.cannot.exceed.value.s", { value0: maxVideoTotalSec }), {
           id: "video-ref-limit",
         });
         break;
@@ -409,7 +410,7 @@ export function useDeckMedia<
             ) {
               URL.revokeObjectURL(entry.previewUrl);
               setUploadingVideo(null);
-              toast.error("Failed to upload video. Please upload an MP4 file.");
+              toast.error(uiText("common.failed.to.upload.video.please.upload.an.mp4.file"));
             }
           },
         });
@@ -450,7 +451,7 @@ export function useDeckMedia<
       );
 
       if (currentTotal + duration > maxAudioTotalSec) {
-        toast.error(`Total audio duration cannot exceed ${maxAudioTotalSec}s`);
+        toast.error(uiText("common.total.audio.duration.cannot.exceed.value.s", { value0: maxAudioTotalSec }));
         break;
       }
 
@@ -600,7 +601,7 @@ export function useDeckMedia<
         }
         if (exceeded) {
           toast.error(
-            `Total video duration cannot exceed ${maxVideoTotalSec}s`,
+            uiText("common.total.video.duration.cannot.exceed.value.s", { value0: maxVideoTotalSec }),
             { id: "video-ref-limit" },
           );
         }
@@ -617,7 +618,7 @@ export function useDeckMedia<
       const baseAudios = [...referenceAudios];
       const availableSlots = Math.max(0, maxAudios - baseAudios.length);
       if (availableSlots <= 0) {
-        toast.error(`Max ${maxAudios} audio tracks / ${maxAudioTotalSec}s total`, {
+        toast.error(uiText("promptbox.max.value.audio.tracks.value.s.total", { value0: maxAudios, value1: maxAudioTotalSec }), {
           id: "audio-ref-limit",
         });
         handleGalleryClose();
@@ -664,7 +665,7 @@ export function useDeckMedia<
         }
         if (exceeded) {
           toast.error(
-            `Total audio duration cannot exceed ${maxAudioTotalSec}s`,
+            uiText("common.total.audio.duration.cannot.exceed.value.s", { value0: maxAudioTotalSec }),
             { id: "audio-ref-limit" },
           );
         }

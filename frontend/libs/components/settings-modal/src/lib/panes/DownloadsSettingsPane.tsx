@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import { Button } from "@storyteller/ui-button";
 import {
@@ -20,11 +21,12 @@ import { FolderIcon, RotateCcwIcon, SearchIcon } from "lucide-react";
 
 const DEFAULT_CUSTOM_FORMAT = "{model}_{date}";
 const FILENAME_OPTIONS = [
-  { value: "artcraft_convention", label: "ArtCraft convention" },
-  { value: "custom", label: "Custom format" },
+  { value: "artcraft_convention", get label() { return uiText("settings-modal.artcraft.convention"); } },
+  { value: "custom", get label() { return uiText("common.custom.format"); } },
 ];
 
 export const DownloadsSettingsPane = () => {
+  useUiLocale();
   const [preferences, setPreferences] = useState<
     AppPreferencesPayload | undefined
   >(undefined);
@@ -63,7 +65,7 @@ export const DownloadsSettingsPane = () => {
       : "";
   const currentDownloadLabel =
     "system" in outerDownloadObject
-      ? "System Download Directory"
+      ? uiText("desktop.system.download.directory")
       : downloadDirectory;
 
   const reloadPreferences = async () => {
@@ -133,11 +135,11 @@ export const DownloadsSettingsPane = () => {
   const saveCustomFormat = async () => {
     const format = customFormat.trim();
     if (!format) {
-      setFormatError("Format cannot be empty");
+      setFormatError(uiText("desktop.format.cannot.be.empty"));
       return;
     }
     if (/[/\\'"`%<>|:*?\x00-\x1f\x7f]/.test(format) || format.includes("..")) {
-      setFormatError("Format cannot contain slashes, quotes, or other unsafe characters");
+      setFormatError(uiText("desktop.format.cannot.contain.slashes.quotes.or.other.unsafe.characters"));
       return;
     }
     await saveFilenamePreference({ custom_format: format });
@@ -147,11 +149,8 @@ export const DownloadsSettingsPane = () => {
     <div className="space-y-4 pt-3 text-base-fg">
       {settingsError && <p role="alert" className="text-red-400">{settingsError}</p>}
       <div className="space-y-2">
-        <Label htmlFor="download-path">Default Download Directory</Label>
-        <p className="text-xs opacity-70">
-          This is where downloads are placed after downloading. The current path
-          is:
-        </p>
+        <Label htmlFor="download-path">{uiText("settings-modal.default.download.directory")}</Label>
+        <p className="text-xs opacity-70">{uiText("settings-modal.this.is.where.downloads.are.placed.after.downloading.the.current.path.is")}{" "}</p>
         <div className="mt-1 border border-ui-panel-border bg-ui-sunken px-3 py-2 text-base-fg">
           <pre className="whitespace-pre-wrap break-all font-mono text-xs">
             {currentDownloadLabel}
@@ -160,28 +159,20 @@ export const DownloadsSettingsPane = () => {
       </div>
       <div className="flex flex-wrap gap-2">
         <Button variant="primary" onClick={openDirectoryPicker}>
-          <FolderIcon />
-          Choose Directory
-        </Button>
+          <FolderIcon />{uiText("settings-modal.choose.directory")}{" "}</Button>
         <Button variant="destructive" onClick={clearDirectory}>
-          <RotateCcwIcon />
-          Use Default
-        </Button>
+          <RotateCcwIcon />{uiText("settings-modal.use.default")}{" "}</Button>
         <Button variant="secondary" onClick={showDirectory}>
-          <SearchIcon />
-          Show Directory
-        </Button>
+          <SearchIcon />{uiText("settings-modal.show.directory")}{" "}</Button>
       </div>
       <div className="flex flex-col gap-2 pt-3">
         <div className="flex flex-col gap-0.5">
-          <Label htmlFor="auto-download">Auto Download</Label>
-          <p className="text-xs opacity-70">
-            Downloads to your system the minute generations complete
-          </p>
+          <Label htmlFor="auto-download">{uiText("common.auto.download")}</Label>
+          <p className="text-xs opacity-70">{uiText("settings-modal.downloads.to.your.system.the.minute.generations.complete")}{" "}</p>
         </div>
         <Switch
           id="auto-download"
-          label="Auto Download"
+          label={uiText("common.auto.download")}
           enabled={preferences?.auto_download ?? false}
           setEnabled={toggleAutoDownload}
           disabled={!preferences || saving}
@@ -189,27 +180,20 @@ export const DownloadsSettingsPane = () => {
       </div>
       <div className="flex flex-col gap-2 pt-3">
         <div className="flex flex-col gap-0.5">
-          <Label htmlFor="ask-location-before-download">
-            Ask location before download
-          </Label>
-          <p className="text-xs opacity-70">
-            When on, a system file picker appears every time you download from
-            the lightbox or anywhere in the app, letting you choose the save
-            location for that file. When off, downloads go straight to the
-            default download directory above.
-          </p>
+          <Label htmlFor="ask-location-before-download">{uiText("common.ask.location.before.download")}{" "}</Label>
+          <p className="text-xs opacity-70">{uiText("settings-modal.when.on.a.system.file.picker.appears.every.time.you.download.from.the.lightbox.or.any")}{" "}</p>
         </div>
         <Switch
           id="ask-location-before-download"
-          label="Ask location before download"
+          label={uiText("common.ask.location.before.download")}
           enabled={askLocationBeforeDownload}
           setEnabled={toggleAskLocationBeforeDownload}
         />
       </div>
       <fieldset disabled={!preferences || saving} className="flex flex-col gap-2 border-0 p-0">
-        <Label htmlFor="download-filename-mode">Preferred download naming scheme</Label>
+        <Label htmlFor="download-filename-mode">{uiText("settings-modal.preferred.download.naming.scheme")}</Label>
         <p className="text-xs opacity-70">
-          {"The ArtCraft convention is {model}_{date}.{ext}, with a batch number when a generation produces several files."}
+          {uiText("settings-modal.the.artcraft.convention.is.value.value.value.with.a.batch.number.when.a.generation.pr", { model: "{model}", date: "{date}", ext: "{ext}" })}
         </p>
         <div className="max-w-xs">
           <Select
@@ -228,7 +212,7 @@ export const DownloadsSettingsPane = () => {
         </div>
         {filenameMode === "custom" && (
           <>
-            <Label htmlFor="download-filename-format">Custom format</Label>
+            <Label htmlFor="download-filename-format">{uiText("common.custom.format")}</Label>
             <div className="flex flex-wrap items-center gap-2">
               <input
                 id="download-filename-format"
@@ -239,12 +223,12 @@ export const DownloadsSettingsPane = () => {
                 spellCheck={false}
                 className="min-w-0 flex-1 rounded-[3px] border border-ui-controls-border bg-ui-controls px-3 py-2 font-mono text-xs outline-none focus:border-base-fg/40"
               />
-              <Button variant="secondary" onClick={saveCustomFormat}>Save format</Button>
+              <Button variant="secondary" onClick={saveCustomFormat}>{uiText("settings-modal.save.format")}</Button>
             </div>
             <p className="text-xs opacity-70">
-              {"Tokens: {model}, {date}, {YYYY}, {YY}, {MM}, {DD}, {HH}, {mm}, {SS}, {batch_index}. The file extension is added automatically. Batch numbers are added automatically if omitted."}
+              {uiText("settings-modal.tokens.value.value.value.value.value.value.value.value.value.value.the.file.extension", { model: "{model}", date: "{date}", YYYY: "{YYYY}", YY: "{YY}", MM: "{MM}", DD: "{DD}", HH: "{HH}", mm: "{mm}", SS: "{SS}", batch_index: "{batch_index}" })}
             </p>
-            <p className="text-xs opacity-70">Changes apply after you click Save format.</p>
+            <p className="text-xs opacity-70">{uiText("settings-modal.changes.apply.after.you.click.save.format")}</p>
           </>
         )}
         {formatError && <p role="alert" className="text-xs text-red-400">{formatError}</p>}

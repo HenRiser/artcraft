@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import Scene from "./scene";
@@ -672,7 +673,7 @@ class Editor {
       this.save_manager.loadScene(sceneToken).then(applyIfLoaded);
     } else {
       this.adapter.onSceneTitleChange?.({
-        title: "Untitled New Scene",
+        title: uiText("desktop.untitled.new.scene"),
         token: undefined,
         ownerToken: this.adapter.getCurrentUserToken?.(),
         isModified: false,
@@ -891,7 +892,7 @@ class Editor {
     const sceneTitle =
       sceneTitleInput && sceneTitleInput !== ""
         ? sceneTitleInput
-        : "Untitled New Scene";
+        : uiText("desktop.untitled.new.scene");
     this.adapter.onSceneTitleChange?.({
       title: sceneTitle,
       token: undefined,

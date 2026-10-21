@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import {
   getCompositorCanvas,
   getLastFrameProfile,
@@ -119,7 +120,7 @@ class WasmCompositor {
         source: texture.source,
         width: texture.width,
         height: texture.height,
-        label: `texture upload ${texture.id}`,
+        get label() { return uiText("video-editor.texture.upload.value", { value0: texture.id }); },
       }),
       width: texture.width,
       height: texture.height,

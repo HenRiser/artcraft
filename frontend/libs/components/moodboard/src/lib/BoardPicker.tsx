@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
@@ -15,6 +16,7 @@ import { deleteBoardEverywhere } from "./persistence/moodboardSync";
 // the canvas via the bridge), and hosts New/Delete. Rename stays on the grid
 // toolbar's inline title.
 export const BoardPicker = () => {
+  useUiLocale();
   const { boards, boardOrder, activeBoardId } = useBoardLibraryStore(
     useShallow((s) => ({
       boards: s.boards,
@@ -52,7 +54,7 @@ export const BoardPicker = () => {
   const handleDelete = async (boardId: string) => {
     const board = boards[boardId];
     if (!board) return;
-    if (!window.confirm(`Delete "${board.name}"? This can't be undone.`)) {
+    if (!window.confirm(uiText("moodboard.delete.value.this.can.t.be.undone", { value0: board.name }))) {
       return;
     }
     const wasActive = activeBoardId === boardId;
@@ -70,8 +72,8 @@ export const BoardPicker = () => {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        title="Switch board"
-        aria-label="Switch board"
+        title={uiText("common.switch.board")}
+        aria-label={uiText("common.switch.board")}
         className="flex max-w-[180px] items-center gap-2 rounded-xl px-3.5 py-1.5 text-sm font-medium text-base-fg/70 transition-colors duration-150 hover:text-base-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
         <span className="truncate">{activeBoard?.name ?? "Boards"}</span>
@@ -100,8 +102,8 @@ export const BoardPicker = () => {
                 </button>
                 <button
                   type="button"
-                  title={`Delete ${board.name}`}
-                  aria-label={`Delete ${board.name}`}
+                  title={uiText("common.delete.value", { value0: board.name })}
+                  aria-label={uiText("common.delete.value", { value0: board.name })}
                   onClick={() => void handleDelete(board.id)}
                   className="mr-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-base-fg/40 opacity-0 transition-opacity hover:bg-red-500/20 hover:text-red-400 focus:opacity-100 group-hover:opacity-100"
                 >
@@ -115,9 +117,7 @@ export const BoardPicker = () => {
             onClick={handleNewBoard}
             className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-base-fg/70 transition-colors hover:bg-base-fg/10 hover:text-base-fg focus:outline-none"
           >
-            <PlusIcon  className="h-3 w-3" />
-            New board
-          </button>
+            <PlusIcon  className="h-3 w-3" />{uiText("moodboard.new.board")}{" "}</button>
         </div>
       )}
     </div>

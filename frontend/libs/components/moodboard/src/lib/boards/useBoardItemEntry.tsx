@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useBoardLibraryStore } from "./BoardLibraryStore";
@@ -31,7 +32,7 @@ export const useBoardItemEntry = (
   const triggerGallery = useCallback(() => {
     if (adapter.renderLibraryPicker) setPickerOpen(true);
     else
-      toast("Library picker isn't available here — upload or paste for now", {
+      toast(uiText("desktop.library.picker.isn.t.available.here.upload.or.paste.for.now"), {
         icon: "🖼️",
       });
   }, [adapter]);

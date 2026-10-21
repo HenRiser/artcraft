@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { PlusIcon, Trash2Icon } from "lucide-react";
@@ -81,11 +82,12 @@ export const ReferenceDeck = ({
   onAddClick,
   canAdd,
   onClearAll,
-  emptyLabel = "Reference",
+  emptyLabel = uiText("common.reference"),
   alwaysExpanded,
   maxCollapsed = 3,
   className,
 }: ReferenceDeckProps) => {
+  useUiLocale();
   const [hovered, setHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
@@ -291,16 +293,14 @@ export const ReferenceDeck = ({
       {onClearAll && items.length > 1 && (
         <div className="mb-1.5 flex items-center justify-between px-0.5">
           <span className="text-[11px] font-medium text-base-fg/60">
-            {items.length} reference{items.length !== 1 ? "s" : ""}
+            {items.length}{" "}{uiText("promptbox.reference")}{items.length !== 1 ? "s" : ""}
           </span>
           <button
             type="button"
             onClick={onClearAll}
             className="flex items-center gap-1 rounded-[3px] px-1 py-0.5 text-[11px] text-base-fg/60 transition-colors hover:text-red-400"
           >
-            <Trash2Icon className="h-2.5 w-2.5" />
-            Clear all
-          </button>
+            <Trash2Icon className="h-2.5 w-2.5" />{uiText("common.clear.all")}{" "}</button>
         </div>
       )}
       {/* Rows are 56px cards + 8px gap; cap at three rows in the fullscreen
@@ -491,6 +491,7 @@ const SortableDeckCard = ({
   onClick: () => void;
   hideHoverChrome?: boolean;
 }) => {
+  useUiLocale();
   const {
     attributes,
     listeners,

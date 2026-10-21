@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { SquareIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { DynamicIcon, HighDefinitionIcon, StandardDefinitionIcon } from "@storyteller/icons";
@@ -28,6 +29,7 @@ export const ResolutionPicker = ({
   currentResolution,
   handleCommonResolutionSelect,
 }: ResolutionPickerProps) => {
+  useUiLocale();
   const useResolution =
     currentResolution ?? model.defaultResolution ?? undefined;
 
@@ -65,7 +67,7 @@ export const ResolutionPicker = ({
   return (
     <>
       <Tooltip
-        content="Resolution"
+        content={uiText("common.resolution")}
         position="top"
         className="z-50"
         closeOnClick={true}
@@ -74,7 +76,7 @@ export const ResolutionPicker = ({
           items={resolutionList}
           onSelect={handleSelectAdapter}
           mode="toggle"
-          panelTitle="Resolution"
+          panelTitle={uiText("common.resolution")}
           showIconsInList
           triggerIcon={
             <DynamicIcon

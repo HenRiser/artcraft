@@ -12,6 +12,9 @@ pub struct GenerationEnqueueFailureEvent {
 
   /// User-facing reason for the failure, if available.
   pub reason: Option<String>,
+
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub reason_code: Option<String>,
 }
 
 impl BasicSendableEvent for GenerationEnqueueFailureEvent {
@@ -25,6 +28,7 @@ impl GenerationEnqueueFailureEvent {
       action,
       service: GenerationServiceProvider::Artcraft,
       model: None,
+      reason_code: Some("login_required".to_string()),
       reason: Some("Please log into Artcraft.".to_string()),
     }
   }
@@ -34,6 +38,7 @@ impl GenerationEnqueueFailureEvent {
       action,
       service: GenerationServiceProvider::Fal,
       model: None,
+      reason_code: Some("fal_key_required".to_string()),
       reason: Some("No FAL API key is set. Configure this in your settings.".to_string()),
     }
   }

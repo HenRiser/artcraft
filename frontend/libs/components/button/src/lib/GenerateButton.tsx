@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { Button, ButtonProps } from "./button";
 import { CoinsIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
@@ -14,6 +15,7 @@ export const GenerateButton = ({
   disabled,
   ...props
 }: GenerateButtonProps) => {
+  useUiLocale();
   return (
     <Button
       className={twMerge(
@@ -27,7 +29,7 @@ export const GenerateButton = ({
 
       {credits != null && (
         <Tooltip
-          content={`${credits} credit${credits !== 1 ? "s" : ""} cost`}
+          content={uiText("common.value.credit.value.cost", { value0: credits, value1: getUiLocale() === "en" ? (credits !== 1 ? "s" : "") : "" })}
           position="top"
           className="z-50"
         >

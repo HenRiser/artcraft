@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useMemo, useState } from "react";
@@ -57,6 +58,7 @@ import {
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 
 export function MediaView() {
+  useUiLocale();
   const editor = useEditor();
   const { toast, mediaSource, assetGallery } = useEditorAdapters();
   const mediaFiles = useEditor((e) => e.media.getAssets());
@@ -78,7 +80,7 @@ export function MediaView() {
   const processFiles = async ({ files }: { files: File[] }) => {
     if (!files || files.length === 0) return;
     if (!activeProject) {
-      toast.error("No active project");
+      toast.error(uiText("video-editor.no.active.project"));
       return;
     }
 
@@ -131,7 +133,7 @@ export function MediaView() {
       });
     } catch (error) {
       console.error("Gallery picker failed:", error);
-      toast.error("Couldn't open the gallery");
+      toast.error(uiText("video-editor.couldn.t.open.the.gallery"));
       return;
     }
     if (selections.length === 0) return;
@@ -179,7 +181,7 @@ export function MediaView() {
                   selection.name,
                   error,
                 );
-                toast.error(`Couldn't import ${selection.name}`, {
+                toast.error(uiText("video-editor.couldn.t.import.value", { value0: selection.name }), {
                   description:
                     error instanceof Error ? error.message : undefined,
                 });
@@ -297,7 +299,7 @@ export function MediaView() {
       <input {...fileInputProps} />
 
       <PanelView
-        title="Assets"
+        title={uiText("video-editor.assets")}
         actions={
           <MediaActions
             mediaViewMode={mediaViewMode}
@@ -323,7 +325,7 @@ export function MediaView() {
           />
         ) : (
           <SelectableSurface
-            ariaLabel="Assets"
+            ariaLabel={uiText("video-editor.assets")}
             orderedIds={orderedMediaIds}
             revealId={highlightMediaId}
             onRevealComplete={clearHighlight}
@@ -357,6 +359,7 @@ function MediaAssetDraggable({
   variant: "card" | "compact";
   isRounded?: boolean;
 }) {
+  useUiLocale();
   const editor = useEditor();
 
   const addElementAtTime = ({
@@ -421,10 +424,11 @@ function MediaItemWithContextMenu({
     ids: string[];
   }) => void;
 }) {
+  useUiLocale();
   const { isSelected, selectedIds } = useSelection();
   const idsToDelete = isSelected(item.id) ? selectedIds : [item.id];
   const deleteLabel =
-    idsToDelete.length > 1 ? `Delete ${idsToDelete.length} items` : "Delete";
+    idsToDelete.length > 1 ? `Delete ${idsToDelete.length} items` : uiText("common.delete");
 
   return (
     <ContextMenu>
@@ -458,6 +462,7 @@ function MediaItemList({
     ids: string[];
   }) => void;
 }) {
+  useUiLocale();
   const isGrid = mode === "grid";
 
   return (
@@ -495,6 +500,7 @@ function formatDuration({ duration }: { duration: number }) {
 }
 
 function MediaDurationBadge({ duration }: { duration?: number }) {
+  useUiLocale();
   if (!duration) return null;
 
   return (
@@ -505,6 +511,7 @@ function MediaDurationBadge({ duration }: { duration?: number }) {
 }
 
 function MediaDurationLabel({ duration }: { duration?: number }) {
+  useUiLocale();
   if (!duration) return null;
 
   return (
@@ -523,6 +530,7 @@ function MediaTypePlaceholder({
   duration?: number;
   variant: "muted" | "bordered";
 }) {
+  useUiLocale();
   const iconClassName = cn("size-6", variant === "bordered" && "mb-1");
 
   return (
@@ -546,6 +554,7 @@ function MediaPreview({
   item: MediaAsset;
   variant?: "grid" | "compact";
 }) {
+  useUiLocale();
   const shouldShowDurationBadge = variant === "grid";
 
   if (item.type === "image") {
@@ -583,7 +592,7 @@ function MediaPreview({
     return (
       <MediaTypePlaceholder
         icon={Video01Icon}
-        label="Video"
+        label={uiText("common.video")}
         duration={item.duration}
         variant="muted"
       />
@@ -594,7 +603,7 @@ function MediaPreview({
     return (
       <MediaTypePlaceholder
         icon={MusicNote03Icon}
-        label="Audio"
+        label={uiText("common.audio")}
         duration={item.duration}
         variant="bordered"
       />
@@ -602,7 +611,7 @@ function MediaPreview({
   }
 
   return (
-    <MediaTypePlaceholder icon={Image02Icon} label="Unknown" variant="muted" />
+    <MediaTypePlaceholder icon={Image02Icon} label={uiText("video-editor.unknown")} variant="muted" />
   );
 }
 
@@ -626,6 +635,7 @@ function MediaActions({
   // Optional: only rendered when the host wires an AssetGalleryAdapter.
   onBrowseGallery?: () => void;
 }) {
+  useUiLocale();
   return (
     <div className="flex gap-1.5">
       <TooltipProvider>
@@ -650,8 +660,8 @@ function MediaActions({
           <TooltipContent>
             <p>
               {mediaViewMode === "grid"
-                ? "Switch to list view"
-                : "Switch to grid view"}
+                ? uiText("video-editor.switch.to.list.view")
+                : uiText("video-editor.switch.to.grid.view")}
             </p>
           </TooltipContent>
         </Tooltip>
@@ -671,28 +681,28 @@ function MediaActions({
             </TooltipTrigger>
             <DropdownMenuContent align="end">
               <SortMenuItem
-                label="Name"
+                label={uiText("common.name")}
                 sortKey="name"
                 currentSortBy={sortBy}
                 currentSortOrder={sortOrder}
                 onSort={onSort}
               />
               <SortMenuItem
-                label="Type"
+                label={uiText("video-editor.type")}
                 sortKey="type"
                 currentSortBy={sortBy}
                 currentSortOrder={sortOrder}
                 onSort={onSort}
               />
               <SortMenuItem
-                label="Duration"
+                label={uiText("common.duration")}
                 sortKey="duration"
                 currentSortBy={sortBy}
                 currentSortOrder={sortOrder}
                 onSort={onSort}
               />
               <SortMenuItem
-                label="File size"
+                label={uiText("video-editor.file.size")}
                 sortKey="size"
                 currentSortBy={sortBy}
                 currentSortOrder={sortOrder}
@@ -701,9 +711,8 @@ function MediaActions({
             </DropdownMenuContent>
           </DropdownMenu>
           <TooltipContent>
-            <p>
-              Sort by {sortBy} (
-              {sortOrder === "asc" ? "ascending" : "descending"})
+            <p>{uiText("video-editor.sort.by")}{" "}{sortBy} (
+              {sortOrder === "asc" ? uiText("video-editor.ascending") : uiText("video-editor.descending")})
             </p>
           </TooltipContent>
         </Tooltip>
@@ -716,9 +725,7 @@ function MediaActions({
           size="sm"
           className="items-center justify-center gap-1.5"
         >
-          <HugeiconsIcon icon={FolderLibraryIcon} />
-          Browse
-        </Button>
+          <HugeiconsIcon icon={FolderLibraryIcon} />{uiText("video-editor.browse")}{" "}</Button>
       ) : null}
       <Button
         variant="outline"
@@ -727,9 +734,7 @@ function MediaActions({
         size="sm"
         className="items-center justify-center gap-1.5"
       >
-        <HugeiconsIcon icon={CloudUploadIcon} />
-        Import
-      </Button>
+        <HugeiconsIcon icon={CloudUploadIcon} />{uiText("video-editor.import")}{" "}</Button>
     </div>
   );
 }
@@ -747,6 +752,7 @@ function SortMenuItem({
   currentSortOrder: MediaSortOrder;
   onSort: ({ key }: { key: MediaSortKey }) => void;
 }) {
+  useUiLocale();
   const isActive = currentSortBy === sortKey;
   const arrow = isActive ? (currentSortOrder === "asc" ? "↑" : "↓") : "";
 

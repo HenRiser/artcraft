@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useState } from "react";
@@ -58,6 +59,7 @@ export function GraphEditorPopover({
   onCommitValue?: (value: NormalizedCubicBezier) => void;
   onCancelPreview?: () => void;
 }) {
+  useUiLocale();
   const [isExpanded, setIsExpanded] = useState(false);
   const custom = useCustomPresets();
   const allPresets = [...BUILTIN_PRESETS, ...custom];
@@ -125,12 +127,8 @@ export function GraphEditorPopover({
 
         <Tabs variant="underline" defaultValue="presets" className="flex flex-col gap-2">
           <TabsList className="px-3">
-            <TabsTrigger value="presets" className="text-xs">
-              Presets
-            </TabsTrigger>
-            <TabsTrigger value="saved" className="text-xs">
-              Saved
-            </TabsTrigger>
+            <TabsTrigger value="presets" className="text-xs">{uiText("common.presets")}{" "}</TabsTrigger>
+            <TabsTrigger value="saved" className="text-xs">{uiText("common.saved")}{" "}</TabsTrigger>
           </TabsList>
           <TabsContent value="presets" className="px-3 pb-0">
             <ExpandableGrid
@@ -178,7 +176,7 @@ export function GraphEditorPopover({
                     className="size-3.5 opacity-40"
                   />
                 </div>
-                <span className="text-[10px] leading-tight">Save</span>
+                <span className="text-[10px] leading-tight">{uiText("common.save")}</span>
               </button>
             </div>
           </TabsContent>
@@ -189,6 +187,7 @@ export function GraphEditorPopover({
 }
 
 function GraphEditorEmptyState({ message }: { message: string }) {
+  useUiLocale();
   return (
     <div
       style={{ minHeight: BEZIER_GRAPH_MIN_HEIGHT }}
@@ -210,6 +209,7 @@ function ExpandableGrid({
   shouldExpand: boolean;
   onExpand: () => void;
 }) {
+  useUiLocale();
   const gridStyle = shouldExpand
     ? isExpanded
       ? { maxHeight: EXPANDED_GRID_MAX_HEIGHT, overflowY: "auto" as const }
@@ -253,6 +253,7 @@ function PresetItem({
   onDelete?: () => void;
   disabled?: boolean;
 }) {
+  useUiLocale();
   return (
     <button
       type="button"
@@ -308,6 +309,7 @@ function toThumbY({ value }: { value: number }) {
 }
 
 function CurveThumb({ value }: { value: NormalizedCubicBezier }) {
+  useUiLocale();
   const points: string[] = [];
   for (let i = 0; i <= THUMB_SEGMENTS; i++) {
     const progress = i / THUMB_SEGMENTS;
@@ -321,7 +323,7 @@ function CurveThumb({ value }: { value: NormalizedCubicBezier }) {
       height={THUMB_HEIGHT}
       viewBox={`0 0 ${THUMB_WIDTH} ${THUMB_HEIGHT}`}
     >
-      <title>Curve preset preview</title>
+      <title>{uiText("video-editor.curve.preset.preview")}</title>
       <path
         d={`M${points.join("L")}`}
         fill="none"

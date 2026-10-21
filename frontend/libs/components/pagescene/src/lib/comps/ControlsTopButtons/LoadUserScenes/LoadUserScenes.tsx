@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   useCallback,
   useContext,
@@ -19,6 +20,7 @@ interface LoadSceneProps {
 }
 
 export const LoadUserScenes = ({ onSceneSelect }: LoadSceneProps) => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const [scenes, setScenes] = useState<SceneTypes[] | undefined>(undefined);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -107,19 +109,17 @@ export const LoadUserScenes = ({ onSceneSelect }: LoadSceneProps) => {
 
   return (
     <div className="flex flex-col gap-0.5">
-      <Label>My Scenes</Label>
+      <Label>{uiText("pagescene.my.scenes")}</Label>
       <div className="relative flex max-h-[500px] min-h-[140px] flex-col">
         {!scenes && (
           <div className="flex items-center justify-center gap-3 py-12">
             <LoadingSpinner />
-            <span className="font-medium opacity-70">Loading scenes...</span>
+            <span className="font-medium opacity-70">{uiText("common.loading.scenes")}</span>
           </div>
         )}
         {scenes && scenes.length === 0 && (
           <div className="flex items-center justify-center gap-3 py-12">
-            <span className="font-medium opacity-50">
-              You have no saved scenes yet.
-            </span>
+            <span className="font-medium opacity-50">{uiText("pagescene.you.have.no.saved.scenes.yet")}{" "}</span>
           </div>
         )}
         {scenes && scenes.length !== 0 && (

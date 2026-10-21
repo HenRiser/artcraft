@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { SelectionBridge } from "../SelectionBridge";
 import type { UndoableAction } from "../HistoryManager";
 
@@ -14,7 +15,7 @@ export class LockAction implements UndoableAction {
     private readonly before: boolean,
     private readonly after: boolean,
   ) {
-    this.label = after ? "Lock" : "Unlock";
+    this.label = after ? uiText("common.lock") : uiText("common.unlock");
   }
 
   apply(): void {

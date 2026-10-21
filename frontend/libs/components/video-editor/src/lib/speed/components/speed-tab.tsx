@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useRef } from "react";
 import { useEditor } from "../../editor/use-editor";
 import { NumberField } from "../../components/ui/number-field";
@@ -64,6 +65,7 @@ export function SpeedTab({
   element: AudioElement | VideoElement;
   trackId: string;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const rate = clampRetimeRate({
     rate: element.retime?.rate ?? DEFAULT_RETIME_RATE,
@@ -111,11 +113,11 @@ export function SpeedTab({
   return (
     <Section collapsible sectionKey={`${element.id}:speed`}>
       <SectionHeader>
-        <SectionTitle>Speed</SectionTitle>
+        <SectionTitle>{uiText("common.speed")}</SectionTitle>
       </SectionHeader>
       <SectionContent>
         <SectionFields>
-          <SectionField label="Speed">
+          <SectionField label={uiText("common.speed")}>
             <NumberField
               icon={<HugeiconsIcon icon={DashboardSpeed02Icon} />}
               value={speedDraft.displayValue}
@@ -140,7 +142,7 @@ export function SpeedTab({
             />
           </SectionField>
           <div className="flex items-center justify-between">
-            <span className="text-sm">Change pitch</span>
+            <span className="text-sm">{uiText("video-editor.change.pitch")}</span>
             <Switch
               checked={!maintainPitch}
               disabled={!isPitchPreserveAvailable}

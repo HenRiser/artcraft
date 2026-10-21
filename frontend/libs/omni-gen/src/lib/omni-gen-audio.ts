@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import { OmniGenApi } from "@storyteller/api";
 import type {
@@ -116,12 +117,12 @@ export async function enqueueAudioGeneration(
         : [response.inference_job_token];
       return { success: true, jobTokens };
     }
-    return { success: false, jobTokens: [], error: "Generation failed" };
+    return { success: false, jobTokens: [], error: uiText("common.generation.failed") };
   } catch (err: any) {
     return {
       success: false,
       jobTokens: [],
-      error: err.error_message ?? err.message ?? "Request failed",
+      error: err.error_message ?? err.message ?? uiText("desktop.request.failed"),
       errorCode: parseAudioHttpStatusCode(err),
     };
   }

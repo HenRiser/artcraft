@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { GenerateAudio, EstimateAudioCost } from "@storyteller/tauri-api";
 import type { OmniGenAudioRequest } from "@storyteller/api";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -32,6 +33,7 @@ const estimateAudio = async (request: OmniGenAudioRequest) => (await EstimateAud
 const AUDIO_FILTER = [FilterMediaClasses.AUDIO];
 
 const CreateAudio = () => {
+  useUiLocale();
   const { models } = useOmniGenAudioModels();
   const promptContentRef = useRef<HTMLDivElement>(null);
   const [promptHeight, setPromptHeight] = useState<number>(138);
@@ -146,8 +148,8 @@ const CreateAudio = () => {
   return (
     <DesktopCreatePageShell
       hasContent={hasContent}
-      emptyStateTitle="Create Audio"
-      emptyStateSubtitle="Describe a song, a sound, or a sample"
+      emptyStateTitle={uiText("common.create.audio")}
+      emptyStateSubtitle={uiText("desktop.describe.a.song.a.sound.or.a.sample")}
       bottomOffset={promptHeight + 40}
       listContent={
         <DesktopGenerationGallery

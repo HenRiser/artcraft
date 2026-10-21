@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { GemIcon } from "lucide-react";
 import { PopoverItem, PopoverMenu } from "@storyteller/ui-popover";
 import { Tooltip } from "@storyteller/ui-tooltip";
@@ -28,6 +29,7 @@ export const QualityPicker = ({
   currentQuality,
   handleCommonQualitySelect,
 }: QualityPickerProps) => {
+  useUiLocale();
   const useQuality = model.resolveQuality(currentQuality);
 
   const handleSelectAdapter = (item: PopoverItem) => {
@@ -43,7 +45,7 @@ export const QualityPicker = ({
 
   return (
     <Tooltip
-      content="Quality"
+      content={uiText("common.quality")}
       position="top"
       className="z-50"
       closeOnClick={true}
@@ -52,7 +54,7 @@ export const QualityPicker = ({
         items={qualityList}
         onSelect={handleSelectAdapter}
         mode="toggle"
-        panelTitle="Quality"
+        panelTitle={uiText("common.quality")}
         triggerIcon={<GemIcon  className="h-3.5 w-3.5" />}
       />
     </Tooltip>

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { type ComponentProps, forwardRef, useEffect, useRef, useState } from "react";
 import { cn } from "../../utils/ui";
 import { Input } from "./input";
@@ -55,6 +56,7 @@ function ColorPickerContent({
   side = "left",
   align = "center",
 }: ColorPickerContentProps) {
+  useUiLocale();
   const [isDragging, setIsDragging] = useState<
     "saturation" | "hue" | "opacity" | null
   >(null);
@@ -291,11 +293,11 @@ function ColorPickerContent({
       <header className="border-b flex justify-between items-center pb-2 px-2">
         <Select defaultValue="custom">
           <SelectTrigger variant="outline">
-            <SelectValue placeholder="Select a mode" />
+            <SelectValue placeholder={uiText("video-editor.select.a.mode")} />
           </SelectTrigger>
           <SelectContent position="popper">
-            <SelectItem value="custom">Custom</SelectItem>
-            <SelectItem value="saved">Saved</SelectItem>
+            <SelectItem value="custom">{uiText("common.custom")}</SelectItem>
+            <SelectItem value="saved">{uiText("common.saved")}</SelectItem>
           </SelectContent>
         </Select>
         <div>
@@ -427,6 +429,7 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     },
     ref,
   ) => {
+  useUiLocale();
     const { alpha } = parseHexAlpha({ hex: value });
 
     const [inputValue, setInputValue] = useState(value);
@@ -542,7 +545,7 @@ const ColorCircle = ({
   size: "sm" | "md";
   position: { left: string; top: string };
   color?: string;
-}) => (
+}) => { useUiLocale(); return (
   <div
     className={cn(
       "pointer-events-none absolute rounded-full border-3 border-white shadow-lg",
@@ -555,6 +558,6 @@ const ColorCircle = ({
       backgroundColor: color,
     }}
   />
-);
+); };
 
 export { ColorPicker, ColorPickerContent };

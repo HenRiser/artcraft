@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState, useRef, useEffect } from "react";
 import { DropletIcon, ImagesIcon, RotateCwIcon } from "lucide-react";
 import { Button } from "@storyteller/ui-button";
@@ -7,6 +8,7 @@ import { UploadEntryCard } from "../../components/media/UploadEntryCard";
 import toast from "react-hot-toast";
 
 export const ImageWatermarkRemover = () => {
+  useUiLocale();
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [selectedGalleryImages, setSelectedGalleryImages] = useState<string[]>(
@@ -56,7 +58,7 @@ export const ImageWatermarkRemover = () => {
   const handleGallerySelect = async (selectedItems: GalleryItem[]) => {
     const item = selectedItems[0];
     if (!item || !item.fullImage) {
-      toast.error("No image selected");
+      toast.error(uiText("common.no.image.selected"));
       return;
     }
 
@@ -80,22 +82,22 @@ export const ImageWatermarkRemover = () => {
 
   const handleRemoveWatermark = async () => {
     if (!imageUrl) {
-      toast.error("Please select an image first");
+      toast.error(uiText("imagewatermarkremover.please.select.an.image.first"));
       return;
     }
 
     setIsProcessing(true);
-    toast.loading("Processing watermark removal...", {
+    toast.loading(uiText("common.processing.watermark.removal"), {
       id: "watermark-removal",
     });
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      toast.success("Watermark removal completed!", {
+      toast.success(uiText("common.watermark.removal.completed"), {
         id: "watermark-removal",
       });
     } catch (error) {
-      toast.error("Failed to remove watermark", { id: "watermark-removal" });
+      toast.error(uiText("common.failed.to.remove.watermark"), { id: "watermark-removal" });
       console.error("Error removing watermark:", error);
     } finally {
       setIsProcessing(false);
@@ -118,14 +120,14 @@ export const ImageWatermarkRemover = () => {
                 <div className="aspect-video overflow-hidden border border-ui-panel-border bg-ui-panel">
                   <UploadEntryCard
                     icon={DropletIcon}
-                    title="Remove Image Watermark"
-                    description="Erase watermarks from your images seamlessly. Upload your image and get a clean, watermark-free result."
+                    title={uiText("imagewatermarkremover.remove.image.watermark")}
+                    description={uiText("imagewatermarkremover.erase.watermarks.from.your.images.seamlessly.upload.your.image.and.get.a.clean.waterm")}
                     accentBackgroundClass="bg-indigo-500/40"
                     accentBorderClass="border-indigo-400/30"
                     accept="image/*"
                     onFilesSelected={handleLocalImageSelect}
-                    primaryLabel="Select Image"
-                    secondaryLabel="Pick from Library"
+                    primaryLabel={uiText("gallery-modal.select.image")}
+                    secondaryLabel={uiText("moodboard.pick.from.library")}
                     secondaryIcon={ImagesIcon}
                     onSecondaryClick={() => setIsGalleryModalOpen(true)}
                   />
@@ -143,14 +145,12 @@ export const ImageWatermarkRemover = () => {
                         setImageDimensions(null);
                       }}
                       className="absolute right-3 top-3 z-10 border border-red/50 px-3 py-1.5 text-sm hover:border-red/80 hover:bg-red/80"
-                    >
-                      Switch Image
-                    </Button>
+                    >{uiText("imagewatermarkremover.switch.image")}{" "}</Button>
                     <div className="flex min-h-[400px] items-center justify-center p-6">
                       <img
                         ref={imageRef}
                         src={imageUrl}
-                        alt="Selected pic"
+                        alt={uiText("imagewatermarkremover.selected.pic")}
                         className="max-h-[70vh] max-w-full object-contain"
                         onLoad={(e) => {
                           const img = e.currentTarget;
@@ -173,7 +173,7 @@ export const ImageWatermarkRemover = () => {
                     className="px-12 py-3 text-lg font-semibold"
                     disabled={isProcessing}
                   >
-                    {isProcessing ? "Processing..." : "Remove Watermark"}
+                    {isProcessing ? uiText("common.processing") : uiText("common.remove.watermark")}
                   </Button>
                 </div>
 
@@ -182,23 +182,17 @@ export const ImageWatermarkRemover = () => {
                     <div className="mb-4 flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
                       <ImagesIcon
                         
-                        className="text-ui-accent-ink" />
-                      Image Information
-                    </div>
+                        className="text-ui-accent-ink" />{uiText("imagewatermarkremover.image.information")}{" "}</div>
                     {imageDimensions ? (
                       <div className="space-y-3 text-sm">
                         <div className="flex items-center justify-between border-b border-ui-divider py-2">
-                          <span className="font-medium text-base-fg/70">
-                            Resolution
-                          </span>
+                          <span className="font-medium text-base-fg/70">{uiText("common.resolution")}{" "}</span>
                           <span className="font-mono text-lg font-semibold tabular-nums text-base-fg">
                             {imageDimensions.width} × {imageDimensions.height}
                           </span>
                         </div>
                         <div className="flex items-center justify-between py-2">
-                          <span className="font-medium text-base-fg/70">
-                            Aspect Ratio
-                          </span>
+                          <span className="font-medium text-base-fg/70">{uiText("common.aspect.ratio")}{" "}</span>
                           <span className="font-mono text-lg font-semibold tabular-nums text-base-fg">
                             {(
                               imageDimensions.width / imageDimensions.height
@@ -208,7 +202,7 @@ export const ImageWatermarkRemover = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="text-sm text-base-fg/50">Loading...</div>
+                      <div className="text-sm text-base-fg/50">{uiText("imagewatermarkremover.loading")}</div>
                     )}
                   </div>
                 </div>

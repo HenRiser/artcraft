@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useRef, useState, type ReactNode } from "react";
@@ -32,6 +33,7 @@ export interface EditorHeaderProps {
 }
 
 export function EditorHeader({ endSlot, exitTo = "/projects" }: EditorHeaderProps) {
+  useUiLocale();
   return (
     <header className="bg-background flex h-[3.4rem] items-center justify-between px-3 pt-0.5">
       <div className="flex items-center gap-1">
@@ -48,6 +50,7 @@ export function EditorHeader({ endSlot, exitTo = "/projects" }: EditorHeaderProp
 }
 
 function CurrentUserBadge() {
+  useUiLocale();
   const { authUser } = useEditorAdapters();
   const user = useAuthUser(authUser);
   if (!user) return null;
@@ -63,6 +66,7 @@ function CurrentUserBadge() {
 }
 
 function ProjectDropdown({ exitTo }: { exitTo: string }) {
+  useUiLocale();
   const [openDialog, setOpenDialog] = useState<
     "delete" | "rename" | "shortcuts" | null
   >(null);
@@ -98,9 +102,9 @@ function ProjectDropdown({ exitTo }: { exitTo: string }) {
           name: newName.trim(),
         });
       } catch (error) {
-        toast.error("Failed to rename project", {
+        toast.error(uiText("common.failed.to.rename.project"), {
           description:
-            error instanceof Error ? error.message : "Please try again",
+            error instanceof Error ? error.message : uiText("desktop.please.try.again"),
         });
       } finally {
         setOpenDialog(null);
@@ -116,9 +120,9 @@ function ProjectDropdown({ exitTo }: { exitTo: string }) {
         });
         navigate(exitTo);
       } catch (error) {
-        toast.error("Failed to delete project", {
+        toast.error(uiText("video-editor.failed.to.delete.project"), {
           description:
-            error instanceof Error ? error.message : "Please try again",
+            error instanceof Error ? error.message : uiText("desktop.please.try.again"),
         });
       } finally {
         setOpenDialog(null);
@@ -132,7 +136,7 @@ function ProjectDropdown({ exitTo }: { exitTo: string }) {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="p-1 rounded-sm size-8">
             <div
-              aria-label="Project menu"
+              aria-label={uiText("video-editor.project.menu")}
               className="size-5 rounded-sm bg-foreground/80"
             />
           </Button>
@@ -142,16 +146,12 @@ function ProjectDropdown({ exitTo }: { exitTo: string }) {
             onClick={handleExit}
             disabled={isExiting}
             icon={<HugeiconsIcon icon={Logout05Icon} />}
-          >
-            Exit project
-          </DropdownMenuItem>
+          >{uiText("video-editor.exit.project")}{" "}</DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() => setOpenDialog("shortcuts")}
             icon={<HugeiconsIcon icon={CommandIcon} />}
-          >
-            Shortcuts
-          </DropdownMenuItem>
+          >{uiText("common.shortcuts")}{" "}</DropdownMenuItem>
 
           <DropdownMenuSeparator />
         </DropdownMenuContent>
@@ -177,6 +177,7 @@ function ProjectDropdown({ exitTo }: { exitTo: string }) {
 }
 
 function EditableProjectName() {
+  useUiLocale();
   const editor = useEditor();
   const activeProject = useEditor((e) => e.project.getActive());
   const [isEditing, setIsEditing] = useState(false);
@@ -213,9 +214,9 @@ function EditableProjectName() {
           name: newName,
         });
       } catch (error) {
-        toast.error("Failed to rename project", {
+        toast.error(uiText("common.failed.to.rename.project"), {
           description:
-            error instanceof Error ? error.message : "Please try again",
+            error instanceof Error ? error.message : uiText("desktop.please.try.again"),
         });
       }
     }

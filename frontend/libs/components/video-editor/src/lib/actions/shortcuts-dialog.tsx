@@ -1,3 +1,5 @@
+import { localize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useEffect, useState } from "react";
@@ -24,6 +26,7 @@ export function ShortcutsDialog({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  useUiLocale();
   const [recordingShortcut, setRecordingShortcut] =
     useState<KeyboardShortcut | null>(null);
   const { toast } = useEditorAdapters();
@@ -58,7 +61,7 @@ export function ShortcutsDialog({
         });
         if (conflict) {
           toast.error(
-            `Key "${keyString}" is already bound to "${conflict.existingAction}"`,
+            uiText("video-editor.key.value.is.already.bound.to.value", { value0: keyString, value1: conflict.existingAction }),
           );
           setRecordingShortcut(null);
           return;
@@ -112,15 +115,15 @@ export function ShortcutsDialog({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[80vh] max-w-2xl flex-col p-0">
         <DialogHeader>
-          <DialogTitle>Keyboard shortcuts</DialogTitle>
+          <DialogTitle>{uiText("common.keyboard.shortcuts")}</DialogTitle>
         </DialogHeader>
 
         <DialogBody className="scrollbar-thin grow overflow-y-auto">
           <div className="flex flex-col gap-6">
             {categories.map((category) => (
-              <div key={category} className="flex flex-col gap-1">
+              <div key={localize(category)} className="flex flex-col gap-1">
                 <h3 className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  {category}
+                  {localize(category)}
                 </h3>
                 <div className="flex flex-col gap-1">
                   {shortcuts
@@ -141,9 +144,7 @@ export function ShortcutsDialog({
           </div>
         </DialogBody>
         <DialogFooter>
-          <Button variant="destructive" onClick={resetToDefaults}>
-            Reset to default
-          </Button>
+          <Button variant="destructive" onClick={resetToDefaults}>{uiText("common.reset.to.default")}{" "}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -159,6 +160,7 @@ function ShortcutItem({
   isRecording: boolean;
   onStartRecording: (params: { shortcut: KeyboardShortcut }) => void;
 }) {
+  useUiLocale();
   const displayKeys = shortcut.keys.filter((key: string) => {
     if (
       key.includes("Cmd") &&
@@ -175,7 +177,7 @@ function ShortcutItem({
         {shortcut.icon && (
           <div className="text-muted-foreground">{shortcut.icon}</div>
         )}
-        <span className="text-sm">{shortcut.description}</span>
+        <span className="text-sm">{localize(shortcut.description)}</span>
       </div>
       <div className="flex items-center gap-2">
         {displayKeys.map((key: string, index: number) => (
@@ -195,7 +197,7 @@ function ShortcutItem({
               })}
             </div>
             {index < displayKeys.length - 1 && (
-              <span className="text-muted-foreground text-xs">or</span>
+              <span className="text-muted-foreground text-xs">{uiText("common.or")}</span>
             )}
           </div>
         ))}
@@ -213,6 +215,7 @@ function EditableShortcutKey({
   isRecording: boolean;
   onStartRecording: () => void;
 }) {
+  useUiLocale();
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -225,7 +228,7 @@ function EditableShortcutKey({
       size="sm"
       onClick={handleClick}
       title={
-        isRecording ? "Press any key combination..." : "Click to edit shortcut"
+        isRecording ? uiText("video-editor.press.any.key.combination") : uiText("video-editor.click.to.edit.shortcut")
       }
     >
       {children}

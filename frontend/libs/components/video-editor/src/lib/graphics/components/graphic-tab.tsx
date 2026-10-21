@@ -1,3 +1,5 @@
+import { localize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useRef } from "react";
@@ -40,6 +42,7 @@ export function GraphicTab({
   element: GraphicElement;
   trackId: string;
 }) {
+  useUiLocale();
   const definition = graphicsRegistry.get(element.definitionId);
   const { localTime, isPlayheadWithinElementRange } = useElementPlayhead({
     startTime: element.startTime,
@@ -64,7 +67,7 @@ export function GraphicTab({
     <div className="flex flex-col">
       <Section collapsible sectionKey={`${element.id}:graphic`}>
         <SectionHeader>
-          <SectionTitle>{definition.name}</SectionTitle>
+          <SectionTitle>{localize(definition.name)}</SectionTitle>
         </SectionHeader>
         <SectionContent>
           <SectionFields>
@@ -94,6 +97,7 @@ function StrokeSection({
   element: GraphicElement;
   trackId: string;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const definition = graphicsRegistry.get(element.definitionId);
   const { localTime, isPlayheadWithinElementRange } = useElementPlayhead({
@@ -170,7 +174,7 @@ function StrokeSection({
           </Button>
         }
       >
-        <SectionTitle>Stroke</SectionTitle>
+        <SectionTitle>{uiText("common.stroke")}</SectionTitle>
       </SectionHeader>
       <SectionContent
         className={cn(!isStrokeEnabled && "pointer-events-none opacity-50")}
@@ -209,6 +213,7 @@ function AnimatedGraphicParamField({
   isPlayheadWithinElementRange: boolean;
   resolvedParams: ParamValues;
 }) {
+  useUiLocale();
   const animatedParam: KeyframedParamPropertyResult = useKeyframedParamProperty(
     {
       param,

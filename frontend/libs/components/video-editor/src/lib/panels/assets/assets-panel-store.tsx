@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ElementType } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -33,31 +34,31 @@ const createHugeiconsIcon =
 export const tabs = {
   media: {
     icon: createHugeiconsIcon({ icon: Folder03Icon }),
-    label: "Media",
+    get label() { return uiText("video-editor.media"); },
   },
   sounds: {
     icon: createHugeiconsIcon({ icon: HeadphonesIcon }),
-    label: "Sounds",
+    get label() { return uiText("video-editor.sounds"); },
   },
   text: {
     icon: createHugeiconsIcon({ icon: TextIcon }),
-    label: "Text",
+    get label() { return uiText("common.text"); },
   },
   stickers: {
     icon: createHugeiconsIcon({ icon: Happy01Icon }),
-    label: "Stickers",
+    get label() { return uiText("video-editor.stickers"); },
   },
   effects: {
     icon: createHugeiconsIcon({ icon: MagicWand05Icon }),
-    label: "Effects",
+    get label() { return uiText("common.effects"); },
   },
   captions: {
     icon: createHugeiconsIcon({ icon: ClosedCaptionIcon }),
-    label: "Captions",
+    get label() { return uiText("common.captions"); },
   },
   settings: {
     icon: createHugeiconsIcon({ icon: Settings01Icon }),
-    label: "Settings",
+    get label() { return uiText("common.settings"); },
   },
 } satisfies Record<
   Tab,

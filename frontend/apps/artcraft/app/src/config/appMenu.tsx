@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { BoxIcon, CrosshairIcon, DropletIcon, FilmIcon, GlobeIcon, GroupIcon, ImageIcon, ImagesIcon, MusicIcon, PenToolIcon, PencilIcon, SparklesIcon, WandSparklesIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -38,33 +39,33 @@ export interface AppDescriptor {
 export const APP_DESCRIPTORS: AppDescriptor[] = [
   {
     id: "IMAGE",
-    label: "Create Image",
+    get label() { return uiText("common.create.image"); },
     icon: ImageIcon,
   },
   {
     id: "VIDEO",
-    label: "Create Video",
+    get label() { return uiText("common.create.video"); },
     icon: FilmIcon,
   },
   {
     id: "AUDIO",
-    label: "Create Audio",
+    get label() { return uiText("common.create.audio"); },
     icon: MusicIcon,
   },
   {
     id: "2D",
-    label: "Image Editor",
+    get label() { return uiText("common.image.editor"); },
     icon: PenToolIcon,
     imageSrc: "/resources/gifs/2D_CANVAS_DEMO.webp",
-    description: "Easy edits. Great for graphic design.",
+    get description() { return uiText("common.easy.edits.great.for.graphic.design"); },
     large: true,
   },
   {
     id: "3D",
-    label: "3D Stage",
+    get label() { return uiText("common.3d.stage"); },
     icon: BoxIcon,
     imageSrc: "/resources/gifs/3D_CANVAS_DEMO.webp",
-    description: "Precision control. Great for AI film.",
+    get description() { return uiText("common.precision.control.great.for.ai.film"); },
     large: true,
   },
 ];
@@ -215,8 +216,8 @@ export const getAppCardPalette = (id: string): AppCardPalette =>
 export const ALL_APPS: FullAppItem[] = [
   {
     id: "text-to-image",
-    label: "Create Image",
-    description: "Generate AI images",
+    get label() { return uiText("common.create.image"); },
+    get description() { return uiText("app.generate.ai.images"); },
     icon: ImageIcon,
     category: "generate",
     action: "IMAGE",
@@ -224,8 +225,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "image-to-video",
-    label: "Create Video",
-    description: "Create video from images",
+    get label() { return uiText("common.create.video"); },
+    get description() { return uiText("app.create.video.from.images"); },
     icon: FilmIcon,
     category: "generate",
     action: "VIDEO",
@@ -233,8 +234,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "create-audio",
-    label: "Create Audio",
-    description: "Generate music and sound effects",
+    get label() { return uiText("common.create.audio"); },
+    get description() { return uiText("app.generate.music.and.sound.effects"); },
     icon: MusicIcon,
     category: "generate",
     action: "AUDIO",
@@ -242,8 +243,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "image-to-3d-object",
-    label: "Image to 3D Object",
-    description: "Convert references into textured assets",
+    get label() { return uiText("app.image.to.3d.object"); },
+    get description() { return uiText("app.convert.references.into.textured.assets"); },
     icon: BoxIcon,
     category: "generate",
     action: "IMAGE_TO_3D_OBJECT",
@@ -251,8 +252,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "image-to-3d-world",
-    label: "Image to 3D World",
-    description: "Turn mood boards into explorable worlds",
+    get label() { return uiText("common.image.to.3d.world"); },
+    get description() { return uiText("app.turn.mood.boards.into.explorable.worlds"); },
     icon: GlobeIcon,
     category: "generate",
     action: "IMAGE_TO_3D_WORLD",
@@ -260,8 +261,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "edit-image",
-    label: "Edit Image",
-    description: "Change with inpainting",
+    get label() { return uiText("common.edit.image"); },
+    get description() { return uiText("app.change.with.inpainting"); },
     icon: PencilIcon,
     category: "edit",
     action: "2D",
@@ -269,8 +270,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "video-frame-extractor",
-    label: "Video Frame Extractor",
-    description: "Extract frames from video",
+    get label() { return uiText("app.video.frame.extractor"); },
+    get description() { return uiText("app.extract.frames.from.video"); },
     icon: ImagesIcon,
     category: "edit",
     action: "VIDEO_FRAME_EXTRACTOR",
@@ -278,8 +279,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "video-watermark-removal",
-    label: "Video Watermark Remover",
-    description: "Remove watermarks from videos",
+    get label() { return uiText("app.video.watermark.remover"); },
+    get description() { return uiText("app.remove.watermarks.from.videos"); },
     icon: DropletIcon,
     category: "edit",
     badge: "SOON",
@@ -287,8 +288,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "image-watermark-removal",
-    label: "Image Watermark Remover",
-    description: "Remove watermarks from images",
+    get label() { return uiText("app.image.watermark.remover"); },
+    get description() { return uiText("app.remove.watermarks.from.images"); },
     icon: DropletIcon,
     category: "edit",
     badge: "SOON",
@@ -296,8 +297,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "remove-background",
-    label: "Remove Background",
-    description: "Remove backgrounds from images",
+    get label() { return uiText("common.remove.background"); },
+    get description() { return uiText("app.remove.backgrounds.from.images"); },
     icon: WandSparklesIcon,
     category: "edit",
     action: "REMOVE_BACKGROUND",
@@ -305,8 +306,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "angles",
-    label: "Angles",
-    description: "Generate new camera angles from a single photo",
+    get label() { return uiText("common.angles"); },
+    get description() { return uiText("app.generate.new.camera.angles.from.a.single.photo"); },
     icon: CrosshairIcon,
     category: "generate",
     action: "ANGLES",
@@ -316,8 +317,8 @@ export const ALL_APPS: FullAppItem[] = [
 
   {
     id: "storyboard",
-    label: "Storyboard",
-    description: "Plan your shots with a visual storyboard",
+    get label() { return uiText("app.storyboard"); },
+    get description() { return uiText("app.plan.your.shots.with.a.visual.storyboard"); },
     icon: ImagesIcon,
     category: "generate",
     action: "STORYBOARD",
@@ -326,8 +327,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "moodboard",
-    label: "Moodboard",
-    description: "Collect references and steer generations from a board",
+    get label() { return uiText("common.moodboard"); },
+    get description() { return uiText("app.collect.references.and.steer.generations.from.a.board"); },
     icon: GroupIcon,
     category: "generate",
     action: "MOODBOARD",
@@ -336,8 +337,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "background-change",
-    label: "Background Change",
-    description: "Swap the backdrop of a video using a reference image",
+    get label() { return uiText("app.background.change"); },
+    get description() { return uiText("app.swap.the.backdrop.of.a.video.using.a.reference.image"); },
     icon: SparklesIcon,
     category: "edit",
     action: "BACKGROUND_CHANGE",
@@ -346,8 +347,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "video-editor",
-    label: "Video Editor",
-    description: "Edit and assemble videos on a timeline",
+    get label() { return uiText("app.video.editor"); },
+    get description() { return uiText("app.edit.and.assemble.videos.on.a.timeline"); },
     icon: FilmIcon,
     category: "edit",
     action: "VIDEO_EDITOR",
@@ -356,8 +357,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "2d-canvas",
-    label: "Image Editor",
-    description: "Easy edits. Great for graphic design.",
+    get label() { return uiText("common.image.editor"); },
+    get description() { return uiText("common.easy.edits.great.for.graphic.design"); },
     icon: PenToolIcon,
     category: "edit",
     action: "2D",
@@ -365,8 +366,8 @@ export const ALL_APPS: FullAppItem[] = [
   },
   {
     id: "3d-editor",
-    label: "3D Stage",
-    description: "Precision control. Great for AI film.",
+    get label() { return uiText("common.3d.stage"); },
+    get description() { return uiText("common.precision.control.great.for.ai.film"); },
     icon: BoxIcon,
     category: "generate",
     action: "3D",

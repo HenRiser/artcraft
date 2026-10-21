@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ReactNode, useState } from "react";
 import { CheckIcon, CloudUploadIcon, Grid3x3Icon, LoaderCircleIcon, PlayIcon, SquareDashedIcon, TriangleAlertIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -30,6 +31,7 @@ interface Props {
 // overlay. Fills its parent; the host app sizes the container. Platform seams
 // (upload, library picker, send-to-generation) arrive via the adapter.
 export const MoodboardWorkspace = ({ adapter, topBarEndSlot }: Props) => {
+  useUiLocale();
   const viewMode = useBoardLibraryStore((s) => s.viewMode);
   const setViewMode = useBoardLibraryStore((s) => s.setViewMode);
   const board = useActiveBoard();
@@ -83,8 +85,8 @@ export const MoodboardWorkspace = ({ adapter, topBarEndSlot }: Props) => {
 
 const OPTIONS: Array<{ mode: ViewMode; label: string; icon: LucideIcon }> =
   [
-    { mode: "grid", label: "Grid", icon: Grid3x3Icon },
-    { mode: "canvas", label: "Canvas", icon: SquareDashedIcon },
+    { mode: "grid", get label() { return uiText("common.grid"); }, icon: Grid3x3Icon },
+    { mode: "canvas", get label() { return uiText("moodboard.canvas"); }, icon: SquareDashedIcon },
   ];
 
 // Top-left chrome: the board picker plus the Grid/Canvas view switch, sharing
@@ -95,7 +97,7 @@ const TopLeftCluster = ({
 }: {
   mode: ViewMode;
   onChange: (m: ViewMode) => void;
-}) => (
+}) => { useUiLocale(); return (
   <div className="glass absolute left-3 top-3 z-40 flex items-center gap-0.5 rounded-2xl border border-ui-divider p-1 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)]">
     <BoardPicker />
     <div className="mx-0.5 h-5 w-px bg-ui-divider" />
@@ -120,7 +122,7 @@ const TopLeftCluster = ({
       );
     })}
   </div>
-);
+); };
 
 // Manual save trigger + live sync state. Only rendered when remote
 // persistence is active (adapter.persistence present + signed in).
@@ -131,6 +133,7 @@ const SaveButton = ({
   status: MoodboardSaveStatus;
   onSave: () => void;
 }) => {
+  useUiLocale();
   const icon =
     status === "saving"
       ? LoaderCircleIcon
@@ -141,20 +144,20 @@ const SaveButton = ({
           : CloudUploadIcon;
   const label =
     status === "saving"
-      ? "Saving..."
+      ? uiText("videoframeextractor.saving")
       : status === "saved"
-        ? "Saved"
+        ? uiText("common.saved")
         : status === "error"
-          ? "Retry save"
-          : "Save";
+          ? uiText("desktop.retry.save")
+          : uiText("common.save");
 
   return (
     <button
       type="button"
       onClick={onSave}
       disabled={status === "saving"}
-      title="Save board"
-      aria-label="Save board"
+      title={uiText("common.save.board")}
+      aria-label={uiText("common.save.board")}
       className={[
         "flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-sm font-medium transition-colors duration-150",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-primary",
@@ -189,7 +192,7 @@ const TopRightCluster = ({
   saveStatus: MoodboardSaveStatus | null;
   onSave?: () => void;
   endSlot?: ReactNode;
-}) => (
+}) => { useUiLocale(); return (
   <div className="pointer-events-none absolute right-3 top-3 z-40 flex items-center gap-2">
     <div className="glass pointer-events-auto flex items-center rounded-xl border border-ui-divider p-0.5 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.45)]">
       {saveStatus !== null && onSave && (
@@ -198,14 +201,12 @@ const TopRightCluster = ({
       <button
         type="button"
         onClick={onPresent}
-        title="Present"
-        aria-label="Present"
+        title={uiText("common.present")}
+        aria-label={uiText("common.present")}
         className="flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-sm font-medium text-base-fg/55 transition-colors duration-150 hover:text-base-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       >
-        <PlayIcon  className="h-3 w-3" />
-        Present
-      </button>
+        <PlayIcon  className="h-3 w-3" />{uiText("common.present")}{" "}</button>
     </div>
     {endSlot && <div className="pointer-events-auto">{endSlot}</div>}
   </div>
-);
+); };

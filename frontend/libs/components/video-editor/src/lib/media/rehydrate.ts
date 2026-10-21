@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { MediaSourceAdapter } from "../adapters/media-source";
 import type { ToastAdapter } from "../adapters/toast";
 import type { MediaHandle, ResolvedMedia } from "../adapters/types";
@@ -98,7 +99,7 @@ async function fetchEntry({
     return { file, handle, resolved };
   } catch (error) {
     console.error("Failed to rehydrate media asset:", entry.id, error);
-    toast.error(`Couldn't restore ${entry.name}`, {
+    toast.error(uiText("video-editor.couldn.t.restore.value", { value0: entry.name }), {
       description: error instanceof Error ? error.message : undefined,
     });
     return null;

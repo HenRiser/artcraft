@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   forwardRef,
   useCallback,
@@ -402,6 +403,7 @@ function MentionDropdown({
   /** Viewport-space caret coordinates (the "@" trigger). */
   position: { left: number; caretTop: number; caretBottom: number };
 }) {
+  useUiLocale();
   const listRef = useRef<HTMLDivElement>(null);
   // Touch-tap bookkeeping for the rows: where the finger landed and whether
   // the list was momentum-scrolling at that moment (see the row handlers).
@@ -514,9 +516,7 @@ function MentionDropdown({
             }),
       }}
     >
-      <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-fg/50">
-        References
-      </div>
+      <div className="px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-base-fg/50">{uiText("promptbox.references")}{" "}</div>
       <div>
         {items.map((item, i) => (
           <button
@@ -634,6 +634,7 @@ export const MentionTextarea = forwardRef<HTMLDivElement, MentionTextareaProps>(
     },
     ref,
   ) {
+  useUiLocale();
     const editorRef = useRef<HTMLDivElement>(null);
     useImperativeHandle(ref, () => editorRef.current!, []);
     const isInternalUpdate = useRef(false);

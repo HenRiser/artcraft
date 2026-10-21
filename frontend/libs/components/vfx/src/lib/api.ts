@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { StorytellerApiHostStore } from "@storyteller/api";
 
 export type SubmitVFXJobRequest = {
@@ -38,7 +39,7 @@ export async function submitVFXJob(
         success: false,
         error_code: res.status,
         error_code_str: VFX_NOT_AVAILABLE_ERROR,
-        error_message: "Background change backend is not yet available.",
+        error_message: uiText("desktop.background.change.backend.is.not.yet.available"),
       };
     }
 
@@ -50,7 +51,7 @@ export async function submitVFXJob(
         success: false,
         error_code: res.status,
         error_code_str: "unknown_response",
-        error_message: "Server returned an unparseable response.",
+        error_message: uiText("desktop.server.returned.an.unparseable.response"),
       };
     }
     return json;

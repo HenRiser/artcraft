@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { Binding } from "../types";
@@ -19,6 +20,7 @@ export function KeybindCaptureInput({
   accent?: boolean;
   className?: string;
 }) {
+  useUiLocale();
   const [capturing, setCapturing] = useState(false);
 
   useKeybindCapture({
@@ -34,7 +36,7 @@ export function KeybindCaptureInput({
     <button
       type="button"
       onClick={() => setCapturing((v) => !v)}
-      aria-label="Change keybinding"
+      aria-label={uiText("keybinds.change.keybinding")}
       className={twMerge(
         "inline-flex min-h-8 min-w-[7rem] items-center justify-center rounded-[3px] border px-2 py-1 text-sm transition-colors",
         capturing
@@ -46,7 +48,7 @@ export function KeybindCaptureInput({
       )}
     >
       {capturing ? (
-        <span className="text-[12px] font-medium">Press a key… (Esc to cancel)</span>
+        <span className="text-[12px] font-medium">{uiText("keybinds.press.a.key.esc.to.cancel")}</span>
       ) : (
         <KbdBindings bindings={bindings} />
       )}

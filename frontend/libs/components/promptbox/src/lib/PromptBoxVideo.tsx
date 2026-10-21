@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, getLocale as getUiLocale } from "@storyteller/common";
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { JobContextType } from "@storyteller/common";
@@ -122,6 +123,7 @@ export const PromptBoxVideo = ({
   credits,
   modelSelector,
 }: PromptBoxVideoProps) => {
+  useUiLocale();
   useSignals();
 
   // for the image media id and url, we need to set the reference image gallery panel.
@@ -451,12 +453,12 @@ export const PromptBoxVideo = ({
       ? [
           {
             label: "Keyframe",
-            description: "First/Last frame",
+            get description() { return uiText("promptbox.first.last.frame"); },
             selected: inputMode === "keyframe",
           },
           {
             label: "Omni Reference",
-            description: "Multi-media ref",
+            get description() { return uiText("promptbox.multi.media.ref"); },
             selected: inputMode === "reference",
           },
         ]
@@ -527,13 +529,13 @@ export const PromptBoxVideo = ({
         if (!firstOpen && !lastOpen) {
           toast.error(
             selectedModel?.endFrame
-              ? "First and last frames are already set"
-              : "The first frame is already set",
+              ? uiText("desktop.first.and.last.frames.are.already.set")
+              : uiText("desktop.the.first.frame.is.already.set"),
           );
         }
       } else if (deck.availableImageSlots <= 0) {
         toast.error(
-          `Max ${maxImageCount} image reference${maxImageCount === 1 ? "" : "s"}`,
+          uiText("common.max.value.image.reference.value", { value0: maxImageCount, value1: getUiLocale() === "en" ? (maxImageCount === 1 ? "" : "s") : "" }),
         );
       } else {
         deck.processImageFiles(images, "start");
@@ -729,14 +731,14 @@ export const PromptBoxVideo = ({
         kind: "image",
         url: referenceImages[0].url,
         previewUrl: referenceImages[0].fullUrl ?? referenceImages[0].url,
-        name: "First frame",
+        name: uiText("promptbox.first.frame"),
       }
     : deck.uploadingImages[0]
       ? {
           id: deck.uploadingImages[0].id,
           kind: "image",
           url: deck.uploadingImages[0].previewUrl,
-          name: "First frame",
+          name: uiText("promptbox.first.frame"),
           uploading: true,
         }
       : undefined;
@@ -747,14 +749,14 @@ export const PromptBoxVideo = ({
         kind: "image",
         url: endFrameImage.url,
         previewUrl: endFrameImage.fullUrl ?? endFrameImage.url,
-        name: "Last frame",
+        name: uiText("promptbox.last.frame"),
       }
     : deck.uploadingEnd
       ? {
           id: deck.uploadingEnd.id,
           kind: "image",
           url: deck.uploadingEnd.previewUrl,
-          name: "Last frame",
+          name: uiText("promptbox.last.frame"),
           uploading: true,
         }
       : undefined;
@@ -1041,25 +1043,25 @@ export const PromptBoxVideo = ({
   const handleEnqueue = async () => {
     if (!prompt.trim()) {
       console.warn("Cannot generate video: prompt is empty");
-      toast.error("Please enter a prompt to generate video");
+      toast.error(uiText("promptbox.please.enter.a.prompt.to.generate.video"));
       return;
     }
     if (isFinite(maxLen) && prompt.length > maxLen) {
       toast.error(
-        `Prompt exceeds the ${maxLen} character limit for this model`,
+        uiText("common.prompt.exceeds.the.value.character.limit.for.this.model", { value0: maxLen }),
       );
       return;
     }
 
     if (!selectedModel) {
       console.warn("Cannot generate video: no model selected");
-      toast.error("Please select a model to generate video");
+      toast.error(uiText("promptbox.please.select.a.model.to.generate.video"));
       return;
     }
 
     if (selectedModel?.requiresImage && referenceImages.length === 0) {
       console.warn("Cannot generate video: no reference image provided");
-      toast.error("Please add a starting frame image to generate video");
+      toast.error(uiText("promptbox.please.add.a.starting.frame.image.to.generate.video"));
       return;
     }
 
@@ -1229,7 +1231,7 @@ export const PromptBoxVideo = ({
     const failure = outcomes.find((outcome) => outcome.status === "rejected");
     if (failure?.status === "rejected") {
       console.error("PromptBoxVideo - enqueue failed", failure.reason);
-      toast.error(commandErrorMessage(failure.reason, "Failed to start video generation. Please try again."));
+      toast.error(commandErrorMessage(failure.reason, uiText("desktop.failed.to.start.video.generation.please.try.again")));
     }
     if (acceptedIds.length) onEnqueuePressed?.(prompt, acceptedIds);
 
@@ -1329,12 +1331,12 @@ export const PromptBoxVideo = ({
 
   // Input-mode (keyframe/reference) picker, reused in the fullscreen footer.
   const inputModeEl = inputModeOptions ? (
-    <Tooltip content="Input Mode" position="top" className="z-50" closeOnClick>
+    <Tooltip content={uiText("promptbox.input.mode")} position="top" className="z-50" closeOnClick>
       <PopoverMenu
         items={inputModeOptions}
         onSelect={handleInputModeSelect}
         mode="toggle"
-        panelTitle="Input Mode"
+        panelTitle={uiText("promptbox.input.mode")}
       />
     </Tooltip>
   ) : null;
@@ -1357,10 +1359,7 @@ export const PromptBoxVideo = ({
               <InfoIcon
                 
                 className="h-3 w-3 shrink-0" />
-              <span>
-                This model can&apos;t generate from text alone - add a starting
-                frame to animate your prompt.
-              </span>
+              <span>{uiText("promptbox.this.model.can.apos.t.generate.from.text.alone.add.a.starting.frame.to.animate.your.p")}{" "}</span>
             </div>
           )}
           <div className="relative flex gap-3">
@@ -1377,8 +1376,8 @@ export const PromptBoxVideo = ({
                   selectedTokens={mentionSelections}
                   placeholder={
                     isReferenceMode
-                      ? "Use @Image1, @Video1, @Audio1... to reference uploads in prompt..."
-                      : "Describe what you want to happen in the video..."
+                      ? uiText("common.use.image1.video1.audio1.to.reference.uploads.in.prompt")
+                      : uiText("common.describe.what.you.want.to.happen.in.the.video")
                   }
                   className="promptbox-scrollbar text-md relative min-h-[2.5em] w-full resize-y overflow-y-auto bg-transparent pr-8 text-base-fg"
                   onKeyDown={(e) => {
@@ -1402,7 +1401,7 @@ export const PromptBoxVideo = ({
                 <textarea
                   ref={textareaRef}
                   rows={1}
-                  placeholder="Describe what you want to happen in the video..."
+                  placeholder={uiText("common.describe.what.you.want.to.happen.in.the.video")}
                   className="promptbox-scrollbar text-md relative min-h-[2.5em] w-full resize-y overflow-y-auto bg-transparent pr-8 text-base-fg placeholder-base-fg/60 focus:outline-none"
                   value={prompt}
                   onChange={handleChange}
@@ -1424,7 +1423,7 @@ export const PromptBoxVideo = ({
             <div className="flex flex-wrap items-center gap-2">
               {modelSelector}
               <Tooltip
-                content="Aspect Ratio"
+                content={uiText("common.aspect.ratio")}
                 position="top"
                 className="z-50"
                 closeOnClick={true}
@@ -1433,7 +1432,7 @@ export const PromptBoxVideo = ({
                   items={aspectRatioOptions}
                   onSelect={handleAspectRatioSelect}
                   mode="toggle"
-                  panelTitle="Aspect Ratio"
+                  panelTitle={uiText("common.aspect.ratio")}
                   showIconsInList
                   triggerIcon={
                     <AspectRatioIcon sizeIcon={getCurrentAspectRatioIcon()} />
@@ -1443,7 +1442,7 @@ export const PromptBoxVideo = ({
 
               {resolutionPickerOptions && (
                 <Tooltip
-                  content="Resolution"
+                  content={uiText("common.resolution")}
                   position="top"
                   className="z-50"
                   closeOnClick={true}
@@ -1452,15 +1451,15 @@ export const PromptBoxVideo = ({
                     items={resolutionPickerOptions}
                     onSelect={handleResolutionSelect}
                     mode="toggle"
-                    panelTitle="Resolution"
+                    panelTitle={uiText("common.resolution")}
                   />
                 </Tooltip>
               )}
 
               {!!selectedModel?.bitrateOptions?.length && (
-                <Tooltip content="Bitrate" position="top" className="z-50">
+                <Tooltip content={uiText("promptbox.bitrate")} position="top" className="z-50">
                   <PopoverMenu
-                    panelTitle="Bitrate"
+                    panelTitle={uiText("promptbox.bitrate")}
                     mode="toggle"
                     items={selectedModel.bitrateOptions.map((value) => ({
                       label: value === "normal" ? "Normal" : value === "high" ? "High" : value,
@@ -1473,9 +1472,9 @@ export const PromptBoxVideo = ({
               )}
 
               {!!selectedModel?.outputFormatOptions?.length && (
-                <Tooltip content="Output format" position="top" className="z-50">
+                <Tooltip content={uiText("promptbox.output.format")} position="top" className="z-50">
                   <PopoverMenu
-                    panelTitle="Output format"
+                    panelTitle={uiText("promptbox.output.format")}
                     mode="toggle"
                     items={selectedModel.outputFormatOptions.map((value) => ({
                       label: value.toUpperCase(),
@@ -1488,14 +1487,14 @@ export const PromptBoxVideo = ({
               )}
 
               {durationRange && durationRange.max > durationRange.min && (
-                <Tooltip content="Duration" position="top" className="z-50">
+                <Tooltip content={uiText("common.duration")} position="top" className="z-50">
                   <PopoverMenu
                     mode="default"
-                    panelTitle="Duration"
+                    panelTitle={uiText("common.duration")}
                     triggerIcon={
                       <ClockIcon  className="h-3.5 w-3.5" />
                     }
-                    triggerLabel={`${effectiveDuration}s`}
+                    triggerLabel={uiText("pagescene.value.s", { value0: effectiveDuration })}
                   >
                     <div className="w-[min(16rem,calc(100vw-2rem))] pb-0.5">
                       <div className="flex items-center gap-2.5">
@@ -1525,7 +1524,7 @@ export const PromptBoxVideo = ({
 
               {selectedModel?.generateWithSound && (
                 <Tooltip
-                  content={generateWithSound ? "Sound: ON" : "Sound: OFF"}
+                  content={generateWithSound ? uiText("promptbox.sound.on") : uiText("promptbox.sound.off")}
                   position="top"
                   className="z-50"
                   delay={200}
@@ -1546,9 +1545,7 @@ export const PromptBoxVideo = ({
             <div className="flex items-center gap-1.5">
               {modelNeedsAnImageButNoneAreSelected && (
                 <span className="flex items-center gap-1.5 text-xs text-red-500 font-medium animate-pulse">
-                  <InfoIcon />
-                  Starting frame required
-                </span>
+                  <InfoIcon />{uiText("promptbox.starting.frame.required")}{" "}</span>
               )}
               {generationCounts.length > 1 && (
                 <VideoGenerationCountPicker
@@ -1563,7 +1560,7 @@ export const PromptBoxVideo = ({
                 confirmClear={hasAttachedRefs}
               />
               <Tooltip
-                content="Add a starting image before generating"
+                content={uiText("promptbox.add.a.starting.image.before.generating")}
                 position="top"
                 className="z-50"
                 delay={0}
@@ -1582,7 +1579,7 @@ export const PromptBoxVideo = ({
           </div>
           <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
             <Tooltip
-              content={isExpanded ? "Collapse" : "Expand"}
+              content={isExpanded ? uiText("common.collapse") : uiText("common.expand")}
               position="top"
               className="-mb-2"
             >
@@ -1671,15 +1668,15 @@ export const PromptBoxVideo = ({
             selectedTokens={mentionSelections}
             placeholder={
               isReferenceMode
-                ? "Use @Image1, @Video1, @Audio1... to reference uploads in prompt..."
-                : "Describe what you want to happen in the video..."
+                ? uiText("common.use.image1.video1.audio1.to.reference.uploads.in.prompt")
+                : uiText("common.describe.what.you.want.to.happen.in.the.video")
             }
             className="promptbox-scrollbar text-md h-full min-h-0 w-full resize-none overflow-y-auto rounded-[3px] bg-transparent text-base-fg"
             style={{ resize: "none" }}
           />
         ) : (
           <textarea
-            placeholder="Describe what you want to happen in the video..."
+            placeholder={uiText("common.describe.what.you.want.to.happen.in.the.video")}
             className="promptbox-scrollbar text-md h-full min-h-0 w-full resize-none overflow-y-auto rounded-[3px] bg-transparent text-base-fg placeholder-base-fg/60 focus:outline-none"
             value={prompt}
             onChange={handleChange}

@@ -8,6 +8,7 @@ export interface UpdateAppPreferencesRequest {
 }
 
 export enum PreferenceName {
+  UiLanguage = "ui_language",
   PreferredDownloadDirectory = "preferred_download_directory",
   PreferredDownloadFilename = "preferred_download_filename",
   AutoDownload = "auto_download",

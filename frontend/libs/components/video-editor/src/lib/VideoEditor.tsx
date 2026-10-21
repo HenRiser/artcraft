@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { EditorProvider } from "./EditorProvider";
 import type { VideoEditorAdapters } from "./adapters";
@@ -60,6 +61,7 @@ export function VideoEditor({
   headerEndSlot,
   exitTo,
 }: VideoEditorProps) {
+  useUiLocale();
   return (
     <EditorProvider adapters={adapters}>
       {/* Shell-wide Radix tooltip provider so every descendant tooltip has a
@@ -93,19 +95,20 @@ export function VideoEditor({
 }
 
 function DegradedRendererBanner() {
+  useUiLocale();
   const isDegraded = useEditor((e) => e.renderer.isDegraded);
   const [dismissed, setDismissed] = useState(false);
   if (!isDegraded || dismissed) return null;
 
   return (
     <div className="bg-accent border-b h-9 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-      <span>For the best experience, open this editor in Chrome.</span>
+      <span>{uiText("video-editor.for.the.best.experience.open.this.editor.in.chrome")}</span>
       <Button
         variant="text"
         size="icon"
         className="p-0 w-auto [&_svg]:size-3.5"
         onClick={() => setDismissed(true)}
-        aria-label="Dismiss"
+        aria-label={uiText("common.dismiss")}
       >
         <HugeiconsIcon icon={Cancel01Icon} />
       </Button>
@@ -114,6 +117,7 @@ function DegradedRendererBanner() {
 }
 
 function EditorLayout() {
+  useUiLocale();
   // Boot the wasm-backed GPU compositor and gate the panel render on
   // it. We need to *await* init before <PreviewCanvas> mounts —
   // child useEffects fire bottom-up, so kicking GPU off in a sibling
@@ -154,6 +158,7 @@ function EditorLayout() {
 }
 
 function ReadyEditorLayout() {
+  useUiLocale();
   useEditorActions();
   useKeybindingsListener();
   usePasteMedia();

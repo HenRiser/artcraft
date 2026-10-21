@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ToastAdapter } from "../adapters/toast";
 
 // Upload toast — host-routed. The OpenCut original called sonner's
@@ -48,13 +49,13 @@ export async function showMediaUploadToast<T extends MediaUploadToastResult>({
           : "1 media asset has been uploaded",
       );
     } else if (uploadedCount > 1) {
-      toast.success(`${uploadedCount} media assets have been uploaded`);
+      toast.success(uiText("video-editor.value.media.assets.have.been.uploaded", { value0: uploadedCount }));
     } else {
-      toast.warning("No media assets were uploaded");
+      toast.warning(uiText("desktop.no.media.assets.were.uploaded"));
     }
     return result;
   } catch (error) {
-    toast.error(`Failed to upload ${getAssetLabel({ count: filesCount })}`, {
+    toast.error(uiText("common.failed.to.upload.value", { value0: getAssetLabel({ count: filesCount }) }), {
       description: error instanceof Error ? error.message : undefined,
     });
     throw error;

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   VideoEditor,
@@ -27,12 +28,12 @@ import { useTauriAssetGalleryAdapter } from "./adapters/asset-gallery-adapter";
 // "VIDEO_EDITOR".
 
 function buildBootstrapProject({ id }: { id: string }): TProject {
-  const scene = buildDefaultScene({ name: "Main scene", isMain: true });
+  const scene = buildDefaultScene({ name: uiText("desktop.main.scene"), isMain: true });
   const now = new Date();
   return {
     metadata: {
       id,
-      name: "Untitled project",
+      name: uiText("desktop.untitled.project"),
       duration: ZERO_MEDIA_TIME,
       createdAt: now,
       updatedAt: now,

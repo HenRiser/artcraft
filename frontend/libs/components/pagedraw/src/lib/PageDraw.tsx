@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, {
   useState,
   useRef,
@@ -93,6 +94,7 @@ const Edit3DButton = memo(function Edit3DButton({
   stageRef,
   onEdit,
 }: Edit3DButtonProps) {
+  useUiLocale();
   const [, forceUpdate] = useState(0);
   const bump = useCallback(() => forceUpdate((t) => t + 1), []);
   const [interacting, setInteracting] = useState(false);
@@ -155,9 +157,7 @@ const Edit3DButton = memo(function Edit3DButton({
       style={{ left: btnLeft, top: btnTop }}
       onPointerDown={(e) => e.stopPropagation()}
       onClick={() => onEdit(nodeId)}
-    >
-      Edit 3D
-    </button>
+    >{uiText("pagedraw.edit.3d")}{" "}</button>
   );
 });
 
@@ -171,6 +171,7 @@ function DragScrubButton({
   title: string;
   onDrag: (dx: number, dy: number) => void;
 }) {
+  useUiLocale();
   const onPointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -203,6 +204,7 @@ const Edit3DScrubControls = memo(function Edit3DScrubControls({
   stageRef,
   overlayHandle,
 }: Edit3DScrubControlsProps) {
+  useUiLocale();
   const [, forceUpdate] = useState(0);
   const bump = useCallback(() => forceUpdate((t) => t + 1), []);
 
@@ -236,17 +238,17 @@ const Edit3DScrubControls = memo(function Edit3DScrubControls({
     >
       <DragScrubButton
         icon={<Maximize2Icon />}
-        title="Scale — drag"
+        title={uiText("pagedraw.scale.drag")}
         onDrag={(dx, dy) => overlayHandle.current?.onScaleDrag(dx, dy)}
       />
       <DragScrubButton
         icon={<RefreshCwIcon />}
-        title="Rotate — drag"
+        title={uiText("pagedraw.rotate.drag")}
         onDrag={(dx, dy) => overlayHandle.current?.onRotateDrag(dx, dy)}
       />
       <DragScrubButton
         icon={<CameraIcon />}
-        title="Field of view — drag"
+        title={uiText("pagedraw.field.of.view.drag")}
         onDrag={(dx, dy) => overlayHandle.current?.onFovDrag(dx, dy)}
       />
       <button
@@ -290,6 +292,7 @@ const PageDraw = ({
   fillParentHeight = false,
   showBottomRightControls = true,
 }: PageDrawProps) => {
+  useUiLocale();
   const canvas2dModelList = useCanvas2dPageModelList();
   const canvasWidth = useRef<number>(1024);
   const canvasHeight = useRef<number>(1024);
@@ -563,7 +566,7 @@ const PageDraw = ({
           console.error("No model URL available for 3D item");
           return;
         }
-        const toastId = toast.loading(`Loading 3D model "${item.label}"…`);
+        const toastId = toast.loading(uiText("pagedraw.loading.3d.model.value", { value0: item.label }));
         try {
           const dataUrl = await render3DModelToDataUrl(
             modelUrl,
@@ -589,12 +592,12 @@ const PageDraw = ({
               displayW,
               displayH,
             );
-            toast.success(`Added "${item.label}" to canvas`, { id: toastId });
+            toast.success(uiText("pagedraw.added.value.to.canvas", { value0: item.label }), { id: toastId });
           };
           img.src = dataUrl;
         } catch (err) {
           console.error("Failed to render 3D model:", err);
-          toast.error(`Failed to load 3D model "${item.label}"`, {
+          toast.error(uiText("pagedraw.failed.to.load.3d.model.value", { value0: item.label }), {
             id: toastId,
           });
         }

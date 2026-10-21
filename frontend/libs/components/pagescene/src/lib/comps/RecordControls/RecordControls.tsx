@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { CameraIcon, CircleIcon } from "lucide-react";
 import { Tooltip } from "@storyteller/ui-tooltip";
@@ -13,6 +14,7 @@ import { TimelineBar } from "../Timeline";
 //   Record  → produce the clip → hand to the video review modal (manual upload,
 //             since videos are large) via producedArtifact.
 export const RecordControls = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const timelineExists = usePageSceneStore((s) => s.timelineExists);
   const recordingProgress = usePageSceneStore((s) => s.recordingProgress);
@@ -33,14 +35,12 @@ export const RecordControls = () => {
           disabled={busy}
           className="border border-ui-panel-border bg-ui-controls flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-sm font-medium text-base-fg hover:bg-white/10 disabled:opacity-50"
         >
-          <CameraIcon  className="h-3.5 w-3.5" />
-          Capture
-        </button>
+          <CameraIcon  className="h-3.5 w-3.5" />{uiText("pagescene.capture")}{" "}</button>
         <Tooltip
           content={
             timelineExists
-              ? "Render the timeline to video"
-              : "Add an animation timeline first"
+              ? uiText("pagescene.render.the.timeline.to.video")
+              : uiText("pagescene.add.an.animation.timeline.first")
           }
           position="top"
           delay={200}
@@ -51,9 +51,7 @@ export const RecordControls = () => {
             disabled={busy || !timelineExists}
             className="flex items-center gap-2 rounded-[3px] bg-red px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:brightness-110 disabled:opacity-50"
           >
-            <CircleIcon  className="h-3 w-3" />
-            Record
-          </button>
+            <CircleIcon  className="h-3 w-3" />{uiText("common.record")}{" "}</button>
         </Tooltip>
       </div>
     </div>

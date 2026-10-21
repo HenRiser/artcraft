@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 // PageSceneAdapter implementation backed by the artcraft host's Tauri
 // + HTTP plumbing. Built once per <PageScene> mount via useMemo so the
 // reference is stable across re-renders (matters because the lib's
@@ -133,7 +134,7 @@ const loadSceneState = async (
       console.warn(`Scene /w Token: ${scene_media_file_token} has no title`);
     }
     signalScene({
-      title: json.media_file.maybe_title || "Untitled Scene",
+      title: json.media_file.maybe_title || uiText("desktop.untitled.scene"),
       token: scene_media_file_token || undefined,
       ownerToken: json.media_file.maybe_creator_user.user_token,
       isModified: false,

@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "license": "MIT OR Apache-2.0",
   "scripts": {
+    "test:localization": "vitest run --config tools/testing/localization.vitest.config.ts",
+    "test:localization:browser": "node tools/testing/localization-smoke.mjs",
     "test:desktop-session": "node tools/testing/desktop-session.mjs",
     "perf:desktop": "node tools/performance/run.mjs"
   },

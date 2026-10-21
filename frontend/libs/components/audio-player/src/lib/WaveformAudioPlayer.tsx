@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   MouseEvent,
   useCallback,
@@ -46,6 +47,7 @@ export function WaveformAudioPlayer({
   compact = false,
   className = "",
 }: WaveformAudioPlayerProps) {
+  useUiLocale();
   const playerId = useId();
   const waveContainerRef = useRef<HTMLDivElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -257,7 +259,7 @@ export function WaveformAudioPlayer({
     >
       <button
         type="button"
-        aria-label={isPlaying ? "Pause" : "Play"}
+        aria-label={isPlaying ? uiText("common.pause") : uiText("common.play")}
         onClick={togglePlay}
         className={`flex shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform hover:scale-105 active:scale-95 ${compact ? "h-8 w-8" : "h-10 w-10"}`}
       >
@@ -305,7 +307,7 @@ export function WaveformAudioPlayer({
       <div className="relative shrink-0">
         <button
           type="button"
-          aria-label="Volume"
+          aria-label={uiText("common.volume")}
           onClick={() => setShowVolume((visible) => !visible)}
           className="flex h-7 w-7 items-center justify-center rounded-md text-white/70 transition-colors hover:bg-white/10 hover:text-white"
         >

@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -25,7 +26,7 @@ export function SelectableSurface({
   orderedIds,
   children,
   className,
-  ariaLabel = "Selectable items",
+  ariaLabel = uiText("desktop.selectable.items"),
   revealId = null,
   onRevealComplete,
   onSelectionChange,

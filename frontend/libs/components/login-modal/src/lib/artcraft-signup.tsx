@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useState, useEffect } from "react";
 import { Input } from "@storyteller/ui-input";
 import { Button } from "@storyteller/ui-button";
@@ -31,6 +32,7 @@ export const ArtCraftSignUp = ({
   errorMessage,
   isLoading = false,
 }: ArtCraftSignUpProps) => {
+  useUiLocale();
   const [localError, setLocalError] = useState<string | undefined>(undefined);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -59,7 +61,7 @@ export const ArtCraftSignUp = ({
         form.elements.namedItem("confirmPassword") as HTMLInputElement
       ).value;
       if (password !== confirmPassword) {
-        setLocalError("Passwords do not match.");
+        setLocalError(uiText("login-modal.passwords.do.not.match"));
         return;
       }
       onSubmit(username, email, password, confirmPassword);
@@ -89,17 +91,17 @@ export const ArtCraftSignUp = ({
       {isSignUp ? (
         <>
           <div className="space-y-2">
-            <label className={FIELD_LABEL}>Username</label>
+            <label className={FIELD_LABEL}>{uiText("common.username")}</label>
             <Input
               name="username"
-              placeholder="Username"
+              placeholder={uiText("common.username")}
               required
               autoComplete="off"
               inputClassName={FIELD_INPUT}
             />
           </div>
           <div className="space-y-2">
-            <label className={FIELD_LABEL}>Email</label>
+            <label className={FIELD_LABEL}>{uiText("login-modal.email")}</label>
             <Input
               name="email"
               type="email"
@@ -112,10 +114,10 @@ export const ArtCraftSignUp = ({
         </>
       ) : (
         <div className="space-y-2">
-          <label className={FIELD_LABEL}>Email or Username</label>
+          <label className={FIELD_LABEL}>{uiText("login-modal.email.or.username")}</label>
           <Input
             name="usernameOrEmail"
-            placeholder="you@example.com or username"
+            placeholder={uiText("login-modal.you.example.com.or.username")}
             required
             autoComplete="off"
             inputClassName={FIELD_INPUT}
@@ -124,12 +126,12 @@ export const ArtCraftSignUp = ({
       )}
 
       <div className="space-y-2">
-        <label className={FIELD_LABEL}>Password</label>
+        <label className={FIELD_LABEL}>{uiText("login-modal.password")}</label>
         <div className="relative">
           <Input
             name="password"
             type={showPassword ? "text" : "password"}
-            placeholder="Min. 8 characters"
+            placeholder={uiText("login-modal.min.8.characters")}
             required
             autoComplete="off"
             inputClassName={`${FIELD_INPUT} pr-12`}
@@ -147,12 +149,12 @@ export const ArtCraftSignUp = ({
 
       {isSignUp && (
         <div className="space-y-2">
-          <label className={FIELD_LABEL}>Confirm Password</label>
+          <label className={FIELD_LABEL}>{uiText("login-modal.confirm.password")}</label>
           <div className="relative">
             <Input
               name="confirmPassword"
               type={showConfirm ? "text" : "password"}
-              placeholder="Re-enter password"
+              placeholder={uiText("login-modal.re.enter.password")}
               required
               autoComplete="off"
               inputClassName={`${FIELD_INPUT} pr-12`}
@@ -178,21 +180,21 @@ export const ArtCraftSignUp = ({
           {isLoading ? (
             <LoaderCircleIcon className="animate-spin" />
           ) : isSignUp ? (
-            "Sign up"
+            uiText("login-modal.sign.up")
           ) : (
-            "Log in"
+            uiText("common.log.in")
           )}
         </Button>
       </div>
 
       <div className="mt-4 text-center text-sm text-white/60">
-        {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+        {isSignUp ? uiText("login-modal.already.have.an.account") : uiText("login-modal.don.t.have.an.account")}{" "}
         <button
           type="button"
           onClick={onToggleMode}
           className="font-semibold text-primary transition-colors hover:text-primary-400"
         >
-          {isSignUp ? "Log in" : "Sign up"}
+          {isSignUp ? uiText("common.log.in") : uiText("login-modal.sign.up")}
         </button>
       </div>
     </form>

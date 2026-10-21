@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext, useRef } from "react";
 import { DynamicIcon } from "@storyteller/icons";
 import { EngineContext } from "../../contexts/EngineContext/EngineContext";
@@ -32,6 +33,7 @@ export const TimelineTrackRow = ({
   track,
   duration,
 }: TimelineTrackRowProps) => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const laneRef = useRef<HTMLDivElement>(null);
   const draggingId = useRef<string | null>(null);
@@ -127,7 +129,7 @@ export const TimelineTrackRow = ({
             <button
               key={`ease-${kf.id}`}
               type="button"
-              title="Edit easing"
+              title={uiText("pagescene.edit.easing")}
               data-easing-chip
               className={`absolute top-1/2 flex h-5 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border bg-ui-controls ${
                 active
@@ -156,7 +158,7 @@ export const TimelineTrackRow = ({
               role="button"
               tabIndex={0}
               data-keyframe
-              title={`${kf.time.toFixed(2)}s`}
+              title={uiText("pagescene.value.s", { value0: kf.time.toFixed(2) })}
               className={`absolute top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rotate-45 cursor-grab rounded-[2px] border transition-colors ${
                 selected
                   ? "border-brand-primary bg-brand-primary"
@@ -179,7 +181,7 @@ export const TimelineTrackRow = ({
 
       <button
         type="button"
-        title="Add keyframe at playhead"
+        title={uiText("pagescene.add.keyframe.at.playhead")}
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-base-fg/70 hover:bg-white/10 hover:text-base-fg"
         onClick={() => {
           if (editor) addKeyframe(editor, item.id);

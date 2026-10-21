@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Fragment, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { DoNotShow } from "~/constants";
@@ -26,9 +27,10 @@ export const ConfirmationModal = ({
   okText = "OK",
   okColor = "",
   onCancel,
-  cancelText = "Cancel",
+  cancelText = uiText("common.cancel"),
   canHide,
 }: Props) => {
+  useUiLocale();
   const handleOk = useCallback(() => {
     const element = document.getElementById("hide-dialog");
     if (element) {
@@ -75,7 +77,7 @@ export const ConfirmationModal = ({
               <div className="mt-2 text-sm leading-relaxed text-white/70">{text}</div>
               {canHide && (
                 <div className="mt-2">
-                  <Checkbox id="hide-dialog" label="Do not show this again" />
+                  <Checkbox id="hide-dialog" label={uiText("reusable.do.not.show.this.again")} />
                 </div>
               )}
 

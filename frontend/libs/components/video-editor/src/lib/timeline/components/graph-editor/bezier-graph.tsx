@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useRef, useState, type PointerEvent } from "react";
@@ -85,6 +86,7 @@ export function BezierGraph({
   onChangeEnd?: (value: NormalizedCubicBezier) => void;
   onCancel?: () => void;
 }) {
+  useUiLocale();
   const svgRef = useRef<SVGSVGElement>(null);
   const [activeHandle, setActiveHandle] = useState<BezierHandle | null>(null);
   const isShiftPressedRef = useShiftKey();
@@ -164,7 +166,7 @@ export function BezierGraph({
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerCancel}
     >
-      <title>Bezier curve editor</title>
+      <title>{uiText("video-editor.bezier.curve.editor")}</title>
       <line
         x1={p0.x}
         y1={p0.y}

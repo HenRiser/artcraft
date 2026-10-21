@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { AssetFilterOption } from "@storyteller/common";
 
 interface Props {
@@ -7,20 +8,21 @@ interface Props {
 
 const FILTERS = [
   {
-    text: "Featured",
+    get text() { return uiText("button.featured"); },
     option: AssetFilterOption.FEATURED,
   },
   {
-    text: "Mine",
+    get text() { return uiText("button.mine"); },
     option: AssetFilterOption.MINE,
   },
   {
-    text: "Bookmarked",
+    get text() { return uiText("button.bookmarked"); },
     option: AssetFilterOption.BOOKMARKED,
   },
 ];
 
 export function FilterButtons({ onClick, value }: Props) {
+  useUiLocale();
   return (
     <div>
       <div className="flex gap-2 overflow-x-auto overflow-y-hidden px-4">

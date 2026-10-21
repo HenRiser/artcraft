@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "@storyteller/ui-toaster";
 import { UploadImageMedia, UploadVideoMedia } from "@storyteller/api";
@@ -15,6 +16,7 @@ import {
 import { CreateEmptyState } from "~/components/generation-feed/CreateEmptyState";
 
 export const PageBackgroundChange = () => {
+  useUiLocale();
   const subTab = useVFXStore((s) => s.subTab);
   const setSubTab = useVFXStore((s) => s.setSubTab);
   const history = useVFXStore((s) => s.history);
@@ -59,8 +61,8 @@ export const PageBackgroundChange = () => {
     if (!result.success) {
       const isExpected = result.error_code_str === VFX_NOT_AVAILABLE_ERROR;
       const message = isExpected
-        ? "Background change backend coming soon. Your inputs are saved."
-        : result.error_message || "Failed to submit background change job.";
+        ? uiText("desktop.background.change.backend.coming.soon.your.inputs.are.saved")
+        : result.error_message || uiText("desktop.failed.to.submit.background.change.job");
       failResult(id, message);
       if (isExpected) toast(message);
       else toast.error(message);
@@ -93,7 +95,7 @@ export const PageBackgroundChange = () => {
           }
         : undefined,
     });
-    toast("Loaded showcase. Edit and Generate.");
+    toast(uiText("desktop.loaded.showcase.edit.and.generate"));
   }, [selectedShowcaseId, loadFromShowcase]);
 
   return (
@@ -113,8 +115,8 @@ export const PageBackgroundChange = () => {
           style={{ paddingBottom: Math.max(promptBoxHeight + 36, 240) }}
         >
           <CreateEmptyState
-            title="No background changes yet"
-            subtitle="Upload a source video and a reference image, then optionally add a prompt."
+            title={uiText("backgroundchange.no.background.changes.yet")}
+            subtitle={uiText("desktop.upload.a.source.video.and.a.reference.image.then.optionally.add.a.prompt")}
           />
         </div>
       ) : (

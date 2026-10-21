@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext, useEffect, useRef } from "react";
 import { ChevronDownIcon, CrosshairIcon, PauseIcon, PlayIcon, SkipBackIcon, SkipForwardIcon, TrashIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -40,6 +41,7 @@ const LANE_RIGHT = "2.5rem";
 
 // Expanded multi-track keyframe editor. Replaces the prompt box while open.
 export const TimelineEditor = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const rulerRef = useRef<HTMLDivElement>(null);
   const isScrubbing = useRef(false);
@@ -325,7 +327,7 @@ export const TimelineEditor = () => {
       <div className="mb-2 flex items-center gap-2 border-b border-ui-panel-border pb-2">
         <button
           type="button"
-          title="Go to start"
+          title={uiText("pagescene.go.to.start")}
           onClick={() => editor && seekTimeline(editor, 0)}
           className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/70 hover:bg-white/10"
         >
@@ -334,7 +336,7 @@ export const TimelineEditor = () => {
         <button
           type="button"
           onClick={togglePlay}
-          aria-label={isPlaying ? "Pause timeline" : "Play timeline"}
+          aria-label={isPlaying ? uiText("common.pause.timeline") : uiText("common.play.timeline")}
           className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/90 hover:bg-white/10"
         >
           <DynamicIcon
@@ -344,7 +346,7 @@ export const TimelineEditor = () => {
         </button>
         <button
           type="button"
-          title="Go to end"
+          title={uiText("pagescene.go.to.end")}
           onClick={() => editor && seekTimeline(editor, duration)}
           className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/70 hover:bg-white/10"
         >
@@ -359,8 +361,8 @@ export const TimelineEditor = () => {
           <Tooltip
             content={
               focusSelected
-                ? "Show all tracks"
-                : "Show only the selected object's track"
+                ? uiText("pagescene.show.all.tracks")
+                : uiText("pagescene.show.only.the.selected.object.s.track")
             }
             position="top"
             delay={300}
@@ -381,7 +383,7 @@ export const TimelineEditor = () => {
         </div>
         <button
           type="button"
-          title="Collapse timeline"
+          title={uiText("pagescene.collapse.timeline")}
           onClick={() => setExpanded(false)}
           className="flex h-7 w-7 items-center justify-center rounded-[3px] text-base-fg/60 hover:bg-white/10"
         >
@@ -455,9 +457,7 @@ export const TimelineEditor = () => {
         </div>
 
         {rows.length === 0 ? (
-          <div className="py-6 text-center text-xs text-base-fg/40">
-            Add objects to the scene to start animating.
-          </div>
+          <div className="py-6 text-center text-xs text-base-fg/40">{uiText("pagescene.add.objects.to.the.scene.to.start.animating")}{" "}</div>
         ) : (
           /* Cap at ~3.5 rows (row = 36px lane + 8px padding) so the panel
              stays compact; the half row hints that the list scrolls. The
@@ -539,7 +539,7 @@ export const TimelineEditor = () => {
             style={{ left: LANE_LEFT, right: LANE_RIGHT }}
           >
             <MotionPopover
-              title="Transition"
+              title={uiText("pagescene.transition")}
               easing={clipTransitionAnchor.easing}
               onChange={(next) =>
                 editor &&
@@ -564,9 +564,7 @@ export const TimelineEditor = () => {
                     }
                     usePageSceneStore.getState().setTimelineEasingClipLane(null);
                   }}
-                >
-                  Remove transition
-                </button>
+                >{uiText("pagescene.remove.transition")}{" "}</button>
               }
             />
           </div>
@@ -575,10 +573,7 @@ export const TimelineEditor = () => {
 
       {/* footer */}
       <div className="mt-3 flex items-center justify-between gap-2">
-        <span className="ms-2 text-[11px] text-base-fg/40">
-          Each diamond stores an object's full position, rotation and scale at
-          that moment. Tap a diamond to jump to it.
-        </span>
+        <span className="ms-2 text-[11px] text-base-fg/40">{uiText("pagescene.each.diamond.stores.an.object.s.full.position.rotation.and.scale.at.that.moment.tap.a")}{" "}</span>
         <div className="flex items-center gap-2">
           {selectedKeyframe && (
             /* data-keyframe-delete: exempt from the click-away deselect —
@@ -592,25 +587,19 @@ export const TimelineEditor = () => {
                 onClick={() =>
                   editor && deleteKeyframe(editor, selectedKeyframe.id)
                 }
-              >
-                Delete
-              </Button>
+              >{uiText("common.delete")}{" "}</Button>
             </div>
           )}
           <Button
             variant="secondary"
             className="flex h-9 items-center border border-ui-controls-border bg-ui-controls/60 px-3 text-sm text-base-fg hover:bg-ui-controls/90"
             onClick={() => editor && cancelTimeline(editor)}
-          >
-            Cancel
-          </Button>
+          >{uiText("common.cancel")}{" "}</Button>
           <Button
             variant="primary"
             className="flex h-9 items-center border-none bg-brand-primary px-3 text-sm text-white"
             onClick={() => editor && saveTimeline(editor)}
-          >
-            Save
-          </Button>
+          >{uiText("common.save")}{" "}</Button>
         </div>
       </div>
     </div>

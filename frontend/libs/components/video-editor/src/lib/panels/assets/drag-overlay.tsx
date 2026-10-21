@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { UploadIcon } from "@hugeicons/core-free-icons";
 
@@ -14,6 +15,7 @@ export function MediaDragOverlay({
   progress = 0,
   onClick,
 }: MediaDragOverlayProps) {
+  useUiLocale();
   if (!isVisible) return null;
 
   const handleClick = ({
@@ -41,8 +43,8 @@ export function MediaDragOverlay({
       <div className="space-y-2">
         <p className="text-muted-foreground max-w-sm text-xs">
           {isProcessing
-            ? `Processing your files (${progress}%)`
-            : "Drag and drop videos, photos, and audio files here"}
+            ? uiText("video-editor.processing.your.files.value", { value0: progress })
+            : uiText("video-editor.drag.and.drop.videos.photos.and.audio.files.here")}
         </p>
       </div>
 

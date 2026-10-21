@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback } from "react";
 import { LoaderCircleIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -46,6 +47,7 @@ export function GalleryThumbnail({
   showRetryLabel = true,
   onLoad,
 }: GalleryThumbnailProps) {
+  useUiLocale();
   const autoplayVideos = useGalleryViewStore((s) => s.autoplayVideos);
   // With autoplay off, videos freeze on their still first frame. The still is
   // also what gets re-checked in that mode.
@@ -75,7 +77,7 @@ export function GalleryThumbnail({
       <div className="flex h-full w-full flex-col items-center justify-center gap-2">
         <LoaderCircleIcon className="animate-spin text-lg text-white/30" />
         {showRetryLabel && (
-          <span className="text-[10px] text-white/30">Loading thumbnail…</span>
+          <span className="text-[10px] text-white/30">{uiText("generation-list.loading.thumbnail")}</span>
         )}
       </div>
     );

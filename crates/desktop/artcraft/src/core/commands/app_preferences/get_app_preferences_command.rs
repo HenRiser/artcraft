@@ -5,6 +5,7 @@ use errors::AnyhowResult;
 use log::{error, info};
 use serde_derive::Serialize;
 use tauri::State;
+use crate::core::state::app_preferences::ui_language::UiLanguage;
 
 #[derive(Serialize)]
 pub struct GetAppPreferencesResponse {
@@ -13,6 +14,7 @@ pub struct GetAppPreferencesResponse {
 
 #[derive(Serialize)]
 pub struct AppPreferencesPayload {
+  pub ui_language: UiLanguage,
   /// The downloads directory to use when a user downloads a file.
   pub preferred_download_directory: PreferredDownloadDirectory,
   pub preferred_download_filename: PreferredDownloadFilename,
@@ -65,6 +67,7 @@ pub async fn get_app_preferences_command(
 async fn get_prefs(app_prefs: &AppPreferencesManager) -> AnyhowResult<AppPreferencesPayload> {
   let prefs = app_prefs.get_clone()?;
   Ok(AppPreferencesPayload {
+    ui_language: prefs.ui_language,
     preferred_download_directory: prefs.preferred_download_directory,
     preferred_download_filename: prefs.preferred_download_filename,
     auto_download: prefs.auto_download,

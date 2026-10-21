@@ -13,6 +13,8 @@ import { SyncStorytellerApiConfig } from "./api/SyncStorytellerApiConfig";
 import { posthog } from "posthog-js";
 import { SoundManager } from "@storyteller/soundboard";
 import { useModelsStore } from "@storyteller/tauri-api";
+import { GetAppPreferences } from "@storyteller/tauri-api";
+import { setLocale } from "@storyteller/common";
 
 // TODO(bt,2025-04-19): Make these configurable
 const ENV = {
@@ -97,7 +99,15 @@ const GlobalSettingsManager = ({ env }: { env: Record<string, string> }) => {
 };
 
 // TODO: Replace environment variables from `root.tsx`
-createRoot(document.getElementById("root")!).render(
+async function bootstrap() {
+  try {
+    const { preferences } = await GetAppPreferences();
+    setLocale(preferences.ui_language === "en" ? "en" : "zh-CN");
+  } catch (error) {
+    console.warn("Could not load UI language preference", error);
+    setLocale("zh-CN");
+  }
+  createRoot(document.getElementById("root")!).render(
   <>
     <StrictMode>
       <BrowserRouter>
@@ -109,3 +119,6 @@ createRoot(document.getElementById("root")!).render(
     </StrictMode>
   </>,
 );
+}
+
+void bootstrap();

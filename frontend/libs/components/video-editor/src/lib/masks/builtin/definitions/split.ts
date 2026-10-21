@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { computeFeatherUpdate } from "../../param-update";
 import type {
   MaskDefinition,
@@ -270,7 +271,7 @@ export const splitMaskDefinition: MaskDefinition<"split"> = {
     },
     {
       key: "rotation",
-      label: "Rotation",
+      get label() { return uiText("common.rotation"); },
       type: "number",
       default: 0,
       min: 0,

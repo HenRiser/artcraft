@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { createContext, useContext, useEffect, useState } from "react";
 import { cn } from "../utils/ui";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -39,6 +40,7 @@ export function Section({
   showTopBorder = false,
   showBottomBorder = true,
 }: SectionProps) {
+  useUiLocale();
   const cached = sectionKey ? sectionExpandedCache.get(sectionKey) : undefined;
   const [isOpen, setIsOpen] = useState(cached ?? defaultOpen);
 
@@ -97,6 +99,7 @@ export function SectionHeader({
   onClick,
   className,
 }: SectionHeaderProps) {
+  useUiLocale();
   const ctx = useSectionContext();
   const isCollapsible = ctx?.collapsible ?? false;
   const isOpen = ctx?.isOpen ?? true;
@@ -123,7 +126,7 @@ export function SectionHeader({
           <Button
             variant="ghost"
             size="icon"
-            aria-label={isOpen ? "Collapse section" : "Expand section"}
+            aria-label={isOpen ? uiText("common.collapse.section") : uiText("common.expand.section")}
             onClick={handleClick}
           >
             {chevronIcon}
@@ -168,6 +171,7 @@ export function SectionTitle({
   className?: string;
   onClick?: () => void;
 }) {
+  useUiLocale();
   const ctx = useSectionContext();
   const isCollapsible = ctx?.collapsible ?? false;
   const isOpen = ctx?.isOpen ?? true;
@@ -200,6 +204,7 @@ export function SectionFields({
   children: React.ReactNode;
   className?: string;
 }) {
+  useUiLocale();
   return (
     <div className={cn("flex flex-col gap-3.5", className)}>{children}</div>
   );
@@ -216,6 +221,7 @@ export function SectionField({
   children: React.ReactNode;
   className?: string;
 }) {
+  useUiLocale();
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <div className="flex h-4 items-center gap-1.5">
@@ -234,6 +240,7 @@ export function SectionContent({
   children: React.ReactNode;
   className?: string;
 }) {
+  useUiLocale();
   const ctx = useSectionContext();
   const isCollapsible = ctx?.collapsible ?? false;
   const isOpen = ctx?.isOpen ?? true;

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ComponentType, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSignals, useSignalEffect } from "@preact/signals-react/runtime";
@@ -41,6 +42,7 @@ export const withProtectionRoute = <P extends object>(
   };
 
 const RedirectToLogin = () => {
+  useUiLocale();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const timeoutTimer = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -55,7 +57,7 @@ const RedirectToLogin = () => {
   }, [navigate, pathname]);
   return (
     <div className="fixed flex h-full w-full flex-col  items-center justify-center">
-      <LoadingDots type="bricks" message="Redirecting to Login..." />
+      <LoadingDots type="bricks" message={uiText("app.redirecting.to.login")} />
     </div>
   );
 };

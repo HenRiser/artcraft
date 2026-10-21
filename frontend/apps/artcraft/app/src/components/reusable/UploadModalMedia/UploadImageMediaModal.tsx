@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 
 import { LoadingDots } from "@storyteller/ui-loading";
@@ -26,6 +27,7 @@ export function UploadImageMediaModal({
   title,
   fileTypes,
 }: Props) {
+  useUiLocale();
   const [uploaderState, setUploaderState] =
     useState<UploaderState>(initialUploaderState);
 
@@ -48,7 +50,7 @@ export function UploadImageMediaModal({
       case UploaderStates.ready:
         return (
           <UploadImageMedia
-            title={"Image"}
+            title={uiText("common.image")}
             fileTypes={fileTypes}
             onClose={onClose}
             onUploadProgress={updateUploaderState}
@@ -61,13 +63,13 @@ export function UploadImageMediaModal({
         return (
           <>
             <LoadingDots className="mb-1 bg-transparent" />
-            <div className="hud-label w-full text-center text-base-fg/50">Uploading...</div>
+            <div className="hud-label w-full text-center text-base-fg/50">{uiText("common.uploading")}</div>
           </>
         );
       case UploaderStates.success:
         return (
           <UploadSuccess
-            title={"Image"}
+            title={uiText("common.image")}
             onOk={() => {
               onSuccess(uploaderState.data);
               onClose();

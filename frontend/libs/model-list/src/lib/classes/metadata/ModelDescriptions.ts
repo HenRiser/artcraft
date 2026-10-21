@@ -1,3 +1,5 @@
+import { getLocale, localize } from "@storyteller/common";
+
 // Manual fallbacks so we can show a tagline (and a longer info blurb) even when
 // the API doesn't return one yet for a given model. The API value always wins.
 const MODEL_DESCRIPTIONS: Record<string, string> = {
@@ -91,14 +93,16 @@ export function getModelDescription(
   modelId: string,
   apiDescription?: string | null,
 ): string {
-  if (apiDescription) return apiDescription;
-  return MODEL_DESCRIPTIONS[modelId] ?? "";
+  if (getLocale() === "zh-CN") {
+    if (apiDescription && localize(apiDescription) !== apiDescription) return localize(apiDescription);
+    if (MODEL_DESCRIPTIONS[modelId]) return localize(MODEL_DESCRIPTIONS[modelId]);
+  }
+  return apiDescription || MODEL_DESCRIPTIONS[modelId] || "";
 }
 
 /** Longer info blurb for the (i) icon. Same precedence/no-flicker contract as
  *  getModelDescription: API value wins, manual map is the fallback, only one is
  *  ever used. Empty string means "no info icon for this model". */
 export function getModelInfo(modelId: string, apiInfo?: string | null): string {
-  if (apiInfo) return apiInfo;
-  return MODEL_INFOS[modelId] ?? "";
+  return localize(apiInfo || MODEL_INFOS[modelId] || "");
 }

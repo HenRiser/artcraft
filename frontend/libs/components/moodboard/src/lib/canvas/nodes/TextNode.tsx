@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { memo } from "react";
 import Konva from "konva";
 import { Text as KonvaText } from "react-konva";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const TextNodeInner = ({ node, draggable, selected, onSelect }: Props) => {
+  useUiLocale();
   const drag = useNodeDrag(node.id);
   const setEditingText = useMoodboardStore((s) => s.setEditingText);
   // Selector compares a single id — only the TextNode whose isEditing
@@ -36,7 +38,7 @@ const TextNodeInner = ({ node, draggable, selected, onSelect }: Props) => {
       width={node.width}
       height={node.height}
       rotation={node.rotation}
-      text={isEditing ? "" : node.text || "Note"}
+      text={isEditing ? "" : node.text || uiText("common.note")}
       fontSize={node.fontSize}
       fill={node.color}
       padding={6}

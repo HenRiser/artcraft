@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { PopoverMenu, type PopoverItem } from "@storyteller/ui-popover";
 import { Tooltip } from "@storyteller/ui-tooltip";
@@ -27,6 +28,7 @@ const RATIO_OPTIONS: RatioOption[] = [
 ];
 
 export const AspectRatioMenu = () => {
+  useUiLocale();
   const aspect = usePageSceneStore((s) => s.cameraAspectRatio);
   const editor = useContext(EngineContext);
 
@@ -45,13 +47,13 @@ export const AspectRatioMenu = () => {
   };
 
   return (
-    <Tooltip content="Aspect ratio" position="bottom" delay={300} closeOnClick>
+    <Tooltip content={uiText("common.aspect.ratio.2")} position="bottom" delay={300} closeOnClick>
       <PopoverMenu
         items={items}
         onSelect={handleSelect}
         mode="toggle"
         position="bottom"
-        panelTitle="Aspect Ratio"
+        panelTitle={uiText("common.aspect.ratio")}
         showIconsInList
         buttonClassName={TOOLBAR_BUTTON_CLASS_NAME}
         triggerIcon={<AspectRatioIcon ratio={current.proportions} />}

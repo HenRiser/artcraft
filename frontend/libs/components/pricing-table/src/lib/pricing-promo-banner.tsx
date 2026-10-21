@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { TagIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 import { PROMO_PCT } from "./promo-discounts";
@@ -6,7 +7,7 @@ interface PricingPromoBannerProps {
   className?: string;
 }
 
-export const PricingPromoBanner = ({ className }: PricingPromoBannerProps) => (
+export const PricingPromoBanner = ({ className }: PricingPromoBannerProps) => { useUiLocale(); return (
   <div
     className={twMerge(
       "relative overflow-hidden border border-primary/30 bg-gradient-to-r from-primary-600/35 via-primary-500/15 to-primary/10 px-6 py-6 sm:px-10 sm:py-8",
@@ -21,21 +22,13 @@ export const PricingPromoBanner = ({ className }: PricingPromoBannerProps) => (
 
     <div className="relative flex flex-col gap-3">
       <span className="inline-flex w-fit items-center gap-1.5 bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-[0.1em] text-white">
-        <TagIcon  className="text-[10px]" />
-        Limited-time offer
-      </span>
+        <TagIcon  className="text-[10px]" />{uiText("common.limited.time.offer")}{" "}</span>
 
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-[-0.02em] text-white">
-        Save <span className="text-primary-300">{PROMO_PCT}%</span> on all
-        monthly &amp; yearly plans
-      </h2>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-[-0.02em] text-white">{uiText("common.save")}{" "}<span className="text-primary-300">{PROMO_PCT}%</span>{" "}{uiText("pricing-table.on.all.monthly.amp.yearly.plans")}{" "}</h2>
 
-      <p className="max-w-2xl text-sm sm:text-base text-white/60">
-        Every ArtCraft plan is discounted for a limited time - lock in the
-        lowest price and start creating.
-      </p>
+      <p className="max-w-2xl text-sm sm:text-base text-white/60">{uiText("pricing-table.every.artcraft.plan.is.discounted.for.a.limited.time.lock.in.the.lowest.price.and.sta")}{" "}</p>
     </div>
   </div>
-);
+); };
 
 export default PricingPromoBanner;

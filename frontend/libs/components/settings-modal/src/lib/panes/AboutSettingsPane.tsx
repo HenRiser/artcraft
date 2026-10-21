@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useRef, useState } from "react";
 import {
   GetAppInfo,
@@ -14,6 +15,7 @@ const UNLOCK_WINDOW_MS = 5000;
 interface AboutSettingsPaneProps {}
 
 export const AboutSettingsPane = (args: AboutSettingsPaneProps) => {
+  useUiLocale();
   const [appInfo, setAppInfo] = useState<
     GetAppInfoPayload | undefined
   >(undefined);
@@ -40,7 +42,7 @@ export const AboutSettingsPane = (args: AboutSettingsPaneProps) => {
       clickTimes.current = [];
       enable();
       gtagEvent("unlock_experimental_menu", {});
-      toast.success("Experimental features unlocked");
+      toast.success(uiText("settings-modal.experimental.features.unlocked"));
     }
   };
 
@@ -48,9 +50,7 @@ export const AboutSettingsPane = (args: AboutSettingsPaneProps) => {
     <>
       <div className="space-y-4 pt-3 text-base-fg">
         <div className="space-y-1">
-          <Label>
-            Artcraft Version
-          </Label>
+          <Label>{uiText("settings-modal.artcraft.version")}{" "}</Label>
           <div
             className="text-sm font-medium"
             onClick={handleVersionClick}
@@ -61,45 +61,37 @@ export const AboutSettingsPane = (args: AboutSettingsPaneProps) => {
         </div>
 
         <div className="space-y-1">
-          <Label>Artcraft Host</Label>
+          <Label>{uiText("settings-modal.artcraft.host")}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.storyteller_host}</div>
         </div>
 
         <div className="space-y-1">
-          <Label>Git Commit ID</Label>
+          <Label>{uiText("settings-modal.git.commit.id")}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.git_commit_short_id} &middot; {appInfo?.git_commit_id}</div>
         </div>
 
         <div className="space-y-1">
-          <Label>Git Commit Timestamp</Label>
+          <Label>{uiText("settings-modal.git.commit.timestamp")}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.git_commit_timestamp}</div>
         </div>
 
         <div className="space-y-1">
-          <Label>
-            Build Timestamp
-          </Label>
+          <Label>{uiText("settings-modal.build.timestamp")}{" "}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.build_timestamp}</div>
         </div>
 
         <div className="space-y-1">
-          <Label>
-            Operating System
-          </Label>
+          <Label>{uiText("settings-modal.operating.system")}{" "}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.os_platform} ({appInfo?.os_version})</div>
         </div>
 
         <div className="space-y-1">
-          <Label>
-            Artcraft Data Directory
-          </Label>
+          <Label>{uiText("settings-modal.artcraft.data.directory")}{" "}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.artcraft_root_directory}</div>
         </div>
 
         <div className="space-y-1">
-          <Label>
-            Downloads Directory
-          </Label>
+          <Label>{uiText("settings-modal.downloads.directory")}{" "}</Label>
           <div className="break-all text-sm font-medium">{appInfo?.download_directory}</div>
         </div>
 

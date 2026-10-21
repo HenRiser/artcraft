@@ -192,6 +192,7 @@ pub async fn enqueue_image_inpaint_command(
 
       // TODO: Derive from err. Make service provider optional.
       let event = GenerationEnqueueFailureEvent {
+        reason_code: None,
         action: GenerationAction::GenerateImage,
         service: GenerationServiceProvider::Artcraft, // FIXME: This is wrong.
         model: None,

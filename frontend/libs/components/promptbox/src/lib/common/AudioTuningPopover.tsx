@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { SlidersHorizontalIcon } from "lucide-react";
 import { PopoverMenu } from "@storyteller/ui-popover";
 import { SliderV2 } from "@storyteller/ui-sliderv2";
@@ -42,22 +43,21 @@ export function AudioTuningPopover({
   pitch = 0,
   onPitchChange,
 }: AudioTuningPopoverProps) {
+  useUiLocale();
   const showSampleRate =
     !!sampleRateOptions?.length && onSampleRateChange !== undefined;
 
   return (
     <PopoverMenu
       mode="default"
-      panelTitle="Tuning"
+      panelTitle={uiText("desktop.tuning")}
       triggerIcon={<SlidersHorizontalIcon  className="h-3.5 w-3.5" />}
-      triggerLabel="Tuning"
+      triggerLabel={uiText("desktop.tuning")}
     >
       <div className="w-60 space-y-3.5 pb-0.5">
         {showSampleRate && (
           <div>
-            <div className="mb-1.5 text-xs font-medium text-base-fg/60">
-              Sample rate
-            </div>
+            <div className="mb-1.5 text-xs font-medium text-base-fg/60">{uiText("promptbox.sample.rate")}{" "}</div>
             <div className="flex flex-wrap gap-1">
               {sampleRateOptions.map((hz) => (
                 <button
@@ -79,7 +79,7 @@ export function AudioTuningPopover({
 
         {showSpeed && (
           <TuningSliderRow
-            label="Speed"
+            label={uiText("common.speed")}
             valueLabel={`${speed.toFixed(2)}×`}
             min={AUDIO_SPEED_MIN}
             max={AUDIO_SPEED_MAX}
@@ -91,7 +91,7 @@ export function AudioTuningPopover({
 
         {showVolume && (
           <TuningSliderRow
-            label="Volume"
+            label={uiText("common.volume")}
             valueLabel={`${volume.toFixed(2)}×`}
             min={AUDIO_VOLUME_MIN}
             max={AUDIO_VOLUME_MAX}
@@ -103,8 +103,8 @@ export function AudioTuningPopover({
 
         {showPitch && (
           <TuningSliderRow
-            label="Pitch"
-            valueLabel={`${pitch > 0 ? "+" : ""}${pitch} st`}
+            label={uiText("promptbox.pitch")}
+            valueLabel={uiText("desktop.value.value.st", { value0: pitch > 0 ? "+" : "", value1: pitch })}
             min={AUDIO_PITCH_MIN}
             max={AUDIO_PITCH_MAX}
             step={1}
@@ -136,6 +136,7 @@ function TuningSliderRow({
   value,
   onChange,
 }: TuningSliderRowProps) {
+  useUiLocale();
   return (
     <div>
       <div className="mb-1 flex items-center justify-between">

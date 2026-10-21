@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { EIntermediateFile, MediaFilesApi, MediaUploadApi } from "@storyteller/api";
 import type { PageSceneAdapter } from "@storyteller/ui-pagescene";
 import {
@@ -42,7 +43,7 @@ export const sceneOutputAdapter: Pick<
     }
     const item: GalleryItem = {
       id: token,
-      label: file.maybe_title || (kind === "video" ? "Scene recording" : "Scene capture"),
+      label: file.maybe_title || (kind === "video" ? uiText("desktop.scene.recording") : uiText("desktop.scene.capture")),
       thumbnail: null,
       thumbnailUrlTemplate: file.media_links.thumbnail_template,
       fullImage: file.media_links.cdn_url,

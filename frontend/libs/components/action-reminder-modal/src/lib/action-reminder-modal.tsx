@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Button } from "@storyteller/ui-button";
 import { Modal } from "@storyteller/ui-modal";
 import { ReactNode } from "react";
@@ -43,6 +44,7 @@ export function ActionReminderModal({
   primaryActionIcon: customPrimaryActionIcon = LogInIcon,
   primaryActionBtnClassName: customPrimaryActionBtnClassName = "",
 }: ActionReminderModalProps) {
+  useUiLocale();
   let titleText: string | undefined;
   let messageContent: ReactNode;
   let primaryActionBtnText: string;
@@ -58,7 +60,7 @@ export function ActionReminderModal({
         titleText = customTitle || "Login to ArtCraft";
         break;
       default:
-        titleText = customTitle || "Action Required";
+        titleText = customTitle || uiText("desktop.action.required");
         break;
     }
   } else {
@@ -69,10 +71,7 @@ export function ActionReminderModal({
     case "soraLogin":
       titleText = customTitle || "Link Your OpenAI Account";
       messageContent = customMessage || (
-        <p>
-          To use this feature, please connect your OpenAI account. This allows
-          us to leverage your existing subscription.
-        </p>
+        <p>{uiText("action-reminder-modal.to.use.this.feature.please.connect.your.openai.account.this.allows.us.to.leverage.you")}{" "}</p>
       );
       primaryActionBtnText = customPrimaryActionText || "Login with OpenAI";
       primaryActionIcon = customPrimaryActionIcon || LogInIcon;
@@ -80,10 +79,7 @@ export function ActionReminderModal({
       break;
     case "artcraftLogin":
       messageContent = customMessage || (
-        <p className="text-sm text-white/70">
-          Please log in or sign up to ArtCraft to proceed. This will allow you
-          to save your work and access all features.
-        </p>
+        <p className="text-sm text-white/70">{uiText("action-reminder-modal.please.log.in.or.sign.up.to.artcraft.to.proceed.this.will.allow.you.to.save.your.work")}{" "}</p>
       );
       primaryActionBtnText = customPrimaryActionText || "Login / Sign Up";
       primaryActionIcon = customPrimaryActionIcon || LogInIcon;
@@ -91,9 +87,7 @@ export function ActionReminderModal({
       break;
     default:
       messageContent = customMessage || (
-        <p className="text-sm text-white/70">
-          Please complete the required action.
-        </p>
+        <p className="text-sm text-white/70">{uiText("action-reminder-modal.please.complete.the.required.action")}{" "}</p>
       );
       primaryActionBtnText = customPrimaryActionText || "Proceed";
       primaryActionIcon = customPrimaryActionIcon || LogInIcon;
@@ -102,7 +96,7 @@ export function ActionReminderModal({
   }
 
   const effectiveSecondaryAction = onSecondaryAction || onClose;
-  const effectiveSecondaryActionText = customSecondaryActionText || "Cancel";
+  const effectiveSecondaryActionText = customSecondaryActionText || uiText("common.cancel");
 
   let modalSpecificClasses = "";
 

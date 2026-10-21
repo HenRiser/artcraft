@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { MediaInfo, AudioMediaItem } from "@storyteller/ui-pagescene";
 import { AssetType } from "~/enums";
 
@@ -35,7 +36,7 @@ function getTitle(item: MediaInfo) {
   if (item.maybe_title) return item.maybe_title;
   if (item.origin && item.origin.maybe_model && item.origin.maybe_model.title)
     return item.origin.maybe_model.title;
-  return "Media Audio";
+  return uiText("desktop.media.audio");
 }
 function getCategory(item: MediaInfo) {
   if (

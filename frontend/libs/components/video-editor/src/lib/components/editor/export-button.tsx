@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { useState } from "react";
@@ -99,6 +100,7 @@ function isExportQuality(value: string): value is ExportQuality {
 }
 
 export function ExportButton() {
+  useUiLocale();
   const [isExportPopoverOpen, setIsExportPopoverOpen] = useState(false);
   const editor = useEditor();
   const activeProject = useEditor((e) => e.project.getActiveOrNull());
@@ -133,7 +135,7 @@ export function ExportButton() {
           }}
         >
           <HugeiconsIcon icon={TransitionTopIcon} className="z-50 size-3.5" />
-          <span className="z-50 text-[0.875rem]">Export</span>
+          <span className="z-50 text-[0.875rem]">{uiText("common.export")}</span>
         </Button>
       </PopoverTrigger>
       {hasProject && <ExportPopover onOpenChange={setIsExportPopoverOpen} />}
@@ -146,6 +148,7 @@ function ExportPopover({
 }: {
   onOpenChange: (open: boolean) => void;
 }) {
+  useUiLocale();
   const editor = useEditor();
   const { exportSink, toast } = useEditorAdapters();
   const activeProject = useEditor((e) => e.project.getActive());
@@ -223,8 +226,8 @@ function ExportPopover({
         setSaveState((prev) => finalizeSaveState(prev));
       } catch (error) {
         console.error("Export sink failed:", error);
-        toast.error("Couldn't save exported video", {
-          description: error instanceof Error ? error.message : "Unknown error",
+        toast.error(uiText("video-editor.couldn.t.save.exported.video"), {
+          description: error instanceof Error ? error.message : uiText("desktop.unknown.error.2"),
         });
         setSaveState((prev) => finalizeSaveState(prev));
         return;
@@ -253,7 +256,7 @@ function ExportPopover({
         <>
           <div className="flex items-center justify-between p-3 border-b border-ui-controls-border">
             <h3 className="font-medium text-sm">
-              {isExporting ? "Exporting project" : "Export project"}
+              {isExporting ? uiText("video-editor.exporting.project") : uiText("video-editor.export.project")}
             </h3>
           </div>
 
@@ -267,7 +270,7 @@ function ExportPopover({
                     showTopBorder={false}
                   >
                     <SectionHeader>
-                      <SectionTitle>Format</SectionTitle>
+                      <SectionTitle>{uiText("video-editor.format")}</SectionTitle>
                     </SectionHeader>
                     <SectionContent>
                       <RadioGroup
@@ -280,15 +283,11 @@ function ExportPopover({
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="mp4" id="mp4" />
-                          <Label htmlFor="mp4">
-                            MP4 (H.264) - Better compatibility
-                          </Label>
+                          <Label htmlFor="mp4">{uiText("video-editor.mp4.h.264.better.compatibility")}{" "}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="webm" id="webm" />
-                          <Label htmlFor="webm">
-                            WebM (VP9) - Smaller file size
-                          </Label>
+                          <Label htmlFor="webm">{uiText("video-editor.webm.vp9.smaller.file.size")}{" "}</Label>
                         </div>
                       </RadioGroup>
                     </SectionContent>
@@ -296,7 +295,7 @@ function ExportPopover({
 
                   <Section collapsible defaultOpen={false}>
                     <SectionHeader>
-                      <SectionTitle>Quality</SectionTitle>
+                      <SectionTitle>{uiText("common.quality")}</SectionTitle>
                     </SectionHeader>
                     <SectionContent>
                       <RadioGroup
@@ -309,21 +308,19 @@ function ExportPopover({
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="low" id="low" />
-                          <Label htmlFor="low">Low - Smallest file size</Label>
+                          <Label htmlFor="low">{uiText("video-editor.low.smallest.file.size")}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="medium" id="medium" />
-                          <Label htmlFor="medium">Medium - Balanced</Label>
+                          <Label htmlFor="medium">{uiText("video-editor.medium.balanced")}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="high" id="high" />
-                          <Label htmlFor="high">High - Recommended</Label>
+                          <Label htmlFor="high">{uiText("video-editor.high.recommended")}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="very_high" id="very_high" />
-                          <Label htmlFor="very_high">
-                            Very high - Largest file size
-                          </Label>
+                          <Label htmlFor="very_high">{uiText("video-editor.very.high.largest.file.size")}{" "}</Label>
                         </div>
                       </RadioGroup>
                     </SectionContent>
@@ -331,7 +328,7 @@ function ExportPopover({
 
                   <Section collapsible defaultOpen={false}>
                     <SectionHeader>
-                      <SectionTitle>Audio</SectionTitle>
+                      <SectionTitle>{uiText("common.audio")}</SectionTitle>
                     </SectionHeader>
                     <SectionContent>
                       <div className="flex items-center space-x-2">
@@ -342,16 +339,14 @@ function ExportPopover({
                             setShouldIncludeAudio(!!checked)
                           }
                         />
-                        <Label htmlFor="include-audio">
-                          Include audio in export
-                        </Label>
+                        <Label htmlFor="include-audio">{uiText("video-editor.include.audio.in.export")}{" "}</Label>
                       </div>
                     </SectionContent>
                   </Section>
 
                   <Section collapsible defaultOpen={true}>
                     <SectionHeader>
-                      <SectionTitle>Destination</SectionTitle>
+                      <SectionTitle>{uiText("video-editor.destination")}</SectionTitle>
                     </SectionHeader>
                     <SectionContent>
                       <div className="flex flex-col gap-2">
@@ -363,9 +358,7 @@ function ExportPopover({
                               setSaveToDisk(!!checked)
                             }
                           />
-                          <Label htmlFor="save-to-disk">
-                            Save to disk
-                          </Label>
+                          <Label htmlFor="save-to-disk">{uiText("video-editor.save.to.disk")}{" "}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Checkbox
@@ -375,14 +368,10 @@ function ExportPopover({
                               setSaveToLibrary(!!checked)
                             }
                           />
-                          <Label htmlFor="save-to-library">
-                            Save to my media library
-                          </Label>
+                          <Label htmlFor="save-to-library">{uiText("video-editor.save.to.my.media.library")}{" "}</Label>
                         </div>
                         {!canExport && (
-                          <p className="text-muted-foreground text-xs">
-                            Pick at least one destination.
-                          </p>
+                          <p className="text-muted-foreground text-xs">{uiText("video-editor.pick.at.least.one.destination")}{" "}</p>
                         )}
                       </div>
                     </SectionContent>
@@ -395,9 +384,7 @@ function ExportPopover({
                     disabled={!canExport}
                     className="w-full gap-2"
                   >
-                    <Download className="size-4" />
-                    Export
-                  </Button>
+                    <Download className="size-4" />{uiText("common.export")}{" "}</Button>
                 </div>
               </>
             )}
@@ -418,9 +405,7 @@ function ExportPopover({
                   variant="outline"
                   className="w-full rounded-md"
                   onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
+                >{uiText("common.cancel")}{" "}</Button>
               </div>
             )}
 
@@ -444,6 +429,7 @@ function SavePhasePanel({
   saveState: SaveState;
   onDismiss: () => void;
 }) {
+  useUiLocale();
   const settled = saveState.phase === "settled";
   const visibleDestinations = (["disk", "library"] as ExportDestination[])
     .map((destination) => ({
@@ -457,9 +443,9 @@ function SavePhasePanel({
   );
   const headerLabel = settled
     ? allSucceeded
-      ? "Export saved"
-      : "Export finished with errors"
-    : "Saving export";
+      ? uiText("desktop.export.saved")
+      : uiText("desktop.export.finished.with.errors")
+    : uiText("desktop.saving.export");
 
   return (
     <div className="space-y-4 p-3">
@@ -479,9 +465,7 @@ function SavePhasePanel({
           variant="outline"
           className="w-full rounded-md"
           onClick={onDismiss}
-        >
-          Close
-        </Button>
+        >{uiText("common.close")}{" "}</Button>
       )}
     </div>
   );
@@ -496,8 +480,9 @@ function DestinationRow({
   status: DestinationStatus;
   error?: string;
 }) {
+  useUiLocale();
   const label =
-    destination === "disk" ? "Saving to disk" : "Saving to media library";
+    destination === "disk" ? uiText("desktop.saving.to.disk") : uiText("desktop.saving.to.media.library");
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2 text-xs">
@@ -505,12 +490,12 @@ function DestinationRow({
         <span className="text-foreground">
           {status === "success"
             ? destination === "disk"
-              ? "Saved to disk"
-              : "Saved to media library"
+              ? uiText("video-editor.saved.to.disk")
+              : uiText("video-editor.saved.to.media.library")
             : status === "error"
               ? destination === "disk"
-                ? "Disk save failed"
-                : "Library upload failed"
+                ? uiText("video-editor.disk.save.failed")
+                : uiText("video-editor.library.upload.failed")
               : label}
         </span>
       </div>
@@ -528,6 +513,7 @@ function DestinationIcon({
   destination: ExportDestination;
   status: DestinationStatus;
 }) {
+  useUiLocale();
   if (status === "success") {
     return <Check className="text-foreground size-3.5" />;
   }
@@ -551,6 +537,7 @@ function ExportError({
   error: string;
   onRetry: () => void;
 }) {
+  useUiLocale();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -562,7 +549,7 @@ function ExportError({
   return (
     <div className="space-y-4 p-3">
       <div className="flex flex-col gap-1.5">
-        <p className="text-destructive text-sm font-medium">Export failed</p>
+        <p className="text-destructive text-sm font-medium">{uiText("video-editor.export.failed")}</p>
         <p className="text-muted-foreground text-xs">{error}</p>
       </div>
 
@@ -573,18 +560,14 @@ function ExportError({
           className="h-8 flex-1 text-xs"
           onClick={handleCopy}
         >
-          {copied ? <Check className="text-constructive" /> : <Copy />}
-          Copy
-        </Button>
+          {copied ? <Check className="text-constructive" /> : <Copy />}{uiText("common.copy")}{" "}</Button>
         <Button
           variant="outline"
           size="sm"
           className="h-8 flex-1 text-xs"
           onClick={onRetry}
         >
-          <RotateCcw />
-          Retry
-        </Button>
+          <RotateCcw />{uiText("common.retry")}{" "}</Button>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { CopyIcon } from "lucide-react";
 import { PopoverMenu, PopoverItem } from "@storyteller/ui-popover";
 import { Tooltip } from "@storyteller/ui-tooltip";
@@ -17,6 +18,7 @@ export const GenerationCountPicker = ({
   currentCount,
   handleCountChange,
 }: GenerationCountPickerProps) => {
+  useUiLocale();
   const maxGenerationCount =
     currentModel?.maxGenerationCount || DEFAULT_GENERATION_COUNT;
   const hasPredefinedOptions = !!currentModel?.predefinedGenerationCounts;
@@ -49,7 +51,7 @@ export const GenerationCountPicker = ({
 
   return (
     <Tooltip
-      content="Number of generations"
+      content={uiText("common.number.of.generations")}
       position="top"
       className="z-50"
       closeOnClick={true}
@@ -59,7 +61,7 @@ export const GenerationCountPicker = ({
         items={generationCountOptions}
         onSelect={onSelect}
         mode="toggle"
-        panelTitle="No. of images"
+        panelTitle={uiText("desktop.no.of.images")}
         triggerIcon={<CopyIcon  className="h-4 w-4" />}
         buttonClassName={PROMPT_TOOLBAR_ICON_BUTTON_CLASSES}
       />

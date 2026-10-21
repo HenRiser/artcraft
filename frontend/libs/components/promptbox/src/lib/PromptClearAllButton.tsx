@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useState } from "react";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { Modal } from "@storyteller/ui-modal";
@@ -31,6 +32,7 @@ export const PromptClearAllButton = ({
   confirmClear,
   className,
 }: PromptClearAllButtonProps) => {
+  useUiLocale();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   const handleClick = () => {
@@ -48,10 +50,10 @@ export const PromptClearAllButton = ({
 
   return (
     <>
-      <Tooltip content="Clear all" position="top" className="z-50" delay={200}>
+      <Tooltip content={uiText("common.clear.all")} position="top" className="z-50" delay={200}>
         <button
           type="button"
-          aria-label="Clear prompt and attached references"
+          aria-label={uiText("promptbox.clear.prompt.and.attached.references")}
           onClick={handleClick}
           disabled={disabled}
           className={twMerge(
@@ -69,20 +71,14 @@ export const PromptClearAllButton = ({
       <Modal
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
-        title="Clear all?"
+        title={uiText("promptbox.clear.all")}
         className="max-w-md"
         showClose={false}
       >
-        <div className="text-sm text-base-fg">
-          This clears the prompt and also removes the attached references.
-        </div>
+        <div className="text-sm text-base-fg">{uiText("promptbox.this.clears.the.prompt.and.also.removes.the.attached.references")}{" "}</div>
         <div className="mt-6 flex justify-end gap-2">
-          <Button variant="secondary" onClick={() => setIsConfirmOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="destructive" onClick={handleConfirm}>
-            Clear all
-          </Button>
+          <Button variant="secondary" onClick={() => setIsConfirmOpen(false)}>{uiText("common.cancel")}{" "}</Button>
+          <Button variant="destructive" onClick={handleConfirm}>{uiText("common.clear.all")}{" "}</Button>
         </div>
       </Modal>
     </>

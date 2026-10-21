@@ -3,3 +3,4 @@ pub mod app_preferences_manager;
 pub mod app_preferences_serializable;
 pub mod preferred_download_directory;
 pub mod preferred_download_filename;
+pub mod ui_language;

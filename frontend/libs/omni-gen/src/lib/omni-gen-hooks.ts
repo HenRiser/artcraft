@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import { OmniGenApi } from "@storyteller/api";
 import type {
@@ -100,7 +101,7 @@ function fetchImageModelsOnce() {
     },
     (err) => {
       imageModelsFetching = false;
-      imageModelsError = err?.message ?? "Failed to fetch image models";
+      imageModelsError = err?.message ?? uiText("desktop.failed.to.fetch.image.models");
       console.error("[OmniGen] Failed to fetch image models:", err);
       errorNotifier(OMNI_MODELS_OUTAGE_MESSAGE);
       notifyImageListeners();
@@ -127,7 +128,7 @@ function fetchVideoModelsOnce() {
     },
     (err) => {
       videoModelsFetching = false;
-      videoModelsError = err?.message ?? "Failed to fetch video models";
+      videoModelsError = err?.message ?? uiText("desktop.failed.to.fetch.video.models");
       console.error("[OmniGen] Failed to fetch video models:", err);
       errorNotifier(OMNI_MODELS_OUTAGE_MESSAGE);
       notifyVideoListeners();
@@ -154,7 +155,7 @@ function fetchAudioModelsOnce() {
     },
     (err) => {
       audioModelsFetching = false;
-      audioModelsError = err?.message ?? "Failed to fetch audio models";
+      audioModelsError = err?.message ?? uiText("desktop.failed.to.fetch.audio.models");
       console.error("[OmniGen] Failed to fetch audio models:", err);
       errorNotifier(OMNI_MODELS_OUTAGE_MESSAGE);
       notifyAudioListeners();
@@ -181,7 +182,7 @@ function fetchMeshModelsOnce() {
     },
     (err) => {
       meshModelsFetching = false;
-      meshModelsError = err?.message ?? "Failed to fetch mesh models";
+      meshModelsError = err?.message ?? uiText("desktop.failed.to.fetch.mesh.models");
       console.error("[OmniGen] Failed to fetch mesh models:", err);
       errorNotifier(OMNI_MODELS_OUTAGE_MESSAGE);
       notifyMeshListeners();
@@ -208,7 +209,7 @@ function fetchSplatModelsOnce() {
     },
     (err) => {
       splatModelsFetching = false;
-      splatModelsError = err?.message ?? "Failed to fetch splat models";
+      splatModelsError = err?.message ?? uiText("desktop.failed.to.fetch.splat.models");
       console.error("[OmniGen] Failed to fetch splat models:", err);
       errorNotifier(OMNI_MODELS_OUTAGE_MESSAGE);
       notifySplatListeners();

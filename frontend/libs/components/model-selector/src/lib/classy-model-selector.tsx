@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   PopoverMenu,
   type PopoverItem,
@@ -76,6 +77,7 @@ function ProviderTooltipContent({
   allowedProviders: GenerationProvider[];
   onFinished?: () => void;
 }) {
+  useUiLocale();
   const { setSelectedModel, setSelectedProvider } =
     useClassyModelSelectorStore();
   const selectedProvider = useSelectedProviderForModel(page, modelId);
@@ -92,9 +94,7 @@ function ProviderTooltipContent({
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="mb-1 mt-0.5 px-1.5 text-sm font-normal text-base-fg opacity-70">
-        Select Provider
-      </div>
+      <div className="mb-1 mt-0.5 px-1.5 text-sm font-normal text-base-fg opacity-70">{uiText("model-selector.select.provider")}{" "}</div>
       <div className="flex flex-col gap-0">
         {allowedProviders.map((p) => (
           <button
@@ -139,6 +139,7 @@ export function ClassyModelSelector({
   showProviderSelection = true,
   ...popoverProps
 }: ClassyModelSelectorProps) {
+  useUiLocale();
   const { selectedModels, setSelectedModel, setSelectedProvider } =
     useClassyModelSelectorStore();
   const itemModels: Model[] = items
@@ -282,13 +283,13 @@ export function ClassyModelSelector({
       ? getCreatorIcon(selectedModel.creator)
       : modelList.find((i) => i.selected)?.icon;
     return (
-      <Tooltip content="Model" position="top" className="z-50" closeOnClick>
+      <Tooltip content={uiText("common.model")} position="top" className="z-50" closeOnClick>
         <PopoverMenu
           items={embeddedList}
           onSelect={handleModelSelect}
           mode="toggle"
           richList
-          panelTitle="Select Model"
+          panelTitle={uiText("desktop.select.model")}
           panelClassName="w-[280px]"
           maxListHeight={maxListHeight}
           buttonClassName="max-w-48"
@@ -306,7 +307,7 @@ export function ClassyModelSelector({
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-base-fg/90 text-base font-semibold">Model</span>
+      <span className="text-base-fg/90 text-base font-semibold">{uiText("common.model")}</span>
       <PopoverMenu
         items={modelList}
         onSelect={handleModelSelect}
@@ -329,7 +330,7 @@ export function ClassyModelSelector({
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-base-fg/60 text-[13px] -mt-[1px]">
-                  <span>via</span>
+                  <span>{uiText("model-selector.via")}</span>
                   {providerIcon && (
                     <span className="opacity-70">{providerIcon}</span>
                   )}

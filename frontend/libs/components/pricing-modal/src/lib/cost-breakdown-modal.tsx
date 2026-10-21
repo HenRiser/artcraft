@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useMeshCostEstimate } from "./useMeshCostEstimate";
 import { Modal } from "@storyteller/ui-modal";
 import { useMemo } from "react";
@@ -35,9 +36,9 @@ import { useImageCostEstimate } from "./useImageCostEstimate";
 import { useSplatCostEstimate } from "./useSplatCostEstimate";
 
 // Drag handle subcomponent that Modal looks for
-const DragHandle = ({ children }: { children: React.ReactNode }) => (
+const DragHandle = ({ children }: { children: React.ReactNode }) => { useUiLocale(); return (
   <>{children}</>
-);
+); };
 DragHandle.displayName = "ModalDragHandle";
 
 // Provider display name mapping
@@ -62,6 +63,7 @@ export interface CostBreakdownModalProps {
 }
 
 export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
+  useUiLocale();
   const { isOpen, closeModal, estimatedCreditsByPage } =
     useCostBreakdownModalStore();
   const {
@@ -161,49 +163,49 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
         return {
           resolution: prompt2D.resolution,
           generationCount: prompt2D.generationCount,
-          label: "Images",
+          get label() { return uiText("common.images"); },
         };
       case ModelPage.Stage3D:
         return {
           resolution: prompt3D.resolution,
           generationCount: 1, // 3D doesn't have generation count
-          label: "Images",
+          get label() { return uiText("common.images"); },
         };
       case ModelPage.TextToImage:
         return {
           resolution: promptImage.resolution,
           generationCount: promptImage.generationCount,
-          label: "Images",
+          get label() { return uiText("common.images"); },
         };
       case ModelPage.ImageToVideo:
         return {
           resolution: promptVideo.resolution,
           generationCount: promptVideo.generationCount,
-          label: "Videos",
+          get label() { return uiText("pricing-modal.videos"); },
         };
       case ModelPage.ImageEditor:
         return {
           resolution: promptEdit.resolution,
           generationCount: 1, // Edit doesn't have generation count in store
-          label: "Images",
+          get label() { return uiText("common.images"); },
         };
       case ModelPage.ImageTo3DWorld:
         return {
           resolution: undefined,
           generationCount: 1,
-          label: "Worlds",
+          get label() { return uiText("pricing-modal.worlds"); },
         };
       case ModelPage.Angles:
         return {
           resolution: undefined,
           generationCount: 1,
-          label: "Images",
+          get label() { return uiText("common.images"); },
         };
       default:
         return {
           resolution: "1k",
           generationCount: 1,
-          label: "Items",
+          get label() { return uiText("pricing-modal.items"); },
         };
     }
   };
@@ -327,9 +329,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
       <DragHandle>
         <div className="flex items-center gap-2 pb-3 border-b border-ui-panel-border select-none">
           <div className="hud-label flex items-center gap-2 text-base-fg">
-            <CoinsIcon className="text-base-fg" />
-            Cost Breakdown
-          </div>
+            <CoinsIcon className="text-base-fg" />{uiText("common.cost.breakdown")}{" "}</div>
         </div>
       </DragHandle>
 
@@ -344,7 +344,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
         {/* Model row — always shown */}
         {selectedModel && (
           <div className="flex justify-between items-center">
-            <span className="text-base-fg/60">Model</span>
+            <span className="text-base-fg/60">{uiText("common.model")}</span>
             <span
               className="text-base-fg font-medium truncate max-w-[140px]"
               title={selectedModel.selectorName}
@@ -360,7 +360,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
             <div className="space-y-1.5">
               {storeData.resolution && (
                 <div className="flex justify-between items-center">
-                  <span className="text-base-fg/60">Resolution</span>
+                  <span className="text-base-fg/60">{uiText("common.resolution")}</span>
                   <span className="text-base-fg font-medium uppercase">
                     {storeData.resolution}
                   </span>
@@ -376,7 +376,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
               )}
               {selectedProvider && (
                 <div className="flex justify-between items-center">
-                  <span className="text-base-fg/60">Provider</span>
+                  <span className="text-base-fg/60">{uiText("common.provider")}</span>
                   <span className="text-base-fg font-medium">
                     {formatProvider(selectedProvider)}
                   </span>
@@ -388,20 +388,16 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
             <div className="bg-ui-sunken rounded-none p-3 border border-ui-panel-border space-y-2.5">
               {/* Credits row */}
               <div>
-                <div className="font-mono text-[10px] text-base-fg/50 uppercase tracking-[0.12em] mb-0.5">
-                  Credits
-                </div>
+                <div className="font-mono text-[10px] text-base-fg/50 uppercase tracking-[0.12em] mb-0.5">{uiText("common.credits")}{" "}</div>
                 <div className="font-display text-lg font-medium tracking-[-0.02em] text-base-fg flex items-center gap-1.5">
                   {isEstimateLoading && isLiveEstimatePage ? (
                     <>
                       <LoaderIcon className="animate-spin text-base" />
-                      <span className="text-base-fg/50 text-sm">
-                        Calculating…
-                      </span>
+                      <span className="text-base-fg/50 text-sm">{uiText("pricing-modal.calculating")}{" "}</span>
                     </>
                   ) : totalCredits != null ? (
                     <>
-                      {totalCredits} {totalCredits === 1 ? "Credit" : "Credits"}
+                      {totalCredits} {totalCredits === 1 ? uiText("pricing-modal.credit") : uiText("common.credits")}
                     </>
                   ) : (
                     <span className="text-base-fg/50">—</span>
@@ -413,9 +409,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
 
               {/* Converted price row */}
               <div>
-                <div className="font-mono text-[10px] text-base-fg/50 uppercase tracking-[0.12em] mb-0.5">
-                  Estimated Price
-                </div>
+                <div className="font-mono text-[10px] text-base-fg/50 uppercase tracking-[0.12em] mb-0.5">{uiText("pricing-modal.estimated.price")}{" "}</div>
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-display text-lg font-medium text-base-fg tracking-[-0.02em]">
                     {formattedPrice}
@@ -431,9 +425,7 @@ export function CostBreakdownModal({ activeTabId }: CostBreakdownModalProps) {
             </div>
           </>
         ) : (
-          <div className="bg-ui-sunken rounded-none p-2.5 border border-ui-panel-border text-center text-base-fg/60 text-[11px]">
-            Credit Costs not yet available for this model
-          </div>
+          <div className="bg-ui-sunken rounded-none p-2.5 border border-ui-panel-border text-center text-base-fg/60 text-[11px]">{uiText("pricing-modal.credit.costs.not.yet.available.for.this.model")}{" "}</div>
         )}
       </div>
     </Modal>

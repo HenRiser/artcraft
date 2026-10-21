@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import toast from "react-hot-toast";
 import {
   FilterMediaClasses,
@@ -60,9 +61,9 @@ export async function downloadMediaFileToDisk(url: string, mediaClass?: string, 
       await DownloadUrl(url, { model });
     }
     if (mediaClass === FilterMediaClasses.DIMENSIONAL) {
-      toast.success(`Downloaded 3D model`);
+      toast.success(uiText("generation-feed.downloaded.3d.model"));
     } else {
-      toast.success(`Downloaded ${mediaClass}`);
+      toast.success(uiText("generation-feed.downloaded.value", { value0: mediaClass }));
     }
   } catch (error) {
     console.error(">>> Failed to download file:", error);
@@ -91,11 +92,11 @@ export async function downloadMediaFilesToFolder(
     return false;
   }
 
-  const toastId = toast.loading(`Saving 1 of ${downloadable.length}…`);
+  const toastId = toast.loading(uiText("generation-feed.saving.1.of.value", { value0: downloadable.length }));
   let failedCount = 0;
   for (let i = 0; i < downloadable.length; i++) {
     const item = downloadable[i];
-    toast.loading(`Saving ${i + 1} of ${downloadable.length}…`, {
+    toast.loading(uiText("generation-feed.saving.value.of.value", { value0: i + 1, value1: downloadable.length }), {
       id: toastId,
     });
     try {
@@ -112,16 +113,16 @@ export async function downloadMediaFilesToFolder(
 
   const saved = downloadable.length - failedCount;
   if (failedCount === 0) {
-    toast.success(`Saved ${saved} ${saved === 1 ? "file" : "files"}`, {
+    toast.success(uiText("generation-feed.saved.value.value", { value0: saved, value1: saved === 1 ? "file" : "files" }), {
       id: toastId,
     });
   } else if (saved > 0) {
     toast.error(
-      `${failedCount} of ${downloadable.length} files failed to save`,
+      uiText("generation-feed.value.of.value.files.failed.to.save", { value0: failedCount, value1: downloadable.length }),
       { id: toastId },
     );
   } else {
-    toast.error("Could not save the selected files.", { id: toastId });
+    toast.error(uiText("generation-feed.could.not.save.the.selected.files"), { id: toastId });
   }
   return saved > 0;
 }
@@ -150,10 +151,10 @@ export async function applyMakeVideoFromImage(url: string, mediaToken?: string) 
 export async function copyShareLink(mediaToken: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(`${SHARE_URL_BASE}${mediaToken}`);
-    toast.success("Share link copied");
+    toast.success(uiText("common.share.link.copied"));
     return true;
   } catch {
-    toast.error("Unable to copy link");
+    toast.error(uiText("common.unable.to.copy.link"));
     return false;
   }
 }
@@ -324,7 +325,7 @@ export async function applyRecreateFromPromptToken(
     }
   }
   if (!promptData) {
-    toast.error("Could not load the original prompt.");
+    toast.error(uiText("generation-feed.could.not.load.the.original.prompt"));
     return;
   }
   applyRecreateFromPromptData({ promptData, mediaClass });

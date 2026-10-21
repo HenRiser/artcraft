@@ -3,3 +3,4 @@ export * from "./lib/enums";
 export * from "./lib/interfaces";
 export * from "./lib/types";
 export * from "./lib/utils";
+export * from "./lib/i18n";

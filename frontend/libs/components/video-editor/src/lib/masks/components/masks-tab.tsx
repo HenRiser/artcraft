@@ -1,3 +1,5 @@
+import { localize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import type { MaskableElement } from "../../timeline/types";
@@ -130,6 +132,7 @@ function withPreviewedMaskParam({
 }
 
 export function MasksTab({ element, trackId }: MasksTabProps) {
+  useUiLocale();
   const editor = useEditor();
   const { renderElement, previewUpdates, commit } =
     useElementPreview<MaskableElement>({
@@ -257,7 +260,7 @@ export function MasksTab({ element, trackId }: MasksTabProps) {
   return (
     <div className="flex flex-col h-full">
       <div className="border-b px-3.5 h-11 shrink-0 flex items-center justify-between gap-2">
-        <SectionTitle>Masks</SectionTitle>
+        <SectionTitle>{uiText("common.masks")}</SectionTitle>
         <DropdownMenu
           open={hasMask ? false : isDropdownOpen}
           onOpenChange={handleDropdownOpenChange}
@@ -270,20 +273,17 @@ export function MasksTab({ element, trackId }: MasksTabProps) {
                     variant="ghost"
                     size="icon"
                     disabled
-                    aria-label="Add mask"
+                    aria-label={uiText("common.add.mask")}
                   >
                     <HugeiconsIcon icon={PlusSignIcon} className="size-3.5!" />
                   </Button>
                 </span>
               </TooltipTrigger>
-              <TooltipContent className="max-w-56 text-balance">
-                Only one mask is supported right now. If you need more,
-                duplicate the clip and apply a different mask to each copy.
-              </TooltipContent>
+              <TooltipContent className="max-w-56 text-balance">{uiText("video-editor.only.one.mask.is.supported.right.now.if.you.need.more.duplicate.the.clip.and.apply.a")}{" "}</TooltipContent>
             </Tooltip>
           ) : (
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Add mask">
+              <Button variant="ghost" size="icon" aria-label={uiText("common.add.mask")}>
                 <HugeiconsIcon icon={PlusSignIcon} className="size-3.5!" />
               </Button>
             </DropdownMenuTrigger>
@@ -300,7 +300,7 @@ export function MasksTab({ element, trackId }: MasksTabProps) {
                 <HugeiconsIcon
                   {...(definition.icon as unknown as HugeiconsIconProps)}
                 />
-                {definition.name}
+                {localize(definition.name)}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -334,6 +334,7 @@ function MaskItem({
   previewParam,
   onCommit,
 }: MaskItemProps) {
+  useUiLocale();
   const editor = useEditor();
   const definition = getMaskDefinition(mask.type);
 
@@ -345,7 +346,7 @@ function MaskItem({
             <Button
               variant="ghost"
               size="icon"
-              aria-label={`Toggle ${definition.name} mask inversion`}
+              aria-label={uiText("video-editor.toggle.value.mask.inversion", { value0: definition.name })}
               onClick={() =>
                 editor.timeline.toggleMaskInverted({
                   trackId,
@@ -361,7 +362,7 @@ function MaskItem({
             <Button
               variant="ghost"
               size="icon"
-              aria-label={`Remove ${definition.name} mask`}
+              aria-label={uiText("video-editor.remove.value.mask", { value0: definition.name })}
               onClick={() =>
                 editor.timeline.removeMask({
                   trackId,
@@ -381,7 +382,7 @@ function MaskItem({
             size={14}
           />
           <SectionTitle className="capitalize font-normal">
-            {definition.name}
+            {localize(definition.name)}
           </SectionTitle>
         </div>
       </SectionHeader>
@@ -408,6 +409,7 @@ function MaskParamsFields({
   previewParam: PreviewParamHandler;
   onCommit: () => void;
 }) {
+  useUiLocale();
   const featherParam = getNumberParamDefinition({
     definition,
     key: "feather",
@@ -440,7 +442,7 @@ function MaskParamsFields({
       {definition.features.hasPosition &&
         "centerX" in mask.params &&
         "centerY" in mask.params && (
-          <SectionField label="Position">
+          <SectionField label={uiText("video-editor.position")}>
             <div className="flex items-center gap-2">
               <MaskNumberField
                 className="flex-1"
@@ -477,7 +479,7 @@ function MaskParamsFields({
       {definition.features.sizeMode === "width-height" &&
         "width" in mask.params &&
         "height" in mask.params && (
-          <SectionField label="Size">
+          <SectionField label={uiText("common.size")}>
             <div className="flex items-center gap-2">
               <MaskNumberField
                 className="flex-1"
@@ -513,7 +515,7 @@ function MaskParamsFields({
 
       {definition.features.sizeMode === "height-only" &&
         "height" in mask.params && (
-          <SectionField label="Height">
+          <SectionField label={uiText("common.height")}>
             <MaskNumberField
               icon="H"
               param={getNumberParamDefinition({
@@ -532,7 +534,7 @@ function MaskParamsFields({
 
       {definition.features.sizeMode === "width-only" &&
         "width" in mask.params && (
-          <SectionField label="Width">
+          <SectionField label={uiText("common.width")}>
             <MaskNumberField
               icon="W"
               param={getNumberParamDefinition({
@@ -550,7 +552,7 @@ function MaskParamsFields({
         )}
 
       {definition.features.sizeMode === "uniform" && "scale" in mask.params && (
-        <SectionField label="Scale">
+        <SectionField label={uiText("common.scale")}>
           <MaskNumberField
             icon={
               isTextMask(mask) ? <HugeiconsIcon icon={ArrowExpandIcon} /> : "S"
@@ -570,7 +572,7 @@ function MaskParamsFields({
       )}
 
       {definition.features.hasRotation && "rotation" in mask.params && (
-        <SectionField label="Rotation">
+        <SectionField label={uiText("common.rotation")}>
           <MaskNumberField
             icon={<HugeiconsIcon icon={RotateClockwiseIcon} />}
             param={getNumberParamDefinition({
@@ -587,7 +589,7 @@ function MaskParamsFields({
         </SectionField>
       )}
 
-      <SectionField label="Feather">
+      <SectionField label={uiText("common.feather")}>
         <MaskNumberField
           icon={<HugeiconsIcon icon={FeatherIcon} />}
           param={featherParam}
@@ -600,7 +602,7 @@ function MaskParamsFields({
         />
       </SectionField>
 
-      <SectionField label="Stroke">
+      <SectionField label={uiText("common.stroke")}>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <MaskNumberField
@@ -652,7 +654,7 @@ function MaskParamsFields({
 
 const LETTER_SPACING_PARAM: NumberParamDefinition = {
   key: "letterSpacing",
-  label: "Letter spacing",
+  get label() { return uiText("video-editor.letter.spacing"); },
   type: "number",
   default: 0,
   min: -100,
@@ -662,7 +664,7 @@ const LETTER_SPACING_PARAM: NumberParamDefinition = {
 
 const LINE_HEIGHT_PARAM: NumberParamDefinition = {
   key: "lineHeight",
-  label: "Line height",
+  get label() { return uiText("video-editor.line.height"); },
   type: "number",
   default: 1.2,
   min: 0.1,
@@ -681,6 +683,7 @@ function TextMaskFields({
   onCommit: () => void;
   fontSizeParam: NumberParamDefinition;
 }) {
+  useUiLocale();
   const content = usePropertyDraft({
     displayValue: mask.params.content,
     parse: (input) => input,
@@ -693,7 +696,7 @@ function TextMaskFields({
 
   return (
     <>
-      <SectionField label="Content">
+      <SectionField label={uiText("common.content")}>
         <Textarea
           value={content.displayValue}
           className="min-h-20"
@@ -702,7 +705,7 @@ function TextMaskFields({
           onBlur={content.onBlur}
         />
       </SectionField>
-      <SectionField label="Font">
+      <SectionField label={uiText("video-editor.font")}>
         <FontPicker
           defaultValue={mask.params.fontFamily}
           onValueChange={(value) => {
@@ -711,7 +714,7 @@ function TextMaskFields({
           }}
         />
       </SectionField>
-      <SectionField label="Size">
+      <SectionField label={uiText("common.size")}>
         <MaskNumberField
           icon={<HugeiconsIcon icon={TextFontIcon} />}
           param={fontSizeParam}
@@ -720,7 +723,7 @@ function TextMaskFields({
           onCommit={onCommit}
         />
       </SectionField>
-      <SectionField label="Spacing">
+      <SectionField label={uiText("video-editor.spacing")}>
         <div className="flex items-start gap-2">
           <MaskNumberField
             className="w-1/2"
@@ -788,6 +791,7 @@ function MaskNumberField({
   icon?: React.ReactNode;
   className?: string;
 }) {
+  useUiLocale();
   const isPercent = param.unit === "percent";
   const percentMax = param.max ?? 100;
   const displayMultiplier = isPercent
@@ -843,18 +847,15 @@ function MaskNumberField({
 }
 
 function EmptyView({ onAddMask }: EmptyViewProps) {
+  useUiLocale();
   return (
     <div className="flex flex-col h-full items-center justify-center gap-4 text-center">
       <OcShapesIcon className="size-10 text-muted-foreground" strokeWidth={1} />
       <div className="flex flex-col gap-2">
-        <h3 className="font-medium text-foreground">No masks</h3>
-        <p className="text-muted-foreground text-sm text-balance max-w-40">
-          Add a mask to hide or reveal parts of this layer.
-        </p>
+        <h3 className="font-medium text-foreground">{uiText("video-editor.no.masks")}</h3>
+        <p className="text-muted-foreground text-sm text-balance max-w-40">{uiText("video-editor.add.a.mask.to.hide.or.reveal.parts.of.this.layer")}{" "}</p>
       </div>
-      <Button variant="default" size="sm" onClick={onAddMask}>
-        Add mask
-      </Button>
+      <Button variant="default" size="sm" onClick={onAddMask}>{uiText("common.add.mask")}{" "}</Button>
     </div>
   );
 }

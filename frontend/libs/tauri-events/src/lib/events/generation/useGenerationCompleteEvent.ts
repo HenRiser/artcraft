@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { useEffect } from "react";
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { SoundManager } from "@storyteller/soundboard";
@@ -41,7 +42,7 @@ export const useGenerationCompleteEvent = () => {
 
 const makeMessage = (event: GenerationCompleteEvent) => {
   if (!event.action) {
-    return "Generation complete!";
+    return uiText("desktop.generation.complete");
   }
   switch (event.action) {
     case GenerationAction.GenerateImage:
@@ -55,6 +56,6 @@ const makeMessage = (event: GenerationCompleteEvent) => {
     case GenerationAction.GenerateGaussian:
       return "3D world generation complete!";
     default:
-      return "Generation complete!";
+      return uiText("desktop.generation.complete");
   }
 }

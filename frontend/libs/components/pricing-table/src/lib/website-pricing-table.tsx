@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale, localize } from "@storyteller/common";
 import { useState } from "react";
 import {
   ArrowRightIcon,
@@ -16,8 +17,8 @@ import "./website-pricing-table.css";
 
 export type BillingCadence = "yearly" | "monthly";
 const BILLING_TABS = [
-  { id: "yearly", label: "Yearly" },
-  { id: "monthly", label: "Monthly" },
+  { id: "yearly", get label() { return uiText("pricing-table.yearly"); } },
+  { id: "monthly", get label() { return uiText("pricing-table.monthly"); } },
 ];
 const HIGHLIGHT_ICONS = { "Most popular": StarIcon, "Best value": GemIcon };
 const PLAN_STYLE: Record<
@@ -79,6 +80,7 @@ export function WebsitePricingTable({
   onManage,
   onContact,
 }: WebsitePricingTableProps) {
+  useUiLocale();
   const hasActivePlan = !!activePlanSlug && activePlanSlug !== "free";
   return (
     <>
@@ -94,16 +96,15 @@ export function WebsitePricingTable({
             tabClassName="w-24 font-mono text-[11px] uppercase tracking-[0.1em]"
           />
           <span className="pricing-hud pricing-sale-badge bg-primary px-2 py-1 text-white">
-            {PROMO_PCT}% off · ends soon
-          </span>
+            {PROMO_PCT}{uiText("pricing-table.off.ends.soon")}{" "}</span>
           <p className="pricing-hud hidden text-primary sm:block">
             {cadence === "yearly"
-              ? "2 months free"
-              : "Switch to yearly, save 20%"}
+              ? uiText("pricing-table.2.months.free")
+              : uiText("pricing-table.switch.to.yearly.save.20")}
           </p>
         </div>
         <p className="pricing-hud hidden text-white/40 sm:block">
-          {displayName ? `Signed in as ${displayName}` : "Prices in USD"}
+          {displayName ? uiText("pricing-table.signed.in.as.value", { value0: displayName }) : uiText("pricing-table.prices.in.usd")}
         </p>
       </div>
 
@@ -118,10 +119,10 @@ export function WebsitePricingTable({
             isCurrent={plan.slug === activePlanSlug}
             ctaLabel={
               plan.slug === activePlanSlug
-                ? "Current plan"
+                ? localize("Current plan")
                 : hasActivePlan
-                  ? `Switch to ${plan.name}`
-                  : `Get ${plan.name}`
+                  ? `${localize("Switch to")} ${plan.name}`
+                  : `${localize("Get")} ${plan.name}`
             }
             disabled={loading || processingPlan !== null}
             processing={processingPlan === plan.slug}
@@ -144,7 +145,7 @@ export function WebsitePricingTable({
               className="pricing-hud flex items-center gap-2 text-white/55"
             >
               <CheckIcon aria-hidden className="h-3.5 w-3.5 text-primary" />
-              {point}
+              {localize(point)}
             </li>
           ))}
         </ul>
@@ -155,7 +156,7 @@ export function WebsitePricingTable({
             disabled={managing}
             className="pricing-hud text-white/55 underline underline-offset-4 hover:text-white/80 disabled:opacity-50"
           >
-            {managing ? "Opening portal…" : "Manage plan"}
+            {managing ? uiText("pricing-table.opening.portal") : uiText("pricing-table.manage.plan")}
           </button>
         )}
       </div>
@@ -184,6 +185,7 @@ function PlanCell({
   processing: boolean;
   onChoose: () => void;
 }) {
+  useUiLocale();
   const { current, basePrice } = planPricing(plan, cadence === "yearly");
   const yearlySavings =
     (plan.originalMonthlyPrice ?? plan.monthlyPrice) * 12 - plan.yearlyPrice;
@@ -203,13 +205,11 @@ function PlanCell({
       <CellIndexRow index={index}>
         {isCurrent ? (
           <>
-            <CheckIcon aria-hidden className="h-3 w-3" />
-            Your plan
-          </>
+            <CheckIcon aria-hidden className="h-3 w-3" />{uiText("pricing-table.your.plan")}{" "}</>
         ) : (
           <>
             {HighlightIcon && <HighlightIcon aria-hidden className="h-3 w-3" />}
-            {PLAN_STYLE[plan.slug]?.highlight ?? "Plan"}
+            {localize(PLAN_STYLE[plan.slug]?.highlight ?? "Plan")}
           </>
         )}
       </CellIndexRow>
@@ -220,11 +220,10 @@ function PlanCell({
             {plan.name}
           </h3>
           <span className="pricing-hud bg-[var(--plan)] hover:bg-[var(--plan)] px-2 py-1 font-bold text-white">
-            {PROMO_PCT}% off
-          </span>
+            {PROMO_PCT}{uiText("pricing-table.off")}{" "}</span>
         </div>
         <p className="mt-1 text-sm text-white/55">
-          {PLAN_STYLE[plan.slug]?.tagline}
+          {localize(PLAN_STYLE[plan.slug]?.tagline)}
         </p>
 
         <div className="mt-5 flex items-baseline gap-2">
@@ -234,14 +233,13 @@ function PlanCell({
           <span className="font-display text-5xl font-medium tracking-[-0.03em] text-white">
             ${current}
           </span>
-          <span className="text-white/55">/mo</span>
+          <span className="text-white/55">{uiText("pricing-table.mo")}</span>
         </div>
         <p className="pricing-hud mt-2 text-white/40">
           {cadence === "yearly" ? (
             <>
-              ${plan.yearlyPrice} billed yearly ·{" "}
-              <span className="text-[var(--plan-ink)]">
-                Save ${yearlySavings}
+              ${plan.yearlyPrice}{" "}{uiText("pricing-table.billed.yearly")}{" "}
+              <span className="text-[var(--plan-ink)]">{uiText("pricing-table.save")}{yearlySavings}
               </span>
             </>
           ) : (
@@ -264,7 +262,7 @@ function PlanCell({
           {!isCurrent && <ArrowRightIcon aria-hidden className="h-3.5 w-3.5" />}
         </Button>
 
-        <p className="pricing-hud mt-8 text-white/40">What you get</p>
+        <p className="pricing-hud mt-8 text-white/40">{uiText("pricing-table.what.you.get")}</p>
         <FeatureList items={features.map((f) => f.text)} className="mt-3" />
       </div>
     </article>
@@ -278,32 +276,25 @@ function EnterpriseCell({
   index: string;
   onContact?: (mailtoUrl: string) => void;
 }) {
+  useUiLocale();
   return (
     <article
       id="enterprise"
       className="website-plan-card plan-enterprise flex flex-col"
     >
-      <CellIndexRow index={index}>For teams</CellIndexRow>
+      <CellIndexRow index={index}>{uiText("pricing-table.for.teams")}</CellIndexRow>
 
       <div className="flex flex-1 flex-col p-6 md:p-8">
-        <h3 className="font-display text-2xl font-medium tracking-[-0.02em] text-white">
-          Enterprise
-        </h3>
+        <h3 className="font-display text-2xl font-medium tracking-[-0.02em] text-white">{uiText("pricing-table.enterprise")}{" "}</h3>
         <div className="mt-5 flex items-baseline gap-2">
-          <span className="font-display text-5xl font-medium tracking-[-0.03em] text-white">
-            Custom
-          </span>
+          <span className="font-display text-5xl font-medium tracking-[-0.03em] text-white">{uiText("common.custom")}{" "}</span>
         </div>
-        <p className="pricing-hud mt-2 text-white/40">
-          Bespoke volume &amp; terms
-        </p>
+        <p className="pricing-hud mt-2 text-white/40">{uiText("pricing-table.bespoke.volume.amp.terms")}{" "}</p>
 
         <ContactButtons className="mt-6" onContact={onContact} />
 
-        <p className="pricing-hud mt-8 text-white/40">
-          Everything in Max, plus
-        </p>
-        <FeatureList items={ENTERPRISE_FEATURES} className="mt-3" />
+        <p className="pricing-hud mt-8 text-white/40">{uiText("pricing-table.everything.in.max.plus")}{" "}</p>
+        <FeatureList items={ENTERPRISE_FEATURES.map(localize)} className="mt-3" />
       </div>
     </article>
   );
@@ -317,6 +308,7 @@ function CellIndexRow({
   index: string;
   children: React.ReactNode;
 }) {
+  useUiLocale();
   return (
     <div className="flex items-center justify-between gap-4 bg-[var(--plan)] hover:bg-[var(--plan)] px-6 py-2.5 text-white md:px-8">
       <p className="pricing-hud flex items-center gap-1.5 font-bold">
@@ -334,6 +326,7 @@ function FeatureList({
   items: string[];
   className?: string;
 }) {
+  useUiLocale();
   return (
     <ul className={twMerge("flex flex-col gap-2.5", className)}>
       {items.map((text) => (
@@ -360,6 +353,7 @@ function ContactButtons({
   className?: string;
   onContact?: (mailtoUrl: string) => void;
 }) {
+  useUiLocale();
   const [copied, setCopied] = useState(false);
   const mailtoUrl = `mailto:${CONTACT_EMAIL}`;
 
@@ -388,13 +382,11 @@ function ContactButtons({
         }
         className={twMerge(PLAN_BUTTON_CLASSES, "flex-1")}
       >
-        <MailIcon aria-hidden className="h-3.5 w-3.5" />
-        Contact us
-      </Button>
+        <MailIcon aria-hidden className="h-3.5 w-3.5" />{uiText("pricing-table.contact.us")}{" "}</Button>
       <Button
         type="button"
         onClick={copy}
-        aria-label={copied ? "Email copied" : "Copy email address"}
+        aria-label={copied ? uiText("pricing-table.email.copied") : uiText("pricing-table.copy.email.address")}
         className={twMerge(PLAN_BUTTON_CLASSES, "w-12 px-0")}
       >
         {copied ? (

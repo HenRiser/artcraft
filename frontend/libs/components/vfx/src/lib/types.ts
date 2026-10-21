@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 export type VFXResolution = "480p" | "720p" | "1080p";
 
 export type VFXMediaRef = {
@@ -42,7 +43,7 @@ export const VFX_MODELS: VFXModel[] = [
   {
     id: "beeble_switchx",
     label: "Beeble SwitchX",
-    description: "Relight, change location, swap objects.",
+    get description() { return uiText("common.relight.change.location.swap.objects"); },
   },
 ];
 

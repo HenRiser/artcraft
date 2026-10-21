@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { ApiManager, ApiResponse, buildSessionHeaders } from "./ApiManager.js";
 import { FetchProxy as fetch } from "@storyteller/tauri-utils";
 
@@ -192,6 +193,6 @@ export class UserApiKeysApi extends ApiManager {
   private statusFallback(response: ErrorBody): string {
     if (response.error_code_str) return response.error_code_str;
     if (response.error_code) return `Request failed (${response.error_code})`;
-    return "Request failed";
+    return uiText("desktop.request.failed");
   }
 }

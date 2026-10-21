@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Fragment } from "react";
 import { useSignals } from "@preact/signals-react/runtime";
 import { ChevronDownIcon, LogOutIcon, UserIcon } from "lucide-react";
@@ -8,6 +9,7 @@ import { twMerge } from "tailwind-merge";
 import { authentication, logout } from "~/signals";
 
 export default function ProfileDropdown() {
+  useUiLocale();
   useSignals();
   const { userInfo } = authentication;
 
@@ -23,7 +25,7 @@ export default function ProfileDropdown() {
 
   const options = [
     {
-      label: "Logout",
+      get label() { return uiText("signaled.logout"); },
       icon: LogOutIcon,
       onClick: () => {
         logout();
@@ -69,9 +71,7 @@ export default function ProfileDropdown() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <UserIcon className="text-[11px] text-white/50" />
-                My Profile
-              </a>
+                <UserIcon className="text-[11px] text-white/50" />{uiText("signaled.my.profile")}{" "}</a>
             )}
           </Menu.Item>
           {options.map((option, index) => (

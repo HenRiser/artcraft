@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, StarIcon, Trash2Icon, WandSparklesIcon, XIcon } from "lucide-react";
@@ -31,7 +32,7 @@ interface Props {
 const KIND_LABEL: Record<BoardItem["kind"], string> = {
   image: "Image",
   video: "Video",
-  text: "Note",
+  get text() { return uiText("common.note"); },
   link: "Link",
   color: "Color",
 };
@@ -54,6 +55,7 @@ export const ItemInspector = ({
   onAddPaletteToBoard,
   onDelete,
 }: Props) => {
+  useUiLocale();
   const [palette, setPalette] = useState<string[]>([]);
   const [tagDraft, setTagDraft] = useState("");
 
@@ -100,7 +102,7 @@ export const ItemInspector = ({
     <Modal
       isOpen
       onClose={onClose}
-      accessibleTitle="Item details"
+      accessibleTitle={uiText("desktop.item.details")}
       className="rounded-xl bg-ui-modal h-[760px] w-[1200px] max-w-screen min-w-[1000px] min-h-[600px] p-4"
       draggable
       resizable
@@ -130,13 +132,13 @@ export const ItemInspector = ({
               </span>
             </div>
 
-            <Section title="Rating">
+            <Section title={uiText("moodboard.rating")}>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button
                     key={n}
                     type="button"
-                    aria-label={`Rate ${n}`}
+                    aria-label={uiText("moodboard.rate.value", { value0: n })}
                     onClick={() => onSetRating(item.rating === n ? 0 : n)}
                     className="rounded p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
@@ -152,7 +154,7 @@ export const ItemInspector = ({
               </div>
             </Section>
 
-            <Section title="Tags">
+            <Section title={uiText("common.tags")}>
               <div className="flex flex-wrap gap-1.5">
                 {item.tags.map((tag) => (
                   <button
@@ -172,23 +174,23 @@ export const ItemInspector = ({
                     if (e.key === "Enter") commitTag();
                   }}
                   onBlur={commitTag}
-                  placeholder="Add tag"
+                  placeholder={uiText("common.add.tag")}
                   className="w-20 rounded-full bg-base-fg/5 px-2.5 py-1 text-[11px] text-base-fg placeholder:text-base-fg/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 />
               </div>
             </Section>
 
             {item.kind === "image" && palette.length > 0 && (
-              <Section title="Palette">
+              <Section title={uiText("moodboard.palette")}>
                 <div className="flex flex-wrap gap-1.5">
                   {palette.map((hex) => (
                     <button
                       key={hex}
                       type="button"
-                      title={`${hex} — copy`}
+                      title={uiText("moodboard.value.copy", { value0: hex })}
                       onClick={() => {
                         void navigator.clipboard?.writeText(hex);
-                        toast.success(`Copied ${hex}`);
+                        toast.success(uiText("moodboard.copied.value", { value0: hex }));
                       }}
                       className="h-7 w-7 rounded-md ring-1 ring-inset ring-black/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                       style={{ background: hex }}
@@ -200,9 +202,7 @@ export const ItemInspector = ({
                   onClick={() => onAddPaletteToBoard(palette)}
                   className="mt-2.5 flex items-center gap-1.5 rounded text-xs font-medium text-base-fg/60 transition-colors hover:text-base-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <PlusIcon  className="h-3 w-3" />
-                  Add swatches to board
-                </button>
+                  <PlusIcon  className="h-3 w-3" />{uiText("moodboard.add.swatches.to.board")}{" "}</button>
               </Section>
             )}
           </div>
@@ -215,18 +215,14 @@ export const ItemInspector = ({
                 icon={WandSparklesIcon}
                 onClick={onUseReference}
                 className="w-full col-span-2 py-1.5 text-[13px]"
-              >
-                Use as reference
-              </Button>
+              >{uiText("common.use.as.reference")}{" "}</Button>
             )}
             <Button
               variant="destructive"
               icon={Trash2Icon}
               onClick={onDelete}
               className="w-full col-span-2 py-1.5 text-[13px]"
-            >
-              Delete
-            </Button>
+            >{uiText("common.delete")}{" "}</Button>
           </div>
         </div>
       </div>
@@ -240,14 +236,15 @@ const Section = ({
 }: {
   title: string;
   children: React.ReactNode;
-}) => (
+}) => { useUiLocale(); return (
   <div className="space-y-1.5">
     <div className="text-sm font-medium text-base-fg/90">{title}</div>
     {children}
   </div>
-);
+); };
 
 const Media = ({ item }: { item: BoardItem }) => {
+  useUiLocale();
   switch (item.kind) {
     case "image":
       return (
@@ -284,7 +281,7 @@ const Media = ({ item }: { item: BoardItem }) => {
       return (
         <div className="max-h-full max-w-2xl overflow-auto rounded-2xl bg-ui-panel p-8 shadow-2xl">
           <p className="whitespace-pre-wrap text-lg leading-relaxed text-base-fg">
-            {item.text || "Note"}
+            {item.text || uiText("common.note")}
           </p>
         </div>
       );
@@ -324,10 +321,10 @@ const NavArrow = ({
 }: {
   side: "left" | "right";
   onClick: () => void;
-}) => (
+}) => { useUiLocale(); return (
   <button
     type="button"
-    aria-label={side === "left" ? "Previous" : "Next"}
+    aria-label={side === "left" ? uiText("common.previous") : uiText("common.next")}
     onClick={(e) => {
       e.stopPropagation();
       onClick();
@@ -344,4 +341,4 @@ const NavArrow = ({
       className="text-lg"
     />
   </button>
-);
+); };

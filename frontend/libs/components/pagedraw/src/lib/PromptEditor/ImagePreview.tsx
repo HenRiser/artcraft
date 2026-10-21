@@ -1,8 +1,10 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import React, { useState, useRef } from 'react';
 import { X } from 'lucide-react';
 import { ImagePreviewProps } from './types';
 
 const ImagePreview: React.FC<ImagePreviewProps> = ({ image, onUpdate, onRemove }) => {
+  useUiLocale();
   const [showControls, setShowControls] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ image, onUpdate, onRemove }
     >
       <img 
         src={image.url} 
-        alt="Style reference" 
+        alt={uiText("pagedraw.style.reference")}
         className="w-full h-full object-cover"
       />
       

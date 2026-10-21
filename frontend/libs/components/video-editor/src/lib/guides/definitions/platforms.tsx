@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import type { GuideDefinition } from "../types";
 import { TikTokLayout } from "./tiktok-layout";
 
@@ -8,6 +9,7 @@ function PlatformLogo({
   domain: string;
   className?: string;
 }) {
+  useUiLocale();
   return (
     <img
       src={`https://cdn.brandfetch.io/${domain}/w/64/h/64`}
@@ -21,6 +23,7 @@ function PlatformLogo({
 }
 
 function PlatformGuidePreview({ domain }: { domain: string }) {
+  useUiLocale();
   return <PlatformLogo domain={domain} />;
 }
 
@@ -48,16 +51,16 @@ export const tiktokGuide: GuideDefinition = {
 };
 export const igReelsGuide = platformGuide({
   id: "ig-reels",
-  label: "Reels",
+  get label() { return uiText("video-editor.reels"); },
   domain: "instagram.com",
 });
 export const ytShortsGuide = platformGuide({
   id: "yt-shorts",
-  label: "Shorts",
+  get label() { return uiText("video-editor.shorts"); },
   domain: "youtube.com",
 });
 export const spotlightGuide = platformGuide({
   id: "spotlight",
-  label: "Spotlight",
+  get label() { return uiText("video-editor.spotlight"); },
   domain: "snapchat.com",
 });

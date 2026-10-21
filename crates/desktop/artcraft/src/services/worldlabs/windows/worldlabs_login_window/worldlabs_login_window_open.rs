@@ -1,3 +1,4 @@
+use crate::core::state::app_preferences::ui_language::localized_window_title;
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
 use crate::core::utils::clear_all_webview_cookies::clear_all_webview_cookies;
 use crate::services::worldlabs::state::worldlabs_bearer_bridge::WorldlabsBearerBridge;
@@ -53,7 +54,7 @@ pub async fn worldlabs_login_window_open(
         NewWindowResponse::Allow
       })
       .always_on_top(false)
-      .title("Login to WorldLabs")
+      .title(localized_window_title(app, WORLDLABS_LOGIN_WINDOW_NAME, "Login to WorldLabs"))
       .center()
       .resizable(true)
       .visible(true)

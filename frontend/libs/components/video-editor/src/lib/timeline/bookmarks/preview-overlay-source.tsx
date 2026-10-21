@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import type { Bookmark } from "../types";
 import {
   EMPTY_PREVIEW_OVERLAY_SOURCE_RESULT,
@@ -9,7 +10,7 @@ import type { MediaTime } from "../../wasm";
 
 export const bookmarkNotesPreviewOverlay: PreviewOverlayDefinition = {
   id: "bookmark-notes",
-  label: "Show bookmark notes",
+  get label() { return uiText("video-editor.show.bookmark.notes"); },
   defaultVisible: true,
 };
 
@@ -18,6 +19,7 @@ function BookmarkNotesOverlay({
 }: {
   bookmarks: Array<{ time: MediaTime; note: string; color?: string }>;
 }) {
+  useUiLocale();
   return (
     <div className="flex flex-col gap-1.5" aria-live="polite">
       {bookmarks.map((bookmark) => (

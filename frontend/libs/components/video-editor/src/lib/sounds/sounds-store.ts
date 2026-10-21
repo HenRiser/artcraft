@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { create } from "zustand";
 import type { SoundEffect, SavedSound } from "./types";
 import { EditorCore } from "../core";
@@ -152,7 +153,7 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       });
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to load saved sounds";
+        error instanceof Error ? error.message : uiText("desktop.failed.to.load.saved.sounds");
       set({
         savedSoundsError: errorMessage,
         isLoadingSavedSounds: false,
@@ -183,9 +184,9 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       });
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to save sound";
+        error instanceof Error ? error.message : uiText("video-editor.failed.to.save.sound");
       set({ savedSoundsError: errorMessage });
-      EditorCore.getInstance().adapters.toast.error("Failed to save sound");
+      EditorCore.getInstance().adapters.toast.error(uiText("video-editor.failed.to.save.sound"));
       console.error("Failed to save sound:", error);
     }
   },
@@ -200,9 +201,9 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       }));
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to remove sound";
+        error instanceof Error ? error.message : uiText("video-editor.failed.to.remove.sound");
       set({ savedSoundsError: errorMessage });
-      EditorCore.getInstance().adapters.toast.error("Failed to remove sound");
+      EditorCore.getInstance().adapters.toast.error(uiText("video-editor.failed.to.remove.sound"));
       console.error("Failed to remove sound:", error);
     }
   },
@@ -232,10 +233,10 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       });
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Failed to clear saved sounds";
+        error instanceof Error ? error.message : uiText("video-editor.failed.to.clear.saved.sounds");
       set({ savedSoundsError: errorMessage });
       EditorCore.getInstance().adapters.toast.error(
-        "Failed to clear saved sounds",
+        uiText("video-editor.failed.to.clear.saved.sounds"),
       );
       console.error("Failed to clear saved sounds:", error);
     }
@@ -254,7 +255,7 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       }
     }
     if (!audioUrl) {
-      editor.adapters.toast.error("Sound file not available");
+      editor.adapters.toast.error(uiText("video-editor.sound.file.not.available"));
       return false;
     }
 
@@ -287,7 +288,7 @@ export const useSoundsStore = create<SoundsStore>((set, get) => ({
       editor.adapters.toast.error(
         error instanceof Error
           ? error.message
-          : "Failed to add sound to timeline",
+          : uiText("desktop.failed.to.add.sound.to.timeline"),
       );
       return false;
     }

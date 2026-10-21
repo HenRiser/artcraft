@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext, useState } from "react";
 import { Badge } from "@storyteller/ui-badge";
 import { BoxIcon, FootprintsIcon, MoveIcon } from "lucide-react";
@@ -38,6 +39,7 @@ const patchExpressionObjectType = (mediaType: string) => {
 };
 
 export const ItemElement = ({ item }: Props) => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   // Broken thumbnail URL (404, CORS) → swap to the icon placeholder instead
   // of the browser's broken-image glyph + alt text. Keyed by media id, NOT a
@@ -71,7 +73,7 @@ export const ItemElement = ({ item }: Props) => {
     if (!target) {
       editor.adapter.showToast(
         ToastTypes.WARNING,
-        "Select a character or rigged object in the scene, then click an animation to add it.",
+        uiText("desktop.select.a.character.or.rigged.object.in.the.scene.then.click.an.animation.to.add.it"),
       );
       return;
     }
@@ -140,14 +142,10 @@ export const ItemElement = ({ item }: Props) => {
         <div className="text-shadow-md absolute inset-0 flex items-center justify-center bg-brand-primary-950/50 text-[13px] font-medium text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
           {item.type === AssetType.ANIMATION ? (
             <>
-              <FootprintsIcon  className="mr-1.5" />
-              Add to Character
-            </>
+              <FootprintsIcon  className="mr-1.5" />{uiText("pagescene.add.to.character")}{" "}</>
           ) : (
             <>
-              <MoveIcon  className="mr-1.5" />
-              Drag to Scene
-            </>
+              <MoveIcon  className="mr-1.5" />{uiText("pagescene.drag.to.scene")}{" "}</>
           )}
         </div>
       </div>

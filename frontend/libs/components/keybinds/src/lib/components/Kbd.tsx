@@ -1,9 +1,11 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Binding } from "../types";
 import { formatBindingTokens } from "../format";
 
 // A single key-cap cluster, e.g. ⌘ ⇧ Z. The app lacked any <kbd> primitive;
 // this is the shared one used by the cheatsheet and settings rows.
 export function Kbd({ binding }: { binding: Binding }) {
+  useUiLocale();
   return (
     <span className="inline-flex items-center gap-0.5">
       {formatBindingTokens(binding).map((token, i) => (
@@ -21,8 +23,9 @@ export function Kbd({ binding }: { binding: Binding }) {
 // A list of alternative bindings for one action, e.g. "Del / ⌫". Renders a muted
 // "Unbound" when empty.
 export function KbdBindings({ bindings }: { bindings: Binding[] }) {
+  useUiLocale();
   if (!bindings.length) {
-    return <span className="text-[11px] italic text-base-fg/40">Unbound</span>;
+    return <span className="text-[11px] italic text-base-fg/40">{uiText("keybinds.unbound")}</span>;
   }
   return (
     <span className="inline-flex items-center gap-1.5">

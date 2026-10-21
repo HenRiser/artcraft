@@ -5,6 +5,7 @@ export interface GetAppPreferencesResult {
 }
 
 export interface AppPreferencesPayload {
+  ui_language?: "zh-CN" | "en",
   // Preferred download directory
   preferred_download_directory: PreferredDownloadDirectory,
   preferred_download_filename: PreferredDownloadFilename,

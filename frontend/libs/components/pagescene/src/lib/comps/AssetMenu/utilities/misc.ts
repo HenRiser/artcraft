@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { PageSceneAdapter } from "../../../adapter";
 import {
   AssetType,
@@ -44,7 +45,7 @@ export const responseMapping = (
       colorIndex: item.cover_image.default_cover.color_index,
       imageIndex: item.cover_image.default_cover.image_index,
       media_id: item.token,
-      name: item.maybe_title ?? "Unknown",
+      name: item.maybe_title ?? uiText("video-editor.unknown"),
       type: assetType as AssetType,
       media_type: item.media_type,
       maybe_animation_type: item.maybe_animation_type

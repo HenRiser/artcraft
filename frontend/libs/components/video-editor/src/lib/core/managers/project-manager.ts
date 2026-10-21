@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { FrameRate } from "opencut-wasm";
 import type { EditorCore } from "../index";
 import type { TProject, TProjectSettings, TTimelineViewState } from "../../project/types";
@@ -323,7 +324,7 @@ export class ProjectManager {
     options: ExportOptions;
   }): Promise<ExportResult> {
     if (this.exportState.isExporting) {
-      return { success: false, error: "Export already in progress" };
+      return { success: false, error: uiText("desktop.export.already.in.progress") };
     }
 
     this.exportCancelRequested = false;
@@ -357,7 +358,7 @@ export class ProjectManager {
       return result;
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Unknown export error";
+        error instanceof Error ? error.message : uiText("desktop.unknown.export.error");
       const failure: ExportResult = { success: false, error: message };
       this.exportState = {
         isExporting: false,

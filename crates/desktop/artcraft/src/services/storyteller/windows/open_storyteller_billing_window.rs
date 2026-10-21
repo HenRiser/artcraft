@@ -1,3 +1,4 @@
+use crate::core::state::app_preferences::ui_language::localized_window_title;
 use crate::core::state::app_env_configs::app_env_configs::AppEnvConfigs;
 use crate::core::state::data_dir::app_data_root::AppDataRoot;
 use crate::services::sora::windows::sora_login_window::sora_login_thread::sora_login_thread;
@@ -274,7 +275,7 @@ async fn do_open_window(
   // TODO(bt,2025-09-01): We probably need to open this in a real browser to get autocomplete.
   let _window = WebviewWindowBuilder::new(app, BILLING_WINDOW_NAME, url)
       .always_on_top(false)
-      .title("ArtCraft Billing")
+      .title(localized_window_title(app, BILLING_WINDOW_NAME, "ArtCraft Billing"))
       .center()
       .resizable(true)
       .visible(true)

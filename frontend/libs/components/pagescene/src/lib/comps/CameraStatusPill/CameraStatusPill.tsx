@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useContext } from "react";
 import { MoveIcon, VideoIcon } from "lucide-react";
 import { Button } from "@storyteller/ui-button";
@@ -13,6 +14,7 @@ import { TOOLBAR_BUTTON_CLASS_NAME } from "../toolbarStyles";
 // the free "Viewport" camera vs looking through a render camera. Clicking it
 // toggles camera view. Hidden in record mode (that mode is self-evident).
 export const CameraStatusPill = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
   const editorState = usePageSceneStore((s) => s.editorState);
   const sceneMode = usePageSceneStore((s) => s.sceneMode);
@@ -22,11 +24,11 @@ export const CameraStatusPill = () => {
 
   const inCameraView = editorState === EditorStates.CAMERA_VIEW;
   const renderCameraLabel =
-    cameras.find((c) => c.id !== "main")?.label ?? "Camera";
+    cameras.find((c) => c.id !== "main")?.label ?? uiText("common.camera");
 
   return (
     <Tooltip
-      content={inCameraView ? "Looking through render camera" : "Free viewport camera"}
+      content={inCameraView ? uiText("pagescene.looking.through.render.camera") : uiText("pagescene.free.viewport.camera")}
       position="bottom"
       delay={300}
     >
@@ -41,7 +43,7 @@ export const CameraStatusPill = () => {
           inCameraView && "border-white/30 bg-white/10",
         )}
       >
-        {inCameraView ? renderCameraLabel : "Viewport"}
+        {inCameraView ? renderCameraLabel : uiText("pagescene.viewport")}
       </Button>
     </Tooltip>
   );

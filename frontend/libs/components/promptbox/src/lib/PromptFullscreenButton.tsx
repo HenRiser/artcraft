@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Tooltip } from "@storyteller/ui-tooltip";
 import { Maximize2Icon } from "lucide-react";
 
@@ -18,12 +19,13 @@ export const PromptFullscreenButton = ({
   onClick,
   className,
 }: PromptFullscreenButtonProps) => {
+  useUiLocale();
   return (
     <div className={`absolute right-0 top-0 z-10 ${className ?? ""}`}>
-      <Tooltip content="Focus mode" position="top" delay={200}>
+      <Tooltip content={uiText("promptbox.focus.mode")} position="top" delay={200}>
         <button
           type="button"
-          aria-label="Expand prompt to focus mode"
+          aria-label={uiText("promptbox.expand.prompt.to.focus.mode")}
           onClick={onClick}
           className="flex h-6 w-6 items-center justify-center bg-base-fg/5 text-base-fg/50 transition-colors hover:bg-base-fg/10 hover:text-base-fg/90 focus:outline-none"
         >

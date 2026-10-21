@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import type { ParamDefinition } from "../../../params";
 import type {
   MaskDefinition,
@@ -69,7 +70,7 @@ const TEXT_MASK_PARAMS: ParamDefinition<keyof TextMaskParams & string>[] = [
   },
   {
     key: "fontSize",
-    label: "Size",
+    get label() { return uiText("common.size"); },
     type: "number",
     default: 15,
     min: MIN_FONT_SIZE,
@@ -78,7 +79,7 @@ const TEXT_MASK_PARAMS: ParamDefinition<keyof TextMaskParams & string>[] = [
   },
   {
     key: "rotation",
-    label: "Rotation",
+    get label() { return uiText("common.rotation"); },
     type: "number",
     default: 0,
     min: 0,
@@ -87,7 +88,7 @@ const TEXT_MASK_PARAMS: ParamDefinition<keyof TextMaskParams & string>[] = [
   },
   {
     key: "scale",
-    label: "Scale",
+    get label() { return uiText("common.scale"); },
     type: "number",
     default: 1,
     min: 1,
@@ -361,7 +362,7 @@ export const textMaskDefinition: MaskDefinition<"text"> = {
         strokeColor: "#ffffff",
         strokeWidth: 0,
         strokeAlign: "center",
-        content: "Mask",
+        get content() { return uiText("common.mask"); },
         fontSize: 15,
         fontFamily: "Arial",
         fontWeight: "normal",

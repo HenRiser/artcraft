@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useState } from "react";
 
 import { LoadingDots } from "@storyteller/ui-loading";
@@ -26,6 +27,7 @@ export function UploadModalMedia({
   title,
   fileTypes,
 }: Props) {
+  useUiLocale();
   const [uploaderState, setUploaderState] =
     useState<UploaderState>(initialUploaderState);
 
@@ -59,7 +61,7 @@ export function UploadModalMedia({
         return (
           <>
             <LoadingDots className="mb-1 bg-transparent" />
-            <div className="hud-label w-full text-center text-base-fg/50">Uploading...</div>
+            <div className="hud-label w-full text-center text-base-fg/50">{uiText("common.uploading")}</div>
           </>
         );
       case UploaderStates.success:

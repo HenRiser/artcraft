@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import {
   forwardRef,
   useCallback,
@@ -66,6 +67,7 @@ export const AudioReferenceRow = forwardRef<
   },
   ref,
 ) {
+  useUiLocale();
   const audioInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [isUploadingAudio, setIsUploadingAudio] = useState(false);
@@ -96,7 +98,7 @@ export const AudioReferenceRow = forwardRef<
       );
       if (currentTotal + duration > maxAudioRefDuration) {
         toast.error(
-          `Total audio duration cannot exceed ${maxAudioRefDuration}s`,
+          uiText("common.total.audio.duration.cannot.exceed.value.s", { value0: maxAudioRefDuration }),
         );
         break;
       }
@@ -125,7 +127,7 @@ export const AudioReferenceRow = forwardRef<
               newState.status === UploaderStates.imageCreateError
             ) {
               setIsUploadingAudio(false);
-              toast.error("Audio upload failed. Please try again.");
+              toast.error(uiText("promptbox.audio.upload.failed.please.try.again"));
             }
           },
         });
@@ -162,7 +164,7 @@ export const AudioReferenceRow = forwardRef<
           newState.status === UploaderStates.imageCreateError
         ) {
           setIsUploadingImage(false);
-          toast.error("Image upload failed. Please try again.");
+          toast.error(uiText("promptbox.image.upload.failed.please.try.again"));
         }
       },
     });
@@ -214,15 +216,12 @@ export const AudioReferenceRow = forwardRef<
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex items-center gap-2 text-base-fg opacity-90">
           <MusicIcon  className="h-3.5 w-3.5" />
-          <span className="text-sm font-medium">
-            Audio Track{" "}
+          <span className="text-sm font-medium">{uiText("promptbox.audio.track")}{" "}
             <span className="font-semibold text-base-fg/60">
               ({referenceAudios.length}/{maxAudioCount})
             </span>
             {audioRequired && referenceAudios.length === 0 && (
-              <span className="ml-1.5 text-xs font-medium text-red-500">
-                required
-              </span>
+              <span className="ml-1.5 text-xs font-medium text-red-500">{uiText("promptbox.required")}{" "}</span>
             )}
           </span>
         </div>
@@ -245,7 +244,7 @@ export const AudioReferenceRow = forwardRef<
               className="flex h-9 items-center gap-1.5 rounded-[3px] border border-dashed border-ui-controls-border bg-ui-controls/50 px-3 text-sm text-base-fg/70 transition-colors hover:bg-ui-controls hover:text-base-fg disabled:cursor-wait disabled:opacity-60"
             >
               <PlusIcon  className="h-3 w-3" />
-              {isUploadingAudio ? "Uploading…" : "Add audio"}
+              {isUploadingAudio ? uiText("common.uploading.2") : uiText("promptbox.add.audio")}
             </button>
             {onPickAudioFromLibrary && (
               <button
@@ -254,9 +253,7 @@ export const AudioReferenceRow = forwardRef<
                 disabled={isUploadingAudio}
                 className="flex h-9 items-center gap-1.5 rounded-[3px] border border-dashed border-ui-controls-border bg-ui-controls/50 px-3 text-sm text-base-fg/70 transition-colors hover:bg-ui-controls hover:text-base-fg disabled:cursor-wait disabled:opacity-60"
               >
-                <FolderOpenIcon  className="h-3 w-3" />
-                From library
-              </button>
+                <FolderOpenIcon  className="h-3 w-3" />{uiText("common.from.library")}{" "}</button>
             )}
           </>
         )}
@@ -265,7 +262,7 @@ export const AudioReferenceRow = forwardRef<
           <>
             <div className="ms-2 flex items-center gap-2 text-base-fg opacity-90">
               <ImageIcon  className="h-3.5 w-3.5" />
-              <span className="text-sm font-medium">Image</span>
+              <span className="text-sm font-medium">{uiText("common.image")}</span>
             </div>
             {referenceImages.map((image) => (
               <div
@@ -274,12 +271,12 @@ export const AudioReferenceRow = forwardRef<
               >
                 <img
                   src={image.url}
-                  alt="Reference"
+                  alt={uiText("common.reference")}
                   className="h-full w-full object-cover"
                 />
                 <button
                   type="button"
-                  aria-label="Remove image"
+                  aria-label={uiText("promptbox.remove.image")}
                   onClick={() => onReferenceImagesChange?.([])}
                   className="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 transition-opacity group-hover:opacity-100"
                 >
@@ -297,7 +294,7 @@ export const AudioReferenceRow = forwardRef<
                 className="flex h-9 items-center gap-1.5 rounded-[3px] border border-dashed border-ui-controls-border bg-ui-controls/50 px-3 text-sm text-base-fg/70 transition-colors hover:bg-ui-controls hover:text-base-fg disabled:cursor-wait disabled:opacity-60"
               >
                 <PlusIcon  className="h-3 w-3" />
-                {isUploadingImage ? "Uploading…" : "Add image"}
+                {isUploadingImage ? uiText("common.uploading.2") : uiText("promptbox.add.image")}
               </button>
             )}
           </>
@@ -316,6 +313,7 @@ function AudioRefTile({
   index: number;
   onRemove: (id: string) => void;
 }) {
+  useUiLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -340,7 +338,7 @@ function AudioRefTile({
     <div className="group flex h-9 items-center gap-2 rounded-[3px] border border-ui-controls-border bg-ui-controls px-2.5">
       <button
         type="button"
-        aria-label={isPlaying ? "Stop" : "Play"}
+        aria-label={isPlaying ? uiText("promptbox.stop") : uiText("common.play")}
         onClick={togglePlay}
         className="flex h-5 w-5 items-center justify-center rounded-full bg-white/90 text-black transition-transform hover:scale-105"
       >
@@ -349,12 +347,11 @@ function AudioRefTile({
           className={`h-2 w-2 ${isPlaying ? "" : "ml-px"}`}
         />
       </button>
-      <span className="text-xs font-medium text-base-fg/80">
-        Audio {index + 1} · {audio.duration}s
+      <span className="text-xs font-medium text-base-fg/80">{uiText("common.audio")}{" "}{index + 1} · {audio.duration}s
       </span>
       <button
         type="button"
-        aria-label="Remove audio"
+        aria-label={uiText("promptbox.remove.audio")}
         onClick={() => onRemove(audio.id)}
         className="flex h-4 w-4 items-center justify-center rounded-[3px] text-base-fg/40 transition-colors hover:text-base-fg"
       >

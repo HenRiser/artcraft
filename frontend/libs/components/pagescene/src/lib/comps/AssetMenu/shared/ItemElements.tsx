@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ItemElement } from "./ItemElement";
 import type { MediaItem } from "../../../models/assets";
 import { LoadingDots } from "@storyteller/ui-loading";
@@ -22,6 +23,7 @@ export const ItemElements = ({
   onLoadMore,
   hasMore,
 }: Props) => {
+  useUiLocale();
   const GRID_GAP = 12;
   const ASPECT_RATIO = 16 / 12;
   const TEXT_HEIGHT = 32;
@@ -94,8 +96,8 @@ export const ItemElements = ({
         <CircleSlashIcon
           
           className="mb-4 text-4xl opacity-30" />
-        <h4>You do not have anything here.</h4>
-        <p className="text-sm opacity-75">Please upload some assets.</p>
+        <h4>{uiText("pagescene.you.do.not.have.anything.here")}</h4>
+        <p className="text-sm opacity-75">{uiText("pagescene.please.upload.some.assets")}</p>
       </div>
     );
   }

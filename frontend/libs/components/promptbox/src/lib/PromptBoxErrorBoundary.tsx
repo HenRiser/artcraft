@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { Component, Fragment } from "react";
 import type { ReactNode, ErrorInfo } from "react";
 
@@ -25,7 +26,7 @@ export class PromptBoxErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="flex items-center justify-center rounded-[3px] border border-red-500/30 bg-red-500/10 px-6 py-4 text-sm text-red-300">
-          <span>Something went wrong with the prompt box.&nbsp;</span>
+          <span>{uiText("promptbox.something.went.wrong.with.the.prompt.box.nbsp")}</span>
           <button
             className="underline hover:text-red-200"
             onClick={() =>
@@ -34,9 +35,7 @@ export class PromptBoxErrorBoundary extends Component<Props, State> {
                 resetKey: prev.resetKey + 1,
               }))
             }
-          >
-            Try again
-          </button>
+          >{uiText("common.try.again")}{" "}</button>
         </div>
       );
     }

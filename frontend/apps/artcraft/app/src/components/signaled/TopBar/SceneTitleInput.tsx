@@ -1,3 +1,4 @@
+import { t as uiText, localize, useLocale } from "@storyteller/common";
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useSignals } from "@preact/signals-react/runtime";
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export const SceneTitleInput = ({ pageName }: Props) => {
+  useLocale();
   useSignals();
   const { userInfo } = authentication;
   const [showInput, setShowInput] = useState(false);
@@ -62,7 +64,7 @@ export const SceneTitleInput = ({ pageName }: Props) => {
     setShowInput(false);
     if (scene.value.title === "") {
       setIsValid(false);
-      handleShowErrorDialog("Scene name can not be empty.");
+      handleShowErrorDialog(uiText("desktop.scene.name.can.not.be.empty"));
       resetPreviousTitle();
       e.currentTarget.focus();
     } else if (scene.value.token) {
@@ -99,7 +101,7 @@ export const SceneTitleInput = ({ pageName }: Props) => {
             className="hud-label text-nowrap text-base-fg/70"
             data-tauri-drag-region
           >
-            {pageName}
+          {localize(pageName)}
           </span>
           <ChevronRightIcon
             aria-hidden="true"

@@ -83,6 +83,7 @@ pub async fn handle_gpt_image_1_sora_text_to_image(
         Ok((response, maybe_new_creds)) => (response, maybe_new_creds),
         Err(err) => {
           let event = GenerationEnqueueFailureEvent {
+        reason_code: None,
             action: GenerationAction::GenerateImage,
             service: GenerationServiceProvider::Sora,
             model: None,

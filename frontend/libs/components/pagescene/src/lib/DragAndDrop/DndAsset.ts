@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import React from "react";
 import * as THREE from "three";
 import { MediaItem } from "../models";
@@ -314,7 +315,7 @@ class DndAsset {
     if (names && !names.some((name) => root.getObjectByName(name))) {
       editor.adapter.showToast(
         ToastTypes.WARNING,
-        "This animation doesn't match the character's skeleton.",
+        uiText("desktop.this.animation.doesn.t.match.the.character.s.skeleton"),
       );
       return;
     }
@@ -327,7 +328,7 @@ class DndAsset {
     if (!laneId) {
       editor.adapter.showToast(
         ToastTypes.WARNING,
-        "No room left on the character's timeline for this clip.",
+        uiText("desktop.no.room.left.on.the.character.s.timeline.for.this.clip"),
       );
     }
   }

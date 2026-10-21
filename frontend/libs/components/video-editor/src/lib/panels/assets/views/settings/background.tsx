@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
@@ -39,6 +40,7 @@ const BlurPreview = memo(
     isSelected: boolean;
     onSelect: () => void;
   }) => {
+  useUiLocale();
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -67,7 +69,7 @@ const BlurPreview = memo(
         )}
         onClick={onSelect}
         type="button"
-        aria-label={`Select ${blur.label} blur`}
+        aria-label={uiText("video-editor.select.value.blur", { value0: blur.label })}
       >
         <canvas
           ref={canvasRef}
@@ -99,6 +101,7 @@ const BackgroundPreviews = memo(
     onSelect: (bg: string) => void;
     useBackgroundColor?: boolean;
   }) => {
+  useUiLocale();
     return useMemo(
       () =>
         backgrounds.map((bg) => (
@@ -122,7 +125,7 @@ const BackgroundPreviews = memo(
             }
             onClick={() => onSelect(bg)}
             type="button"
-            aria-label={`Select background ${bg}`}
+            aria-label={uiText("video-editor.select.background.value", { value0: bg })}
           />
         )),
       [
@@ -149,6 +152,7 @@ function CustomColorPreview({
   onPreview: (color: string) => void;
   onCommit: (color: string) => void;
 }) {
+  useUiLocale();
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -158,7 +162,7 @@ function CustomColorPreview({
             isSelected && "border-primary border-2",
           )}
           type="button"
-          aria-label="Pick a custom background color"
+          aria-label={uiText("video-editor.pick.a.custom.background.color")}
         >
           <span
             className="absolute inset-0"
@@ -180,12 +184,13 @@ function CustomColorPreview({
 }
 
 const COLOR_SECTIONS = [
-  { id: "colors", title: "Colors", backgrounds: colors, useBackgroundColor: true, showCustomPicker: true },
-  { id: "pattern-craft", title: "Pattern craft", backgrounds: patternCraftGradients, showCustomPicker: false },
+  { id: "colors", get title() { return uiText("video-editor.colors"); }, backgrounds: colors, useBackgroundColor: true, showCustomPicker: true },
+  { id: "pattern-craft", get title() { return uiText("video-editor.pattern.craft"); }, backgrounds: patternCraftGradients, showCustomPicker: false },
   { id: "syntax-ui", title: "Syntax UI", backgrounds: syntaxUIGradients, showCustomPicker: false },
 ] as const;
 
 export function BackgroundContent() {
+  useUiLocale();
   const editor = useEditor();
   const activeProject = useEditor((e) => e.project.getActive());
 
@@ -263,7 +268,7 @@ export function BackgroundContent() {
         showTopBorder={false}
       >
         <SectionHeader>
-          <SectionTitle>Blur</SectionTitle>
+          <SectionTitle>{uiText("video-editor.blur")}</SectionTitle>
         </SectionHeader>
         <SectionContent>
           <div className="flex flex-wrap gap-2">{blurPreviews}</div>

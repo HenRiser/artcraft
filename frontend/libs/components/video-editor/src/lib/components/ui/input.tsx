@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 "use client";
 
 import { Eye, EyeOff, X } from "lucide-react";
@@ -60,6 +61,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref,
   ) => {
+  useUiLocale();
     const [isFocused, setIsFocused] = useState(false);
 
     const isPassword = type === "password";
@@ -111,7 +113,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               onClear?.();
             }}
             className="text-muted-foreground absolute top-0 right-0 h-full px-3 !opacity-100"
-            aria-label="Clear input"
+            aria-label={uiText("video-editor.clear.input")}
           >
             <X className="!size-[0.85]" />
           </Button>
@@ -125,7 +127,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               "text-muted-foreground hover:text-foreground absolute top-0 h-full px-3",
               showClear ? "right-10" : "right-0",
             )}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? uiText("video-editor.hide.password") : uiText("video-editor.show.password")}
           >
             {showPassword ? (
               <Eye className="size-4" />

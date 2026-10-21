@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { LoadingDots } from "@storyteller/ui-loading";
 import { usePageSceneStore } from "../../PageSceneStore";
 
@@ -6,6 +7,7 @@ import { usePageSceneStore } from "../../PageSceneStore";
 // Video encodes are abortable: the Cancel button (and the Escape keybind)
 // flip the store's encodeCancelSignal, which recordTimeline polls per frame.
 export const RenderOverlay = () => {
+  useUiLocale();
   const progress = usePageSceneStore((s) => s.recordingProgress);
   const cancellable = usePageSceneStore((s) => s.encodeCancelSignal !== null);
   const requestEncodeCancel = usePageSceneStore((s) => s.requestEncodeCancel);
@@ -15,7 +17,7 @@ export const RenderOverlay = () => {
     progress?.phase === "encoding"
       ? `Rendering video… ${pct}%`
       : progress?.phase === "uploading"
-        ? "Uploading to gallery…"
+        ? uiText("pagescene.uploading.to.gallery")
         : "Capturing frame…";
 
   return (
@@ -32,9 +34,7 @@ export const RenderOverlay = () => {
             type="button"
             onClick={requestEncodeCancel}
             className="glass glass-no-hover rounded-full px-5 py-2 text-sm font-medium text-base-fg shadow-xl hover:bg-white/10"
-          >
-            Cancel (Esc)
-          </button>
+          >{uiText("pagescene.cancel.esc")}{" "}</button>
         </div>
       )}
     </>

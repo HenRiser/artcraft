@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import * as THREE from "three";
 import { BoxIcon, CameraIcon, PersonStandingIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -218,11 +219,11 @@ export class SceneManager implements SceneManagerAPI {
     let kind = "3D Object";
     if (object.name == "::CAM::") {
       faicon = CameraIcon;
-      name = "Camera";
-      kind = "Camera";
+      name = uiText("common.camera");
+      kind = uiText("common.camera");
     } else if (object.uuid in timeline_characters) {
       faicon = PersonStandingIcon;
-      kind = "Character";
+      kind = uiText("promptbox.character");
     }
     let locked = object.userData["locked"];
     if (locked == undefined) {

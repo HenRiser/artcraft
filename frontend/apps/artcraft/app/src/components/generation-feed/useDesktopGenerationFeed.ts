@@ -1,3 +1,4 @@
+import { t as uiText } from "@storyteller/common";
 import { findDesktopModel } from "@storyteller/tauri-api";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { listen, UnlistenFn } from "@tauri-apps/api/event";
@@ -170,7 +171,7 @@ export function useDesktopGenerationFeed(options: {
     addCompletedItems(
       event.generated_images.map((img) => ({
         id: img.media_token,
-        label: "Image Generation",
+        get label() { return uiText("generation-feed.image.generation"); },
         thumbnail:
           getThumbnailUrl(img.maybe_thumbnail_template, {
             width: THUMBNAIL_SIZES.LARGE,
@@ -189,7 +190,7 @@ export function useDesktopGenerationFeed(options: {
     addCompletedItems([
       {
         id: video.media_token,
-        label: "Video Generation",
+        get label() { return uiText("generation-feed.video.generation"); },
         thumbnail:
           getThumbnailUrl(video.maybe_thumbnail_template, {
             width: THUMBNAIL_SIZES.LARGE,
@@ -360,7 +361,7 @@ function getTaskModelLabel(t: TaskQueueItem): string {
     ? getProviderDisplayName(String(t.provider).toLowerCase())
     : undefined;
   if (modelDisplay && provider) return `${modelDisplay} · ${provider}`;
-  return modelDisplay || provider || "Unknown model";
+  return modelDisplay || provider || uiText("desktop.unknown.model");
 }
 
 function taskToInProgress(
@@ -455,7 +456,7 @@ async function taskToGalleryItems(
   );
   const label =
     meta?.prompt ||
-    (mediaType === "video" ? "Video Generation" : "Image Generation");
+    (mediaType === "video" ? uiText("generation-feed.video.generation") : uiText("generation-feed.image.generation"));
   const modelId = t.model_type ? String(t.model_type) : undefined;
   // Sort by task creation time (not completion time) so the completed row
   // occupies the same slot the pending row held — no layout shift.

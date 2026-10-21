@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animated, useSpring } from "@react-spring/web";
 import { Button, GenerateButton } from "@storyteller/ui-button";
@@ -60,7 +61,7 @@ interface ImageTo3DExperienceProps {
 }
 
 const MODE_TABS = [
-  { id: "image", label: "Image to 3D" },
+  { id: "image", get label() { return uiText("experiences.image.to.3d"); } },
   // { id: "text", label: "Text to 3D" },
 ] satisfies { id: Mode; label: string }[];
 
@@ -84,6 +85,7 @@ export const ImageTo3DExperience = ({
   variant,
   backgroundImage,
 }: ImageTo3DExperienceProps) => {
+  useUiLocale();
   const [activeMode, setActiveMode] = useState<Mode>("image");
   const selectedWorldModel = useSelectedModel(WORLD_MODEL_PAGE);
   const selectedWorldProvider = useSelectedProviderForModel(
@@ -164,7 +166,7 @@ export const ImageTo3DExperience = ({
               id: generateId(),
               preview: pending.url,
               mediaToken: pending.mediaToken,
-              name: "Library Image",
+              name: uiText("desktop.library.image"),
               isUploading: false,
             },
           ];
@@ -247,7 +249,7 @@ export const ImageTo3DExperience = ({
 
       setUploadedMediaToken(uploadResult.data);
     } catch (error) {
-      toast.error("Failed to upload image");
+      toast.error(uiText("experiences.failed.to.upload.image"));
       setUploadedPreview(null);
       setUploadedName(null);
     } finally {
@@ -318,7 +320,7 @@ export const ImageTo3DExperience = ({
             ),
           );
         } catch {
-          toast.error(`Failed to upload ${file.name}`);
+          toast.error(uiText("common.failed.to.upload.value", { value0: file.name }));
           setWorldImages((prev) => prev.filter((img) => img.id !== imageId));
         }
       }),
@@ -351,7 +353,7 @@ export const ImageTo3DExperience = ({
           id: generateId(),
           preview: item.fullImage!,
           mediaToken: item.id,
-          name: item.label || "Library Image",
+          name: item.label || uiText("desktop.library.image"),
           isUploading: false,
         }));
       setWorldImages((prev) => [...prev, ...newImages]);
@@ -362,7 +364,7 @@ export const ImageTo3DExperience = ({
 
     const item = selectedItems[0];
     if (!item || !item.fullImage) {
-      toast.error("No image selected");
+      toast.error(uiText("common.no.image.selected"));
       return;
     }
 
@@ -371,7 +373,7 @@ export const ImageTo3DExperience = ({
     setIsGalleryModalOpen(false);
     setSelectedGalleryImages([]);
 
-    setUploadedName(item.label || "Library Image");
+    setUploadedName(item.label || uiText("desktop.library.image"));
     setUploadedPreview(item.fullImage);
     setUploadedMediaToken(item.id);
   };
@@ -434,7 +436,7 @@ export const ImageTo3DExperience = ({
         const note =
           activeMode === "text"
             ? snapshotPrompt
-            : snapshotName || "Generated Model";
+            : snapshotName || uiText("experiences.generated.model");
 
         objectStartGeneration(
           activeMode,
@@ -466,8 +468,8 @@ export const ImageTo3DExperience = ({
         }
       }
     } catch (error) {
-      const errorMessage = commandErrorMessage(error, "An unexpected error occurred");
-      toast.error(`Failed to generate 3D model: ${errorMessage}`);
+      const errorMessage = commandErrorMessage(error, uiText("desktop.an.unexpected.error.occurred"));
+      toast.error(uiText("experiences.failed.to.generate.3d.model.value", { value0: errorMessage }));
       if (variant === "world") {
         worldFailGeneration(subscriberId);
       } else {
@@ -533,17 +535,13 @@ export const ImageTo3DExperience = ({
             icon={UploadIcon}
             onClick={() => fileInputRef.current?.click()}
             className="w-full"
-          >
-            Upload image
-          </Button>
+          >{uiText("experiences.upload.image")}{" "}</Button>
           <Button
             variant="action"
             icon={ImagesIcon}
             onClick={handlePickFromLibrary}
             className="w-full"
-          >
-            Pick from library
-          </Button>
+          >{uiText("common.pick.from.library")}{" "}</Button>
         </div>
       }
     >
@@ -587,9 +585,7 @@ export const ImageTo3DExperience = ({
             hasResults ? "text-2xl" : "text-4xl",
           )} />
         {!hasResults && (
-          <span className="mt-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
-            Add Image
-          </span>
+          <span className="mt-3 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">{uiText("common.add.image")}{" "}</span>
         )}
       </div>
     </Tooltip>
@@ -607,7 +603,7 @@ export const ImageTo3DExperience = ({
         >
           <img
             src={uploadedPreview}
-            alt="Reference"
+            alt={uiText("common.reference")}
             className={twMerge(
               "h-full w-full object-cover transition-opacity",
               isUploading && "opacity-50",
@@ -649,7 +645,7 @@ export const ImageTo3DExperience = ({
         rows={1}
         className="text-md max-h-[5.5em] w-full resize-none overflow-y-auto rounded-[3px] bg-transparent pr-2 pt-1 text-base-fg placeholder-base-fg/60 focus:outline-none"
         value={prompt}
-        placeholder="Describe any object you want to generate from scratch..."
+        placeholder={uiText("experiences.describe.any.object.you.want.to.generate.from.scratch")}
         onChange={(event) => setPrompt(event.target.value)}
       />
     </div>
@@ -675,17 +671,13 @@ export const ImageTo3DExperience = ({
                     icon={UploadIcon}
                     onClick={() => worldFileInputRef.current?.click()}
                     className="w-full"
-                  >
-                    Upload images
-                  </Button>
+                  >{uiText("common.upload.images")}{" "}</Button>
                   <Button
                     variant="action"
                     icon={ImagesIcon}
                     onClick={handlePickFromLibrary}
                     className="w-full"
-                  >
-                    Pick from library
-                  </Button>
+                  >{uiText("common.pick.from.library")}{" "}</Button>
                 </div>
               }
             >
@@ -733,9 +725,7 @@ export const ImageTo3DExperience = ({
                 <PlusIcon
                   
                   className="text-3xl text-base-fg opacity-80" />
-                <span className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
-                  Add Images
-                </span>
+                <span className="mt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">{uiText("experiences.add.images")}{" "}</span>
               </div>
             </Tooltip>
           </div>
@@ -745,7 +735,7 @@ export const ImageTo3DExperience = ({
             className="w-full resize-none overflow-y-auto rounded-[3px] border border-white/15 bg-ui-controls px-3 py-2.5 text-base text-base-fg placeholder-base-fg/60 transition-colors focus:border-white/60 focus:outline-none"
             style={{ maxHeight: "5em" }}
             value={worldPrompt}
-            placeholder="Describe your 3D world (optional)..."
+            placeholder={uiText("common.describe.your.3d.world.optional")}
             onChange={(e) => setWorldPrompt(e.target.value)}
           />
         </div>
@@ -805,17 +795,13 @@ export const ImageTo3DExperience = ({
               icon={UploadIcon}
               onClick={() => worldFileInputRef.current?.click()}
               className="w-full"
-            >
-              Upload images
-            </Button>
+            >{uiText("common.upload.images")}{" "}</Button>
             <Button
               variant="action"
               icon={ImagesIcon}
               onClick={handlePickFromLibrary}
               className="w-full"
-            >
-              Pick from library
-            </Button>
+            >{uiText("common.pick.from.library")}{" "}</Button>
           </div>
         }
       >
@@ -840,15 +826,12 @@ export const ImageTo3DExperience = ({
     const imageCountRow = (
       <div className="flex items-center justify-center gap-2 font-mono text-[11px] tabular-nums text-base-fg/40">
         <span>
-          {worldImages.length}/{MAX_WORLD_IMAGES} images
-        </span>
+          {worldImages.length}/{MAX_WORLD_IMAGES}{" "}{uiText("experiences.images")}{" "}</span>
         <button
           type="button"
           className="text-base-fg/40 underline transition-colors hover:text-base-fg/70"
           onClick={() => setWorldImages([])}
-        >
-          Clear all
-        </button>
+        >{uiText("common.clear.all")}{" "}</button>
       </div>
     );
 
@@ -869,7 +852,7 @@ export const ImageTo3DExperience = ({
               rows={1}
               className="flex-1 resize-none overflow-y-auto rounded-[3px] border border-white/15 bg-ui-controls px-3 py-2 text-sm text-base-fg placeholder-base-fg/60 transition-colors focus:border-white/60 focus:outline-none"
               value={worldPrompt}
-              placeholder="Describe world (optional)..."
+              placeholder={uiText("experiences.describe.world.optional")}
               onChange={(e) => setWorldPrompt(e.target.value)}
             />
           </div>
@@ -892,7 +875,7 @@ export const ImageTo3DExperience = ({
           className="w-full resize-none overflow-y-auto rounded-[3px] border border-white/15 bg-ui-controls px-3 py-2.5 text-base text-base-fg placeholder-base-fg/60 transition-colors focus:border-white/60 focus:outline-none"
           style={{ maxHeight: "5em" }}
           value={worldPrompt}
-          placeholder="Describe your 3D world (optional)..."
+          placeholder={uiText("common.describe.your.3d.world.optional")}
           onChange={(e) => setWorldPrompt(e.target.value)}
         />
       </div>
@@ -977,15 +960,13 @@ export const ImageTo3DExperience = ({
                         const editor = getActiveEditor();
                         if (editor) {
                           void addObject(editor, mediaItem);
-                          toast.success("Added to 3D scene");
+                          toast.success(uiText("experiences.added.to.3d.scene"));
                         } else {
-                          toast.error("3D editor isn't ready yet");
+                          toast.error(uiText("experiences.3d.editor.isn.t.ready.yet"));
                         }
                       }, 500);
                     }}
-                  >
-                    Open in 3D Editor
-                  </Button>
+                  >{uiText("experiences.open.in.3d.editor")}{" "}</Button>
                   <Button
                     variant="action"
                     icon={BoxIcon}
@@ -1009,16 +990,12 @@ export const ImageTo3DExperience = ({
             {/* Right: History List */}
             <div className="flex h-full flex-col overflow-hidden border border-ui-panel-border bg-ui-panel">
               <div className="flex items-center justify-between border-b border-ui-panel-border px-4 py-3">
-                <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">
-                  History
-                </h3>
+                <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-base-fg/60">{uiText("common.history")}{" "}</h3>
                 {results.length > 0 && (
                   <button
                     onClick={resetResults}
                     className="rounded-[3px] border border-red/40 bg-red/10 px-3 py-1 text-xs text-white/70 transition-colors hover:bg-red/20"
-                  >
-                    Clear Session
-                  </button>
+                  >{uiText("experiences.clear.session")}{" "}</button>
                 )}
               </div>
               <div className="flex-1 overflow-y-auto p-3">
@@ -1041,7 +1018,7 @@ export const ImageTo3DExperience = ({
                           {result.previewUrl ? (
                             <img
                               src={result.previewUrl}
-                              alt="thumb"
+                              alt={uiText("experiences.thumb")}
                               className={twMerge(
                                 "h-full w-full object-cover transition-opacity",
                                 isPending && "opacity-40",
@@ -1062,13 +1039,11 @@ export const ImageTo3DExperience = ({
                         </div>
                         <div className="min-w-0 flex-1 py-0.5">
                           <div className="truncate text-sm font-medium text-base-fg/90">
-                            {result.note || "Generated Model"}
+                            {result.note || uiText("experiences.generated.model")}
                           </div>
                           <div className="mt-1 flex items-center gap-1.5 text-xs">
                             {isPending ? (
-                              <span className="text-base-fg/55">
-                                Generating…
-                              </span>
+                              <span className="text-base-fg/55">{uiText("common.generating")}{" "}</span>
                             ) : (
                               <span className="font-mono tabular-nums text-base-fg/45">
                                 {formatTime(result.timestamp)}
@@ -1133,7 +1108,7 @@ export const ImageTo3DExperience = ({
                   loading={isGenerating}
                   credits={variant === "world" ? worldCredits : objectCredits}
                 >
-                  {`Generate ${variant === "object" ? "Object" : "World"}`}
+                  {uiText("experiences.generate.value", { value0: variant === "object" ? "Object" : "World" })}
                 </GenerateButton>
               </div>
             </div>
@@ -1214,7 +1189,7 @@ export const ImageTo3DExperience = ({
           </button>
           <img
             src={previewImage}
-            alt="Preview"
+            alt={uiText("common.preview")}
             className="max-h-[80vh] max-w-[80vw] border border-white/15 object-contain"
             onClick={(e) => e.stopPropagation()}
           />

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { useCallback, useState } from "react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -14,6 +15,7 @@ export function CopyPromptButton({
   text: string;
   onCopyResult?: (success: boolean) => void;
 }) {
+  useUiLocale();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(
@@ -32,11 +34,11 @@ export function CopyPromptButton({
   );
 
   return (
-    <Tooltip content={copied ? "Copied" : "Copy prompt"} position="top">
+    <Tooltip content={copied ? uiText("common.copied") : uiText("common.copy.prompt")} position="top">
       <button
         type="button"
         onClick={handleCopy}
-        aria-label="Copy prompt"
+        aria-label={uiText("common.copy.prompt")}
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[3px] text-white/40 transition-colors hover:bg-white/10 hover:text-white"
       >
         <DynamicIcon icon={copied ? CheckIcon : CopyIcon} className="text-sm" />

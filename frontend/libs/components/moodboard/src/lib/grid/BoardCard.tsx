@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { memo, useEffect, useRef, useState } from "react";
 import { CheckIcon, Maximize2Icon, StarIcon, Trash2Icon, WandSparklesIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -34,7 +35,7 @@ interface Props {
 const KIND_NOUN: Record<BoardItem["kind"], string> = {
   image: "image",
   video: "video",
-  text: "note",
+  get text() { return uiText("moodboard.note"); },
   link: "link",
   color: "color swatch",
 };
@@ -64,6 +65,7 @@ const BoardCardInner = ({
   onEditText,
   onCommitText,
 }: Props) => {
+  useUiLocale();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [entering, setEntering] = useState(
     Boolean(animateIn) && !prefersReducedMotion(),
@@ -174,19 +176,19 @@ const BoardCardInner = ({
               fades up on hover. */}
           <div className="absolute right-2 top-2 flex translate-y-1 items-center gap-1 rounded-full border border-white/15 bg-black/65 p-0.5 opacity-0 transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100">
             <RailButton
-              label="Open"
+              label={uiText("moodboard.open")}
               icon={Maximize2Icon}
               onClick={() => onOpen(item.id)}
             />
             {item.kind === "image" && (
               <RailButton
-                label="Use as reference"
+                label={uiText("common.use.as.reference")}
                 icon={WandSparklesIcon}
                 onClick={() => onUseReference(item.id)}
               />
             )}
             <RailButton
-              label="Delete"
+              label={uiText("common.delete")}
               icon={Trash2Icon}
               onClick={() => onDelete(item.id)}
             />
@@ -205,7 +207,7 @@ const RailButton = ({
   label: string;
   icon: typeof CheckIcon;
   onClick: () => void;
-}) => (
+}) => { useUiLocale(); return (
   <button
     type="button"
     aria-label={label}
@@ -219,7 +221,7 @@ const RailButton = ({
   >
     <DynamicIcon icon={icon} className="h-3.5 w-3.5" />
   </button>
-);
+); };
 
 const CardContent = ({
   item,
@@ -230,6 +232,7 @@ const CardContent = ({
   editing?: boolean;
   onCommitText?: (id: string, text: string) => void;
 }) => {
+  useUiLocale();
   switch (item.kind) {
     case "image":
       return (
@@ -277,7 +280,7 @@ const CardContent = ({
             onPointerDown={(e) => e.stopPropagation()}
             className="whitespace-pre-wrap text-sm leading-relaxed text-base-fg/90"
           >
-            {item.text || "Note"}
+            {item.text || uiText("common.note")}
           </p>
         </div>
       );
@@ -328,6 +331,7 @@ const NoteEditor = ({
   initial: string;
   onCommit: (text: string) => void;
 }) => {
+  useUiLocale();
   const ref = useRef<HTMLTextAreaElement | null>(null);
   const [draft, setDraft] = useState(initial);
 
@@ -360,7 +364,7 @@ const NoteEditor = ({
             onCommit(initial.trim());
           }
         }}
-        placeholder="Write a note…"
+        placeholder={uiText("moodboard.write.a.note")}
         className="h-full w-full resize-none bg-transparent text-sm leading-relaxed text-base-fg/90 placeholder:text-base-fg/35 focus:outline-none"
       />
     </div>

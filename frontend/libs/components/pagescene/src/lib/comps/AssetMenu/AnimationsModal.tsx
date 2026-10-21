@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { Checkbox } from "@storyteller/ui-checkbox";
 import { Modal } from "@storyteller/ui-modal";
 import { ArrowUpFromLineIcon, FootprintsIcon, LayersIcon, SearchIcon } from "lucide-react";
@@ -40,6 +41,7 @@ type AnimationsTab = {
 // pointer-drag onto characters/timeline rows via DndAsset), but only
 // animations, split into All / Presets / Uploaded tabs.
 export const AnimationsModal = () => {
+  useUiLocale();
   const editor = useContext(EngineContext);
 
   const {
@@ -129,16 +131,16 @@ export const AnimationsModal = () => {
 
   const tabs = useMemo<AnimationsTab[]>(
     () => [
-      { id: "all", label: "All", icon: LayersIcon, items: allAnimations },
+      { id: "all", get label() { return uiText("common.all"); }, icon: LayersIcon, items: allAnimations },
       {
         id: "presets",
-        label: "Presets",
+        get label() { return uiText("common.presets"); },
         icon: FootprintsIcon,
         items: defaultAnimations,
       },
       {
         id: "uploaded",
-        label: "Uploaded",
+        get label() { return uiText("common.uploaded"); },
         icon: ArrowUpFromLineIcon,
         items: userAnimations,
       },
@@ -173,18 +175,14 @@ export const AnimationsModal = () => {
     ) {
       return (
         <div className="flex h-full flex-col items-center justify-center gap-1 text-center">
-          <p className="text-sm text-white/70">No uploaded animations yet.</p>
-          <p className="text-xs text-white/40">
-            Upload a Mixamo GLB or FBX to add your own clips.
-          </p>
+          <p className="text-sm text-white/70">{uiText("pagescene.no.uploaded.animations.yet")}</p>
+          <p className="text-xs text-white/40">{uiText("pagescene.upload.a.mixamo.glb.or.fbx.to.add.your.own.clips")}{" "}</p>
           <Button
             variant="primary"
             icon={ArrowUpFromLineIcon}
             className="mt-3"
             onClick={handleOpenUpload}
-          >
-            Upload animation
-          </Button>
+          >{uiText("common.upload.animation")}{" "}</Button>
         </div>
       );
     }
@@ -229,9 +227,7 @@ export const AnimationsModal = () => {
         <div className="grid h-full grid-cols-12 gap-3">
           <div className="relative col-span-3 flex h-full flex-col p-3 pt-2 after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-gray-200 after:bg-white/10">
             <div className="flex h-10 items-center justify-between gap-2.5">
-              <h2 className="font-display text-lg tracking-tight text-white">
-                Animations
-              </h2>
+              <h2 className="font-display text-lg tracking-tight text-white">{uiText("common.animations")}{" "}</h2>
             </div>
             <hr className="my-2 w-full border-white/10" />
             <div className="flex h-full flex-col space-y-2">
@@ -261,14 +257,12 @@ export const AnimationsModal = () => {
                 iconClassName="opacity-70"
                 className="w-full justify-center rounded-[3px] border border-white/10 bg-white/[6%] px-3.5 py-2.5 hover:bg-white/15"
                 onClick={handleOpenUpload}
-              >
-                Upload animation
-              </Button>
+              >{uiText("common.upload.animation")}{" "}</Button>
               <Checkbox
                 id="animations-reopen-after-add"
                 checked={reopenAfterDrag}
                 onChange={handleReopenChange}
-                label="Reopen after adding"
+                label={uiText("common.reopen.after.adding")}
               />
             </div>
           </div>
@@ -279,7 +273,7 @@ export const AnimationsModal = () => {
                   <div className="relative grow">
                     <Input
                       ref={searchInputRef}
-                      placeholder="Search animations"
+                      placeholder={uiText("pagescene.search.animations")}
                       className="relative z-[51] grow"
                       inputClassName="bg-white/5 pr-10 placeholder-white/40"
                       icon={SearchIcon}
@@ -317,7 +311,7 @@ export const AnimationsModal = () => {
           isOpen: isUploadModalOpen,
           onClose: () => setIsUploadModalOpen(false),
           onSuccess: handleUploadSuccess,
-          title: "Upload Animation",
+          get title() { return uiText("pagescene.upload.animation"); },
           titleIcon: ArrowUpFromLineIcon,
           initialCategory: "animation",
         })}

@@ -1,3 +1,4 @@
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ChevronDownIcon, ChevronUpIcon, EraserIcon, FrameIcon, MaximizeIcon, MousePointerIcon, MoveIcon, PenIcon, RectangleHorizontalIcon, RectangleVerticalIcon, Redo2Icon, RotateCcwIcon, SquareIcon, SquarePenIcon } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { DynamicIcon } from "@storyteller/icons";
@@ -70,6 +71,7 @@ export const PromptBoxEdit = ({
   onRedo,
   credits,
 }: PromptBoxEditProps) => {
+  useUiLocale();
   const [prompt, setPrompt] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -262,7 +264,7 @@ export const PromptBoxEdit = ({
     if (busy || isDisabled || !prompt.trim()) return;
     if (isFinite(maxLen) && prompt.length > maxLen) {
       toast.error(
-        `Prompt exceeds the ${maxLen} character limit for this model`,
+        uiText("common.prompt.exceeds.the.value.character.limit.for.this.model", { value0: maxLen }),
       );
       return;
     }
@@ -290,12 +292,12 @@ export const PromptBoxEdit = ({
         {
           value: "marker",
           icon: PenIcon,
-          text: "Marker",
+          get text() { return uiText("promptbox.marker"); },
         },
         {
           value: "eraser",
           icon: EraserIcon,
-          text: "Eraser",
+          get text() { return uiText("common.eraser"); },
         },
       ]
     : supportsMaskedInpainting
@@ -303,24 +305,24 @@ export const PromptBoxEdit = ({
           {
             value: "edit",
             icon: SquarePenIcon,
-            text: "Edit Region",
+            get text() { return uiText("common.edit.region"); },
           },
           {
             value: "eraser",
             icon: EraserIcon,
-            text: "Eraser",
+            get text() { return uiText("common.eraser"); },
           },
         ]
       : [
           {
             value: "edit",
             icon: SquarePenIcon,
-            text: "Edit Region",
+            get text() { return uiText("common.edit.region"); },
           },
           {
             value: "select",
             icon: MousePointerIcon,
-            text: "Select",
+            get text() { return uiText("common.select"); },
           },
         ];
 
@@ -343,7 +345,7 @@ export const PromptBoxEdit = ({
             />
             <div className="h-6 w-px bg-white/20" />
             <div className="flex items-center gap-1">
-              <Tooltip content="Undo" position="top" delay={200}>
+              <Tooltip content={uiText("common.undo")} position="top" delay={200}>
                 <button
                   onClick={onUndo}
                   className="flex h-8 w-8 items-center justify-center rounded-[3px] text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
@@ -352,7 +354,7 @@ export const PromptBoxEdit = ({
                   <RotateCcwIcon  className="h-4 w-4" />
                 </button>
               </Tooltip>
-              <Tooltip content="Redo" position="top" delay={200}>
+              <Tooltip content={uiText("common.redo")} position="top" delay={200}>
                 <button
                   onClick={onRedo}
                   className="flex h-8 w-8 items-center justify-center rounded-[3px] text-white/70 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed"
@@ -393,7 +395,7 @@ export const PromptBoxEdit = ({
             <div className="flex gap-3">
               {selectedImageModel?.canUseImagePrompt && (
                 <Tooltip
-                  content="Add Image"
+                  content={uiText("common.add.image")}
                   position="top"
                   closeOnClick={true}
                   className={twMerge(isImageRowVisible && "hidden opacity-0")}
@@ -427,7 +429,7 @@ export const PromptBoxEdit = ({
                 <textarea
                   ref={textareaRef}
                   rows={1}
-                  placeholder="Write what you want to change in your image and click generate..."
+                  placeholder={uiText("common.write.what.you.want.to.change.in.your.image.and.click.generate")}
                   className={`promptbox-scrollbar text-md min-h-[2.5em] w-full resize-y overflow-y-auto bg-transparent pr-8 text-white placeholder-white placeholder:text-white/60 focus:outline-none ${isExpanded ? "max-h-[500px]" : "max-h-[5.5em]"}`}
                   value={prompt}
                   onChange={handleChange}
@@ -456,7 +458,7 @@ export const PromptBoxEdit = ({
                 {selectedImageModel?.canChangeAspectRatio &&
                   !selectedImageModel?.supportsNewAspectRatio() && (
                     <Tooltip
-                      content="Aspect Ratio"
+                      content={uiText("common.aspect.ratio")}
                       position="top"
                       className="z-50"
                       closeOnClick={true}
@@ -465,7 +467,7 @@ export const PromptBoxEdit = ({
                         items={aspectRatioList}
                         onSelect={handleAspectRatioSelect}
                         mode="toggle"
-                        panelTitle="Aspect Ratio"
+                        panelTitle={uiText("common.aspect.ratio")}
                         showIconsInList
                         triggerIcon={
                           <DynamicIcon
@@ -478,7 +480,7 @@ export const PromptBoxEdit = ({
                   )}
                 {selectedImageModel?.canChangeResolution && (
                   <Tooltip
-                    content="Resolution"
+                    content={uiText("common.resolution")}
                     position="top"
                     className="z-50"
                     closeOnClick={true}
@@ -487,7 +489,7 @@ export const PromptBoxEdit = ({
                       items={resolutionList}
                       onSelect={handleResolutionSelect}
                       mode="toggle"
-                      panelTitle="Resolution"
+                      panelTitle={uiText("common.resolution")}
                       showIconsInList
                       triggerIcon={
                         <MaximizeIcon  className="h-4 w-4" />
@@ -499,7 +501,7 @@ export const PromptBoxEdit = ({
               <div className="flex items-center gap-2">
                 {onFitPressed && (
                   <Tooltip
-                    content={"Fit canvas to screen"}
+                    content={uiText("common.fit.canvas.to.screen")}
                     position="top"
                     className="z-50"
                     delay={200}
@@ -509,9 +511,7 @@ export const PromptBoxEdit = ({
                       className="h-9 bg-ui-controls/60 px-3 text-base-fg hover:bg-ui-controls/90"
                       onClick={onFitPressed}
                     >
-                      <FrameIcon  className="h-4 w-4" />
-                      Fit
-                    </Button>
+                      <FrameIcon  className="h-4 w-4" />{uiText("common.fit")}{" "}</Button>
                   </Tooltip>
                 )}
                 <GenerationCountPicker
@@ -533,15 +533,13 @@ export const PromptBoxEdit = ({
                   disabled={isDisabled || !prompt.trim()}
                   loading={isEnqueueing ?? internalEnqueueing}
                   credits={credits}
-                >
-                  Generate
-                </GenerateButton>
+                >{uiText("common.generate")}{" "}</GenerateButton>
               </div>
             </div>
           </div>
           <div className="absolute -bottom-1 left-1/2 -translate-x-1/2">
             <Tooltip
-              content={isExpanded ? "Collapse" : "Expand"}
+              content={isExpanded ? uiText("common.collapse") : uiText("common.expand")}
               position="top"
               className="-mb-2"
             >
@@ -589,7 +587,7 @@ export const PromptBoxEdit = ({
         }
       >
         <textarea
-          placeholder="Write what you want to change in your image and click generate..."
+          placeholder={uiText("common.write.what.you.want.to.change.in.your.image.and.click.generate")}
           className="promptbox-scrollbar text-md h-full min-h-0 w-full resize-none overflow-y-auto rounded-[3px] bg-transparent text-base-fg placeholder-base-fg/60 focus:outline-none"
           value={prompt}
           onChange={handleChange}

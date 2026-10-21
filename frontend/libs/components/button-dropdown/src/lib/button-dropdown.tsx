@@ -1,3 +1,5 @@
+import { localize as uiLocalize } from "@storyteller/common";
+import { t as uiText, useLocale as useUiLocale } from "@storyteller/common";
 import { ButtonHTMLAttributes, Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "lucide-react";
@@ -44,6 +46,7 @@ export const ButtonDropdown = ({
   align = "left",
   showSelected,
 }: ButtonDropdownProps) => {
+  useUiLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(
     null,
@@ -133,9 +136,9 @@ export const ButtonDropdown = ({
                               className="mr-2 h-4 w-4 shrink-0"
                             />
                           )}
-                          <div className="grow text-start">{option.label}</div>
+                          <div className="grow text-start">{uiLocalize(option.label)}</div>
                           <div className="ml-6 font-mono text-[11px] font-normal text-white/45">
-                            {option.description && option.description}
+                            {uiLocalize(option.description && option.description)}
                           </div>
                           {showSelected && (
                             <>
@@ -188,7 +191,7 @@ export const ButtonDropdown = ({
                   {...currentDialogProps.closeButtonProps}
                   onClick={closeModal}
                 >
-                  {currentDialogProps.closeButtonProps.label}
+                  {uiLocalize(currentDialogProps.closeButtonProps.label)}
                 </Button>
               )}
 
@@ -202,7 +205,7 @@ export const ButtonDropdown = ({
                   closeModal();
                 }}
               >
-                {currentDialogProps.confirmButtonProps.label || "Confirm"}
+                {currentDialogProps.confirmButtonProps.label || uiText("button-dropdown.confirm")}
               </Button>
             )}
           </div>
