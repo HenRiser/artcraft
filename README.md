@@ -25,6 +25,12 @@ https://github.com/user-attachments/assets/7339bd09-3e0d-44a7-a024-af9de64e4c11
 
 ArtCraft is the IDE for interactive AI image and video creation. Compose in 2D, stage scenes in 3D, and choose the models that fit your work. Turn prompting into *crafting* with visual tools for precise, repeatable results.
 
+## Simplified Chinese localization
+
+This fork includes basic Simplified Chinese localization for the main desktop UI, common dialogs, editors, and bundled help. The app defaults to Simplified Chinese; switch to English under **Settings → Appearance → Language**.
+
+本 fork 已完成基础简体中文汉化，默认使用中文。可在 **设置 → 外观 → 语言** 中切换 English。
+
 ## Show, Don't Tell: Advanced Crafting Features
 
 Artists need control over composition, character identity, and camera placement. Build the scene before you generate it. Click any preview to view it at full size.
